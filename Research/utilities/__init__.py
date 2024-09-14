@@ -4,6 +4,7 @@ import librosa
 from typing import Tuple
 
 def plot_waveform(waveform: np.ndarray, sr: int = 22050, title: str = "") -> None:
+    """Plot a given waveform"""
     librosa.display.waveshow(waveform, sr=sr, alpha=0.5)
     plt.title(title)
     plt.ylabel("Relative intensity")
