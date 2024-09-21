@@ -27,3 +27,79 @@ def amplitude_envelope(waveform: np.ndarray, frame_size: int, hop_length: int) -
         amplitudes.append(maximum_amplitude)
     
     return np.array(amplitudes)
+
+def rms(waveform: np.ndarray, frame_size: int, hop_length: int) -> np.ndarray:
+    """
+    For a given waveform, calculate the root-mean-squared energy over frames of size :param:`frame_size` at hop length :param:`hop_length`
+    """
+    energies = []
+
+    total_samples = waveform.size
+    for start_sample in range(0, total_samples, hop_length):
+        end_sample = min(start_sample + frame_size, total_samples)
+
+        energy = np.sqrt(np.mean(np.power(waveform[start_sample:end_sample], 2.0)))
+        energies.append(energy)
+    
+    return np.array(energies)
+
+def zcr(waveform: np.ndarray, frame_size: int, hop_length: int) -> np.ndarray:
+    """
+    For a given waveform, calculate the zero-crossing rate over frames of size :param:`frame_size` at hop length :param:`hop_length`
+    """
+    rates = []
+
+    total_samples = waveform.size
+    for start_sample in range(0, total_samples, hop_length):
+        end_sample = min(start_sample + frame_size, total_samples)
+
+        rate = 0.0
+        for sample in range(start_sample, end_sample - 1):
+            rate += np.abs(np.sign(waveform[sample]) - np.sign(waveform[sample + 1]))
+        rates.append(rate / 2.0)
+    
+    return np.array(rates)
+
+def dft(signal: np.ndarray) -> np.ndarray:
+    """
+    For a given signal calculate the discrete fourier transform. Output is a numpy array of complex values
+    """
+    fourier_transform = []
+
+    N = signal.size
+    for frequency in range(N):
+        transform = 0
+        for n in range(N):
+            transform += signal[n] * np.exp(-1j * 2 * np.pi * frequency / N * n)
+        
+        fourier_transform.append(transform)
+
+    return np.array(fourier_transform)
+
+def fft(signal: np.ndarray) -> np.ndarray:
+    """
+    For a given signal calculate the discrete fourier transform approximation using the FFT algorithm. Output is a numpy array of complex values
+    Inputs of length not on the form 2^n will be 0 padded.
+    """
+
+    n = signal.size
+    if n == 1:
+        return signal
+
+    # If n is not a power of 2, right pad with 0s
+    if n.bit_count() > 1:
+        padding = int(np.power(2, np.ceil(np.log2(n))) - n)
+        signal = np.concatenate((signal, [0] * padding))
+        n += padding
+
+    root_of_unity = np.exp(2 * np.pi * 1j / n)
+
+    signal_even, signal_odd = np.array([signal[i] for i in range(0, n, 2)]), np.array([signal[i] for i in range(1, n, 2)])
+    transform_even, transform_odd = fft(signal_even), fft(signal_odd)
+
+    transform = [0] * n
+    for j in range(n // 2):
+        transform[j] = transform_even[j] + np.power(root_of_unity, j) * transform_odd[j]
+        transform[j + n // 2] = transform_even[j] - np.power(root_of_unity, j) * transform_odd[j]
+
+    return np.array(transform)
