@@ -103,3 +103,44 @@ def fft(signal: np.ndarray) -> np.ndarray:
         transform[j + n // 2] = transform_even[j] - np.power(root_of_unity, j) * transform_odd[j]
 
     return np.array(transform)
+
+def hann_window(frame_size: int) -> np.ndarray:
+    """
+    Compute the Hann window for a frame of size :param:`frame_size`
+    """
+    window = np.zeros(frame_size)
+    for i in range(frame_size):
+        window[i] = 0.5 * (1.0 - np.cos(2.0 * np.pi * (i+1) / (frame_size - 1.0)))
+
+    return window
+
+def stft(signal: np.ndarray, frame_size: int, hop_length: int, center: bool = True) -> np.ndarray:
+    """
+    For a given signal, frame size and hop length, compute the Short-time Fourier transform
+    """
+    window = hann_window(frame_size)
+
+    total_samples = signal.size
+
+    total_frames = total_samples // hop_length + 1
+    total_frequency_bins = frame_size // 2 + 1
+
+    spectrogram = np.zeros((total_frequency_bins, total_frames), dtype=np.complex_)
+    for i in range(total_frames):
+        if center:
+            start_sample = i * hop_length - frame_size // 2
+        else:
+            start_sample = i * hop_length
+        end_sample = start_sample + frame_size
+
+        if start_sample < 0:
+            frame = np.append(np.zeros(np.abs(start_sample)), signal[:end_sample])
+        elif end_sample > total_samples:
+            frame = np.append(signal[start_sample:], np.zeros(end_sample - total_samples))
+        else:
+            frame = signal[start_sample:end_sample]
+
+        frame_fft = np.fft.fft(frame * window)
+        spectrogram[:, i] = frame_fft[:total_frequency_bins]
+
+    return spectrogram

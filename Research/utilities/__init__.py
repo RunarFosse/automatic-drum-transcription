@@ -20,3 +20,10 @@ def plot_fourier_transform(transform: np.ndarray, sr: int = 22050, title: str = 
     plt.xlabel("Frequency (Hz)")
     plt.title(title)
     plt.legend()
+
+def plot_spectrogram(spectrogram: np.ndarray, hop_length: int, sr: int = 22050, title: str = "", y_axis: str = "linear") -> None:
+    """Plot a spectrogram"""
+    librosa.display.specshow(spectrogram, sr=sr, hop_length=hop_length, x_axis="time", y_axis=y_axis)
+    plt.colorbar(format="%+2.f")
+
+    plt.title(title)
