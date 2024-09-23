@@ -144,3 +144,9 @@ def stft(signal: np.ndarray, frame_size: int, hop_length: int, center: bool = Tr
         spectrogram[:, i] = frame_fft[:total_frequency_bins]
 
     return spectrogram
+
+def amplitude_to_db(spectrogram: np.ndarray, amin: float = 1e-05) -> np.ndarray:
+    """
+    Convert a given spectrogram from amplitude space to the logarithmic decibel space
+    """
+    return 10.0 * np.log10(np.clip(np.power(spectrogram, 2.0), a_min=amin, a_max=None))
