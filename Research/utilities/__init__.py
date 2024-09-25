@@ -21,12 +21,14 @@ def plot_fourier_transform(transform: np.ndarray, sr: int = 22050, title: str = 
     plt.title(title)
     plt.legend()
 
-def plot_spectrogram(spectrogram: np.ndarray, hop_length: int, sr: int = 22050, title: str = "", y_axis: str = "linear", color_unit: str = "") -> None:
+def plot_spectrogram(spectrogram: np.ndarray, hop_length: int, sr: int = 22050, title: str = "", y_axis: str = "linear", color_unit: str = "", ylabel: str = "") -> None:
     """Plot a spectrogram"""
     librosa.display.specshow(spectrogram, sr=sr, hop_length=hop_length, x_axis="time", y_axis=y_axis)
     plt.colorbar(format="%+2.f " + color_unit)
 
     plt.title(title)
+    if ylabel:
+        plt.ylabel(ylabel)
 
 def plot_mel_filter_banks(filter_banks: np.ndarray, n_fft: int, title: str = "") -> None:
     frequencies = np.arange(0, n_fft // 2 + 1)
