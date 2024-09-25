@@ -27,3 +27,14 @@ def plot_spectrogram(spectrogram: np.ndarray, hop_length: int, sr: int = 22050, 
     plt.colorbar(format="%+2.f " + color_unit)
 
     plt.title(title)
+
+def plot_mel_filter_banks(filter_banks: np.ndarray, n_fft: int, title: str = "") -> None:
+    frequencies = np.arange(0, n_fft // 2 + 1)
+
+    for i, filter_bank in enumerate(filter_banks):
+        plt.plot(frequencies, filter_bank, label=f"Filter bank {i + 1}")
+
+    plt.title(title)
+    plt.xlabel("Frequencies")
+    plt.ylabel("Weight value")
+    plt.legend()

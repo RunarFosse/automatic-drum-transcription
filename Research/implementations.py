@@ -150,3 +150,42 @@ def amplitude_to_db(spectrogram: np.ndarray, amin: float = 1e-05) -> np.ndarray:
     Convert a given spectrogram from amplitude space to the logarithmic decibel space
     """
     return 10.0 * np.log10(np.clip(np.power(spectrogram, 2.0), a_min=amin, a_max=None))
+
+def frequency_to_mel(frequency: float | np.ndarray) -> float | np.ndarray:
+    """
+    Convert a frequency measure into a mel
+    """
+    return 1125.0 * np.log(1.0 + frequency / 700.0)
+
+def mel_to_frequency(mel: float | np.ndarray) -> float | np.ndarray:
+    """
+    Convert a mel measure into frequency
+    """
+    return 700.0 * (np.exp(mel / 1125.0) - 1.0)
+
+def mel_filter_banks(sr: int, n_fft: int, n_mels: int = 20, fmin: float = 0.0, fmax: float | None = None, slaney_norm: bool = True) -> np.ndarray:
+    """
+    Calculate a given number of mel filter banks, returned as a numpy array. Using slaney normalization but can be toggled off
+    """
+    if fmax is None:
+        fmax = sr / 2.0
+
+    mmin, mmax = frequency_to_mel(fmin), frequency_to_mel(fmax)
+    mel_points = np.linspace(mmin, mmax, n_mels + 2)
+
+    freq_points = mel_to_frequency(mel_points)
+    freq_points = (n_fft // 2 + 1) * freq_points / fmax
+
+    filter_banks = np.zeros((n_mels, n_fft // 2 + 1))
+    for i in range(1, len(freq_points) - 1):
+        start, middle, end = freq_points[i-1], freq_points[i], freq_points[i+1]
+        for frequency in range(n_fft // 2):
+            if frequency >= start and frequency < middle:
+                filter_banks[i-1][frequency] = (frequency - start) / (middle - start)
+            elif frequency >= middle and frequency <= end:
+                filter_banks[i-1][frequency] = (end - frequency) / (end - middle)
+            
+            if slaney_norm:
+                filter_banks[i-1][frequency] /= (end - start) / 2.0
+    
+    return filter_banks
