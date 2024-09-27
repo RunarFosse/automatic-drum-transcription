@@ -14,3 +14,7 @@ From Crowdsourced Data](https://www.mdpi.com/2624-6120/4/4/42)
         * Self-attention decoder
     * Gives a small overview over ADT related works since 2018
     * Uses some popular ADT datasets
+
+* [A Review of Automatic Drum Transcription](https://www.open-access.bcu.ac.uk/6180/1/Wu-et-al.-2018-A-review-of-automatic-drum-transcription.pdf)
+    * Early review of ADT, up until 2017
+    * Presents a detailed history of techniques and algorithms 
