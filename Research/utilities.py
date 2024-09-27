@@ -11,15 +11,21 @@ def plot_waveform(waveform: np.ndarray, sr: int = 22050, title: str = "") -> Non
 
 def plot_fourier_transform(transform: np.ndarray, sr: int = 22050, title: str = "", plot_nyquist: bool = False) -> None:
     """Plot a fourier transform"""
+    if not transform.size:
+        plt.text(x=0.0, y=0.0, s="Fourier transform not computed", fontsize="xx-large", fontweight="bold", horizontalalignment="center")
+        plot_nyquist = False
+
     plt.plot(np.linspace(0, sr, len(transform)), np.abs(transform), label="Fourier Transform")
 
     if plot_nyquist:
         plt.axvline(x=sr / 2.0, c="r", linestyle="--", label="Nyquist Frequency")
     
+    if transform.size:
+        plt.legend()
+
     plt.ylabel("Magnitude")
     plt.xlabel("Frequency (Hz)")
     plt.title(title)
-    plt.legend()
 
 def plot_spectrogram(spectrogram: np.ndarray, hop_length: int, sr: int = 22050, title: str = "", y_axis: str = "linear", color_unit: str = "", ylabel: str = "") -> None:
     """Plot a spectrogram"""
