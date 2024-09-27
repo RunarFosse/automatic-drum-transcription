@@ -7,4 +7,5 @@
 | IDMT-SMT-DRUMS-V2 | A medium-sized database for automatic drum transcription and source separation. | 2.2 | 3 | DTD | R/S | **TBD** |
 | ADTOF | A large dataset of non-synthetic music for automatic drum transcription. | 359.0 | 5 | DTM | R | 2024-09-27 |
 | StemGMD | A large-scale audio dataset of isolated drum stems for deep drums demixing. | 1224.0 | 9 | DTD | S | **TBD** |
-| E-GMD | a large dataset of human drum performances, with audio recordings annotated in MIDI. | 444.5 | 22 | DTM | S | **TBD** |
+| E-GMD | A large dataset of human drum performances, with audio recordings annotated in MIDI. | 444.5 | 22 | **TBD** | S | **TBD** |
+| Slakh | A dataset of multi-track audio and aligned MIDI for music source separation and multi-instrument automatic transcription. | 145.0 | < 34 | DTM | S | **TBD** |
