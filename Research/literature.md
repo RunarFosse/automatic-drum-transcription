@@ -4,8 +4,7 @@
     * Introduction to audio signal features and preprocesssing
     * Covers everything from basics of digital sound signals to Mel spectrograms and MFCCs
 
-* [High-Quality and Reproducible Automatic Drum Transcription
-From Crowdsourced Data](https://www.mdpi.com/2624-6120/4/4/42)
+* [High-Quality and Reproducible Automatic Drum Transcription From Crowdsourced Data](https://www.mdpi.com/2624-6120/4/4/42)
     * Study of how crowdsourced data can positively impact training of ADT models
     * Introduces some basic DL architectures and techniques:
         * Frame-synchronous CNN encoder
@@ -30,3 +29,15 @@ From Crowdsourced Data](https://www.mdpi.com/2624-6120/4/4/42)
     * Introduces new performance measure, Octave F-measure, and the psuedo confusion matrix
     * It highlights some usual inconsistencies in the datasets
     * It claims models often have high accuracies, but are capped by quality of annotations
+
+* [ADTOF: A LARGE DATASET OF NON-SYNTHETIC MUSIC FOR AUTOMATIC DRUM TRANSCRIPTION](https://archives.ismir.net/ismir2021/paper/000102.pdf)
+    * Is an introduction of the ADTOF dataset
+    * Covers the general problem description, model training, performance estimation, etc. using well known conventions
+    * Good analysis over the results
+    * It also claims that big crowdsourced datasets using real music gives a better result
+
+* [AUTOMATIC DRUM TRANSCRIPTION FOR POLYPHONIC RECORDINGS USING SOFT ATTENTION MECHANISMS AND CONVOLUTIONAL NEURAL NETWORKS](https://archives.ismir.net/ismir2017/paper/000146.pdf)
+    * Early view of convolutional and soft attention mechanisms in DTM
+    * Shows that convolutions and attention are beneficial additions
+    * Introduces a alternative peak picking algorithm which does not perform better
+    * Trains a small network over small datasets
