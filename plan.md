@@ -1,6 +1,6 @@
 # Masterthesis plan and structure
 
-* Introduction of ADT and DTM
+* Introduction of the tasks ADT and DTM, motivation
 
 * Present state-of-the-art datasets and models
 
