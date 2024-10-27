@@ -41,3 +41,7 @@
     * Shows that convolutions and attention are beneficial additions
     * Introduces a alternative peak picking algorithm which does not perform better
     * Trains a small network over small datasets
+
+* [MEDLEYDB 2.0 : NEW DATA AND A SYSTEM FOR SUSTAINABLE DATA COLLECTION](https://rachelbittner.weebly.com/uploads/3/2/1/8/32182799/bittner_ismirlbd-mdb_2016.pdf)
+    * Introduces the MDB2.0 dataset
+    * Requires citation for use
