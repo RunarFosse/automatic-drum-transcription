@@ -2,6 +2,8 @@
 data/
 */data/
 
+# Mac specific temporary folder
+.DS_Store
 
 
 # Byte-compiled / optimized / DLL files
