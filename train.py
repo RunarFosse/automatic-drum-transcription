@@ -9,8 +9,10 @@ from ray import train, tune
 
 from datasets import ADTOF_load
 
+from pathlib import Path
 
-def train(config: tune.TuneConfig, Model: nn.Module, train_path: str, val_path: str, device: str = "cpu", seed: int | None = None):
+
+def train(config: tune.TuneConfig, Model: nn.Module, train_path: Path, val_path: Path, device: str = "cpu", seed: int | None = None):
     """ Training function to use with RayTune """
 
     # Declare device

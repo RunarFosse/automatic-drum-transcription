@@ -5,7 +5,7 @@ from time import time
 from functools import partial
 from models import ADTOF_FrameRNN
 from train import train
-from os import getcwd
+from pathlib import Path
 
 # Only run this file directly
 assert __name__ == "__main__"
@@ -15,12 +15,15 @@ parser = argparse.ArgumentParser("run.py")
 parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda", nargs="?")
 args = parser.parse_args()
 
+# Extract the absolute path of the data directory
+data_dir = Path(__file__).resolve().parent / "data"
+
 # ----------------------------------------------------------------------------------------------------------------
 
 num_samples = 5
 
-train_path = getcwd() + "/data/adtof/adtof_yt_train"
-val_path = getcwd() + "/data/adtof/adtof_yt_validation"
+train_path = "adtof/adtof_yt_train"
+val_path = "adtof/adtof_yt_validation"
 
 config = {
     "batch_size": tune.choice([16, 32, 64]),
@@ -41,7 +44,7 @@ scheduler = ASHAScheduler(
 
 # Run the experiments
 result = tune.run(
-    partial(train, Model=Model, train_path=train_path, val_path=val_path, device=device, seed=seed),
+    partial(train, Model=Model, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
     config=config,
     num_samples=num_samples,
     scheduler=scheduler

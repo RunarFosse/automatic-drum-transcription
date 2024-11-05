@@ -1,6 +1,7 @@
 import tensorflow as tf
 import torch
 from torch.utils.data import IterableDataset, DataLoader
+from pathlib import Path
 
 
 class TensorFlowDatasetIterable(IterableDataset):
@@ -32,11 +33,11 @@ class TensorFlowDatasetIterable(IterableDataset):
             yield features, label
 
 
-def ADTOF_load(path: str, batch_size = 1, shuffle = False, transform=None, seed=None) -> DataLoader:
+def ADTOF_load(path: Path, batch_size = 1, shuffle = False, transform=None, seed=None) -> DataLoader:
     """ Load a ADTOF dataset as a PyTorch DataLoader """
 
     # Load the dataset using TensorFlow
-    tf_dataset = tf.data.Dataset.load(path)
+    tf_dataset = tf.data.Dataset.load(str(path))
 
     # Let TensorFlow handle batching and shuffling
     tf_dataset = tf_dataset.shuffle(buffer_size = batch_size * 25, seed = seed)
