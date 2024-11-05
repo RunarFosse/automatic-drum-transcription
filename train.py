@@ -18,7 +18,7 @@ def train(config: tune.RayConfig, Model: nn.Module, train_path: str, val_path: s
 
     # Load the datasets
     train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
-    val_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
+    val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
 
     # Create the model, loss function and optimizer
     model = Model().to(device)
