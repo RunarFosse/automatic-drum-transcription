@@ -10,7 +10,7 @@ from ray import train, tune
 from datasets import ADTOF_load
 
 
-def train(config: tune.RayConfig, Model: nn.Module, train_path: str, val_path: str, device: str = "cpu", seed: int | None = None):
+def train(config: tune.TuneConfig, Model: nn.Module, train_path: str, val_path: str, device: str = "cpu", seed: int | None = None):
     """ Training function to use with RayTune """
 
     # Declare device
@@ -27,37 +27,37 @@ def train(config: tune.RayConfig, Model: nn.Module, train_path: str, val_path: s
     optimizer.zero_grad(set_to_none=True)
 
     # Start training
-    model.train()
+    print("Started training")
     for epoch in range(3):
+        model.train()
         train_loss = 0.0
         for i, data in enumerate(train_loader):
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
             outputs = model(inputs)
 
-            loss = loss_fn(outputs, labels)
+            loss = loss_fn(outputs, labels).mean()
             loss.backward()
 
-            optimizer.backward()
+            optimizer.step()
             optimizer.zero_grad()
 
             # Print statistics every 2000th mini-batch
             train_loss += loss.item()
-            if (i+1) % 2000 == 0:
+            if True or (i+1) % 2000 == 0:
                 print(f"[Epoch {epoch+1}, {i+1}] loss: {train_loss / (i+1) :.4f}")
 
         # After a training epoch, compute validation performance
-        val_loss = 0.0
         model.eval()
+        val_loss = 0.0
         for i, data in enumerate(val_loader):
             with torch.no_grad():
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(inputs)
 
-                loss = loss_fn(outputs, labels)
+                loss = loss_fn(outputs, labels).mean()
                 val_loss += loss.item()
         
         # Report to RayTune
         train.report({"loss": val_loss / (i+1)})
-
     print("Finished training")

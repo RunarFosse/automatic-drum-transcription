@@ -5,20 +5,22 @@ from time import time
 from functools import partial
 from models import ADTOF_FrameRNN
 from train import train
+from os import getcwd
 
 # Only run this file directly
 assert __name__ == "__main__"
 
 # Declare an argument parser for this file
 parser = argparse.ArgumentParser("run.py")
-parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda")
+parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda", nargs="?")
+args = parser.parse_args()
 
 # ----------------------------------------------------------------------------------------------------------------
 
 num_samples = 5
 
-train_path = "data/adtof/adtof_yt_train"
-val_path = "data/adtof/adtof_yt_validation"
+train_path = getcwd() + "/data/adtof/adtof_yt_train"
+val_path = getcwd() + "/data/adtof/adtof_yt_validation"
 
 config = {
     "batch_size": tune.choice([16, 32, 64]),
@@ -29,8 +31,8 @@ config = {
 
 Model = ADTOF_FrameRNN
 
-device = parser.device
-seed = time()
+device = args.device
+seed = int(time())
 
 scheduler = ASHAScheduler(
     metric="loss",
@@ -48,4 +50,4 @@ result = tune.run(
 # Print the results
 best_trial = result.get_best_trial()
 print(f"Best trial config: {best_trial.config}")
-print(f"Best trial final validation loss: {best_trial.last_result["loss"]}")
+print(f"Best trial final validation loss: {best_trial.last_result['loss']}")

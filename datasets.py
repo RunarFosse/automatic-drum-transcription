@@ -24,6 +24,9 @@ class TensorFlowDatasetIterable(IterableDataset):
             # Transform the features
             if self._transform:
                 features = self._transform(features)
+            
+            # And permute the dimensions
+            features = features.permute((0, 3, 1, 2))
 
             # And yield the datapoints
             yield features, label
