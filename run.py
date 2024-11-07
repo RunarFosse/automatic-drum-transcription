@@ -1,4 +1,5 @@
 import argparse
+import ray
 from ray import tune
 from ray.tune.schedulers import ASHAScheduler
 from time import time
@@ -18,9 +19,12 @@ args = parser.parse_args()
 # Extract the absolute path of the data directory
 data_dir = Path(__file__).resolve().parent / "data"
 
+# Initialize ray
+ray.init(num_cpus=4)
+
 # ----------------------------------------------------------------------------------------------------------------
 
-num_samples = 5
+num_samples = 1
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
@@ -47,11 +51,7 @@ result = tune.run(
     partial(train, Model=Model, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
     config=config,
     num_samples=num_samples,
-    scheduler=scheduler,
-    resources_per_trial={
-        "cpu": 8,
-        "gpu": 1
-    }
+    scheduler=scheduler
 )
 
 # Print the results
