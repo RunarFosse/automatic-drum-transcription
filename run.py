@@ -19,12 +19,9 @@ args = parser.parse_args()
 # Extract the absolute path of the data directory
 data_dir = Path(__file__).resolve().parent / "data"
 
-# Initialize ray
-ray.init(num_cpus=4)
-
 # ----------------------------------------------------------------------------------------------------------------
 
-num_samples = 1
+num_samples = 5
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
