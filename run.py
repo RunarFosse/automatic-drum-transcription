@@ -48,8 +48,7 @@ result = tune.run(
     partial(train, Model=Model, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
     config=config,
     num_samples=num_samples,
-    scheduler=scheduler,
-    resources_per_trial={"gpu": 1 if device[:4] == "cuda" and torch.cuda.is_available() else 0}
+    scheduler=scheduler
 )
 
 # Print the results
