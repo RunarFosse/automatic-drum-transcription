@@ -1,5 +1,5 @@
 # Install PyTorch supporting cuda version 11020
---index-url https://download.pytorch.org/whl/cu110
+--index-url https://download.pytorch.org/whl/cu112
 torch
 torchvision
 torchaudio 
