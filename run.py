@@ -24,7 +24,7 @@ init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
-num_samples = 1
+num_samples = 5
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
@@ -37,6 +37,8 @@ config = {
 }
 
 Model = ADTOF_FrameRNN
+
+print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 
 device = args.device
 seed = int(time())
