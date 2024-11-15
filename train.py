@@ -17,8 +17,7 @@ def train(config: tune.TuneConfig, Model: nn.Module, train_path: Path, val_path:
     """ Training function to use with RayTune """
 
     # Declare device
-    #device = device if torch.cuda.is_available() else "cpu"
-    device = device
+    device = device if torch.cuda.is_available() else "cpu"
 
     # Load the datasets
     train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
