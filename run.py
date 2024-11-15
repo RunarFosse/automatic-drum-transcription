@@ -1,6 +1,6 @@
 import argparse
 import torch
-from ray import tune
+from ray import init, tune
 from ray.tune.schedulers import ASHAScheduler
 from time import time
 from functools import partial
@@ -18,6 +18,9 @@ args = parser.parse_args()
 
 # Extract the absolute path of the data directory
 data_dir = Path(__file__).resolve().parent / "data"
+
+# Initialize a Ray instance
+init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
