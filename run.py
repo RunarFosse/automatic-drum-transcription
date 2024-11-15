@@ -39,7 +39,6 @@ config = {
 Model = ADTOF_FrameRNN
 
 device = args.device
-print(f"Input device: {device}")
 seed = int(time())
 
 scheduler = ASHAScheduler(
