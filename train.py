@@ -30,7 +30,7 @@ def train(config: tune.TuneConfig, Model: nn.Module, train_path: Path, val_path:
     optimizer.zero_grad(set_to_none=True)
 
     # Start training
-    print("Started training")
+    print("Started training on {device}")
     for epoch in range(3):
         model.train()
         train_loss = 0.0
