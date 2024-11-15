@@ -5,7 +5,7 @@ torchaudio==2.2.1+cu118
 --index-url https://download.pytorch.org/whl/cu118
 
 numpy==1.26.3
-matplotlib
+matplotlib==3.9.2
 
 
 tensorflow[and-cuda]==2.18.0
