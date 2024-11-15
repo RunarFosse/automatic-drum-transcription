@@ -1,12 +1,11 @@
-# Install PyTorch supporting cuda version 11020
---index-url https://download.pytorch.org/whl/cu118
-torch
-torchvision
-torchaudio 
+# Install PyTorch supporting cuda version 11080
+torch+cuda118
+torchvision+cuda118
+torchaudio+cuda118
 
-numpy==1.26.3
-matplotlib==3.9.2
+numpy
+matplotlib
 
 
-tensorflow==2.18.0
-ray[tune]==2.38.0
+tensorflow[and-cuda]
+ray[tune]
