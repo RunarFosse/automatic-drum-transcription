@@ -1,7 +1,7 @@
 # Install PyTorch supporting cuda version 11080
-torch+cuda118
-torchvision+cuda118
-torchaudio+cuda118
+torch+cu118
+torchvision+cu118
+torchaudio+cu118
 
 numpy
 matplotlib
