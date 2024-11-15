@@ -53,7 +53,8 @@ result = tune.run(
     partial(train, Model=Model, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
     config=config,
     num_samples=num_samples,
-    scheduler=scheduler
+    scheduler=scheduler,
+    resources_per_trial={"gpu": 1}
 )
 
 # Print the results
