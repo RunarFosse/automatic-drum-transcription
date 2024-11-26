@@ -49,7 +49,7 @@ scheduler = ASHAScheduler(
 )
 
 # Run the experiments
-result = tune.run(
+"""result = tune.run(
     partial(train_model, Model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
     config=config,
     num_samples=num_samples,
@@ -60,4 +60,11 @@ result = tune.run(
 # Print the results
 best_trial = result.get_best_trial()
 print(f"Best trial config: {best_trial.config}")
-print(f"Best trial final validation loss: {best_trial.last_result['loss']}")
+print(f"Best trial final validation loss: {best_trial.last_result['loss']}") """
+
+train_model({
+    "batch_size": 1,
+    "lr": 1e-3,
+    "weight_decay": 1e-4,
+    "amsgrad": True,
+}, model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed)
