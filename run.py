@@ -20,7 +20,7 @@ args = parser.parse_args()
 data_dir = Path(__file__).resolve().parent / "data"
 
 # Initialize a Ray instance
-#init(num_gpus=1, num_cpus=16)
+init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
