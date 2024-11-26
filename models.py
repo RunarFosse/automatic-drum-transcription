@@ -41,7 +41,7 @@ class RNNDecoder(nn.Module):
     def __init__(self):
         super().__init__()
         self.bigru = nn.GRU(288, 60, 3, bidirectional=True)
-        self.fc = nn.Linear(288, 5)
+        self.fc = nn.Linear(120, 5)
     
     def forward(self, x):
         out = torch.flatten(x.permute(0, 2, 3, 1), start_dim=2)
