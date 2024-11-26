@@ -32,7 +32,7 @@ def train(config: tune.TuneConfig, Model: nn.Module, train_path: Path, val_path:
 
     # Start training
     print(f"Started training on {device}")
-    for epoch in range(3):
+    for epoch in range(10):
         model.train()
         train_loss = 0.0
         for i, data in enumerate(train_loader):
@@ -48,7 +48,7 @@ def train(config: tune.TuneConfig, Model: nn.Module, train_path: Path, val_path:
 
             # Print statistics every 2000th mini-batch
             train_loss += loss.item()
-            if True or (i+1) % 2000 == 0:
+            if (i+1) % 2000 == 0:
                 print(f"[Epoch {epoch+1}, {i+1}] loss: {train_loss / (i+1) :.4f}")
 
         # After a training epoch, compute validation performance
