@@ -67,4 +67,4 @@ train_model({
     "lr": 1e-3,
     "weight_decay": 1e-4,
     "amsgrad": True,
-}, model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed)
+}, Model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed)
