@@ -50,7 +50,7 @@ scheduler = ASHAScheduler(
 
 # Run the experiments
 result = tune.run(
-    partial(train_model, Model=Model, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
+    partial(train_model, Model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
     config=config,
     num_samples=num_samples,
     scheduler=scheduler,

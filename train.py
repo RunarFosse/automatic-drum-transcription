@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Optional
 
 
-def train_model(config: tune.TuneConfig, Model: nn.Module, train_path: Path, val_path: Path, device: str = "cpu", seed: Optional[int] = None):
+def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_path: Path, val_path: Path, device: str = "cpu", seed: Optional[int] = None):
     """ Training function to use with RayTune """
 
     # Declare device
@@ -32,7 +32,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, train_path: Path, val
 
     # Start training
     print(f"Started training on {device}")
-    for epoch in range(10):
+    for epoch in range(n_epochs):
         model.train()
         train_loss = 0.0
         for i, data in enumerate(train_loader):
