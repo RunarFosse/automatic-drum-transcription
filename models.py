@@ -40,16 +40,16 @@ class FrameSynchronousCNNEncoder(nn.Module):
 class RNNDecoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.bigrus = nn.ModuleList([nn.GRU(288, 64, 60, bidirectional=True) for _ in range(3)])
-        self.fc = nn.Linear(128, 5)
+        self.bigrus = nn.ModuleList([nn.GRU(288, 32, 60, bidirectional=True) for _ in range(3)])
+        self.fc = nn.Linear(64, 5)
     
     def forward(self, x):
-        x = torch.flatten(x.permute(0, 2, 3, 1), start_dim=2)
+        out = torch.flatten(x.permute(0, 2, 3, 1), start_dim=2)
 
         for bigru in self.bigrus:
-            x, _ = bigru(x)
+            out, _ = bigru(out)
 
-        out = F.sigmoid(self.fc(x))
+        out = F.sigmoid(self.fc(out))
         return out
 
 
