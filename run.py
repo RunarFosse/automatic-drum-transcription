@@ -30,7 +30,7 @@ train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
 
 config = {
-    "batch_size": 16,
+    "batch_size": 8,
     "lr": tune.loguniform(1e-4, 1e-2),
     "weight_decay": tune.loguniform(1e-5, 1e-4),
     "amsgrad": tune.choice([True, False]),
