@@ -44,12 +44,12 @@ class RNNDecoder(nn.Module):
         self.fc = nn.Linear(128, 5)
     
     def forward(self, x):
-        out = torch.flatten(x.permute(0, 2, 3, 1), start_dim=2)
+        x = torch.flatten(x.permute(0, 2, 3, 1), start_dim=2)
 
         for bigru in self.bigrus:
-            out, _ = bigru(out)
+            x, _ = bigru(x)
 
-        out = F.sigmoid(self.fc(out))
+        out = F.sigmoid(self.fc(x))
         return out
 
 
