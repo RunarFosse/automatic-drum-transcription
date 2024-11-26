@@ -40,7 +40,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
 class RNNDecoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.bigrus = nn.ModuleList([nn.GRU(288, 128, 60, bidirectional=True) for _ in range(3)])
+        self.bigrus = nn.ModuleList([nn.GRU(288, 128, 60, bidirectional=True) for _ in range(1)])
         self.fc = nn.Linear(256, 5)
     
     def forward(self, x):
