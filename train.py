@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
+from torcheval.metrics.functional import multiclass_f1_score
 
 from ray import train, tune
 
@@ -62,7 +63,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
         # After a training epoch, compute validation performance
         model.eval()
-        val_loss = 0.0
+        val_loss, val_f1_micro, val_f1_macro = 0.0, 0.0, 0.0
         for i, data in enumerate(val_loader):
             with torch.no_grad():
                 inputs, labels = data[0].to(device), data[1].to(device)
@@ -70,7 +71,12 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
                 loss = loss_fn(outputs, labels).mean()
                 val_loss += loss.item()
+
+                val_f1_micro += multiclass_f1_score(outputs, labels, num_classes=5, average="micro").mean()
+                val_f1_macro += multiclass_f1_score(outputs, labels, num_classes=5, average="macro").mean()
         
         # Report to RayTune
-        train.report({"loss": val_loss / (i+1)})
+        train.report({"Validation Loss": val_loss / (i+1),
+                      "Validation F1 micro": val_f1_micro / (i+1),
+                      "Validation F1 macro": val_f1_macro / (i+1)})
     print("Finished training")
