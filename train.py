@@ -39,6 +39,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         model.train()
         train_loss = 0.0
         for i, data in enumerate(train_loader):
+            break
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
             outputs = model(inputs)
@@ -65,8 +66,11 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 loss = loss_fn(outputs, labels).mean()
                 val_loss += loss.item()
 
-                val_f1_micro += multiclass_f1_score(outputs, labels, num_classes=5, average="micro").mean()
-                val_f1_macro += multiclass_f1_score(outputs, labels, num_classes=5, average="macro").mean()
+                # Compute F1 score over frames and batches
+                frames = labels.shape[1]
+                for frame in range(frames):
+                    val_f1_micro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="micro").mean() / frames
+                    val_f1_macro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="macro").mean() / frames
         
         # Report to RayTune
         train.report({"Validation Loss": val_loss / (i+1),
