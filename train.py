@@ -36,7 +36,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         model.train()
         train_loss = 0.0
         for i, data in enumerate(train_loader):
-            print(i)
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
             outputs = model(inputs)
