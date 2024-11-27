@@ -12,6 +12,8 @@ from datasets import ADTOF_load
 from pathlib import Path
 from typing import Optional
 
+from time import sleep
+
 
 def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_path: Path, val_path: Path, device: str = "cpu", seed: Optional[int] = None):
     """ Training function to use with RayTune """
@@ -24,8 +26,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
     val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
 
-    for _ in range(20000000):
-        print("waiting")
+    print("Sleeping for 20 seconds")
+    sleep(20)
 
     # Create the model, loss function and optimizer
     model = Model().to(device)
