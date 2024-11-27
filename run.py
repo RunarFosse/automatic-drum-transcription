@@ -7,6 +7,7 @@ from functools import partial
 from models import ADTOF_FrameRNN
 from train import train_model
 from pathlib import Path
+import tensorflow as tf
 
 # Only run this file directly
 assert __name__ == "__main__"
@@ -25,6 +26,9 @@ data_dir = Path(__file__).resolve().parent / "data"
 # ----------------------------------------------------------------------------------------------------------------
 
 num_samples = 1
+
+
+print("Num Tensorflow GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
