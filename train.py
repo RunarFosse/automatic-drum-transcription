@@ -12,7 +12,7 @@ from datasets import ADTOF_load
 from pathlib import Path
 from typing import Optional
 
-from time import sleep
+from time import sleep, time
 
 
 def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_path: Path, val_path: Path, device: str = "cpu", seed: Optional[int] = None):
@@ -33,20 +33,27 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     optimizer.zero_grad(set_to_none=True)
 
     # Start training
+    start_time = time()
     print(f"Started training on {device}")
     for epoch in range(n_epochs):
         model.train()
         train_loss = 0.0
         for i, data in enumerate(train_loader):
+            print("Loading data:", time() - start_time)
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
+            print("Computing output:", time() - start_time)
             outputs = model(inputs)
 
+            print("Computing Loss:", time() - start_time)
             loss = loss_fn(outputs, labels).mean()
             loss.backward()
 
+            print("Optimizer step:", time() - start_time)
             optimizer.step()
             optimizer.zero_grad()
+
+            print("Finished:", time() - start_time)
 
             # Print statistics every 2000th mini-batch
             train_loss += loss.item()
