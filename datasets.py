@@ -38,15 +38,16 @@ def ADTOF_load(path: Path, batch_size = 1, shuffle = False, transform=None, seed
     """ Load a ADTOF dataset as a PyTorch DataLoader """
 
     # Load the dataset using TensorFlow
-    tf_dataset = tf.data.Dataset.load(str(path))
+    with tf.device('/device:cpu:0'):
+        tf_dataset = tf.data.Dataset.load(str(path))
 
     # Let TensorFlow handle batching and shuffling
-    tf_dataset = tf_dataset.shuffle(buffer_size = batch_size * 50, seed = seed)
-    tf_dataset = tf_dataset.batch(batch_size = batch_size)
-    tf_dataset = tf_dataset.prefetch(tf.data.AUTOTUNE)
+        tf_dataset = tf_dataset.shuffle(buffer_size = batch_size * 50, seed = seed)
+        tf_dataset = tf_dataset.batch(batch_size = batch_size)
+        tf_dataset = tf_dataset.prefetch(tf.data.AUTOTUNE)
 
     # Wrap the dataset as a PyTorch iterable dataset
-    dataset = TensorFlowDatasetIterable(tf_dataset, transform = transform)
+        dataset = TensorFlowDatasetIterable(tf_dataset, transform = transform)
 
     # And return it as a PyTorch DataLoader
     dataloader = DataLoader(dataset, batch_size = None)
