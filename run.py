@@ -23,8 +23,7 @@ data_dir = Path(__file__).resolve().parent / "data"
 tf.config.set_visible_devices([], 'GPU')
 
 # Initialize a Ray instance
-#init(num_gpus=1, num_cpus=16)
-
+init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
@@ -34,7 +33,7 @@ train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
 
 config = {
-    "batch_size": 1,
+    "batch_size": tune.choice([32, 64, 128]),
     "lr": tune.loguniform(1e-4, 1e-2),
     "weight_decay": tune.loguniform(1e-5, 1e-4),
     "amsgrad": tune.choice([True, False]),
