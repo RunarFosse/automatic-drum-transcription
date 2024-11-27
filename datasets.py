@@ -4,6 +4,7 @@ from torch.utils.data import IterableDataset, DataLoader
 from pathlib import Path
 
 
+
 class TensorFlowDatasetIterable(IterableDataset):
     """ Load a TensorFlow dataset as a PyTorch iterable dataset
 
@@ -40,9 +41,9 @@ def ADTOF_load(path: Path, batch_size = 1, shuffle = False, transform=None, seed
     tf_dataset = tf.data.Dataset.load(str(path))
 
     # Let TensorFlow handle batching and shuffling
-    #tf_dataset = tf_dataset.shuffle(buffer_size = batch_size * 25, seed = seed)
-    #tf_dataset = tf_dataset.batch(batch_size = batch_size)
-    #tf_dataset = tf_dataset.prefetch(tf.data.AUTOTUNE)
+    tf_dataset = tf_dataset.shuffle(buffer_size = batch_size * 10, seed = seed)
+    tf_dataset = tf_dataset.batch(batch_size = batch_size)
+    tf_dataset = tf_dataset.prefetch(tf.data.AUTOTUNE)
 
     # Wrap the dataset as a PyTorch iterable dataset
     dataset = TensorFlowDatasetIterable(tf_dataset, transform = transform)
