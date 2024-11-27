@@ -58,7 +58,7 @@ result = tune.run(
     config=config,
     num_samples=num_samples,
     scheduler=scheduler,
-    resources_per_trial={"cpu": 1, "gpu": 1}
+    resources_per_trial={"gpu": 1}
 )
 
 # Print the results
