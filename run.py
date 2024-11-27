@@ -3,7 +3,6 @@ import torch
 from ray import init, tune
 from ray.tune.schedulers import ASHAScheduler
 from time import time
-from functools import partial
 from models import ADTOF_FrameRNN
 from train import train_model
 from pathlib import Path
@@ -55,7 +54,7 @@ scheduler = ASHAScheduler(
 
 # Run the experiments
 result = tune.run(
-    partial(train_model, Model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
+    tune.with_parameters(train_model, Model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
     config=config,
     num_samples=num_samples,
     scheduler=scheduler,
