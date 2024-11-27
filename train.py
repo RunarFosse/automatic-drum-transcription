@@ -51,7 +51,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
             # Print statistics every 2000th mini-batch
             train_loss += loss.item()
-            if True and (i+1) % 2000 == 0:
+            if True or (i+1) % 2000 == 0:
                 print(f"[Epoch {epoch+1}, {i+1}] loss: {train_loss / (i+1) :.4f}")
 
         # After a training epoch, compute validation performance
