@@ -26,9 +26,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
     val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
 
-    print("Sleeping for 20 seconds")
-    sleep(20)
-
     # Create the model, loss function and optimizer
     model = Model().to(device)
     loss_fn = nn.CrossEntropyLoss()
