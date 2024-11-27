@@ -19,9 +19,9 @@ class TensorFlowDatasetIterable(IterableDataset):
     
     def __iter__(self):
         # Iterate the dataset
-        for data, label in self._tf_dataset:
-            features = torch.tensor(data["x"].numpy())
-            label = torch.tensor(label.numpy())
+        for data, label in self._tf_dataset.as_numpy_iterator():
+            features = torch.tensor(data["x"])
+            label = torch.tensor(label)
 
             # Transform the features
             if self._transform:
