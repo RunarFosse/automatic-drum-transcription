@@ -27,7 +27,7 @@ init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
-num_samples = 10
+num_samples = 1
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
