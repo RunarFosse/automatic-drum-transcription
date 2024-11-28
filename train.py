@@ -53,8 +53,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             train_loss += loss.item()
             n_batches_train += 1
         
-        print(outputs)
-        print(labels)
+        print(torch.stack((outputs, labels), dim=2))
 
         # After a training epoch, compute validation performance
         model.eval()
