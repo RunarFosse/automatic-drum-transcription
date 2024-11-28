@@ -65,7 +65,7 @@ result = tune.run(
 )
 
 # Print the results
-best_trial = result.get_best_trial()
+best_trial = result.get_best_trial("Validation Loss", "min")
 print(f"Best trial config: {best_trial.config}")
 print(f"Best trial final validation loss: {best_trial.last_result['Validation Loss']}")
 #print(f"Best trial final validation F1 micro: {best_trial.last_result['Validation F1 micro']}")
