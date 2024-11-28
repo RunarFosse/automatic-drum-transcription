@@ -69,9 +69,9 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 #for frame in range(frames):
                 #    val_f1_micro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="micro").mean() / frames
                 #    val_f1_macro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="macro").mean() / frames
+            
+        print(outputs)
         
         # Report to RayTune
-        train.report({"Validation Loss": val_loss / (i+1),
-                      "Validation F1 micro": val_f1_micro / (i+1),
-                      "Validation F1 macro": val_f1_macro / (i+1)})
+        train.report({"Validation Loss": val_loss / (i+1)})
     print("Finished training")
