@@ -87,7 +87,7 @@ class AttentionLayer(nn.Module):
         x = x.transpose(0, 1)
 
         for attention in self.attentions:
-            out = attention(out, out, out)
+            out, _ = attention(out, out, out)
 
         # Transpose back
         x = x.transpose(0, 1)
