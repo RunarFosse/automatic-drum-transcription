@@ -84,7 +84,7 @@ class AttentionLayer(nn.Module):
         out = self.layer_norm(x)
 
         for attention in self.attentions:
-            out = attention(out)
+            out = attention(out, out, out)
 
         out = self.dropout(out)
 
