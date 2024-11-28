@@ -27,13 +27,13 @@ init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
-num_samples = 5
+num_samples = 25
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
 
 config = {
-    "batch_size": tune.choice([128, 256]),
+    "batch_size": tune.choice([128]),
     #"batch_size": 64,
     "lr": tune.loguniform(1e-3, 1e-1),
     #"lr": 0.01,
