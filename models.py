@@ -44,8 +44,6 @@ class RNNDecoder(nn.Module):
         self.fc = nn.Linear(288, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        out = torch.flatten(x.permute(0, 2, 3, 1), start_dim=2)
-
         for bigru in self.bigrus:
             out, _ = bigru(out)
 
@@ -102,10 +100,10 @@ class AttentionDecoder(nn.Module):
         self.fc = nn.Linear(288, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        out = self.positional_encoding(x)
+        out = self.positional_encoding(out)
 
         for layer in self.layers:
-            out = self.layer(out)
+            out = layer(out)
 
         return F.sigmoid(self.fc(out))
 
@@ -118,6 +116,7 @@ class ADTOF_FrameRNN(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
+        latent = torch.flatten(latent.permute(0, 2, 3, 1), start_dim=2)
         return self.decoder(latent)
     
 class ADTOF_FrameAttention(nn.Module):
@@ -130,4 +129,5 @@ class ADTOF_FrameAttention(nn.Module):
         print(x.shape)
         latent = self.encoder(x)
         print(latent.shape)
+        latent = torch.flatten(latent.permute(0, 2, 3, 1), start_dim=2)
         return self.decoder(latent)
