@@ -26,9 +26,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=False, seed=seed)
     val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=False, seed=seed)
 
-    # Compute number of batches for each dataset
-    n_batches_train, n_batches_val = len(train_loader) / config["batch_size"], len(val_loader) / config["batch_size"]
-
     # Create the model, loss function and optimizer
     model = Model().to(device)
     loss_fn = nn.CrossEntropyLoss()
@@ -40,6 +37,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     for epoch in range(n_epochs):
         model.train()
         train_loss = 0.0
+        n_batches_train = 0
         for i, data in enumerate(train_loader):
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
@@ -51,8 +49,9 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             optimizer.step()
             optimizer.zero_grad()
 
-            # And store average training loss
-            train_loss += loss.item() / n_batches_train
+            # And store training loss
+            train_loss += loss.item()
+            n_batches_train += 1
         
         print(outputs)
         print(labels)
@@ -60,13 +59,15 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         # After a training epoch, compute validation performance
         model.eval()
         val_loss, val_f1_micro, val_f1_macro = 0.0, 0.0, 0.0
+        n_batches_val = 0
         for i, data in enumerate(val_loader):
             with torch.no_grad():
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(inputs)
 
                 loss = loss_fn(outputs, labels).mean()
-                val_loss += loss.item() / n_batches_val
+                val_loss += loss.item()
+                n_batches_val += 1
 
                 # Compute F1 score over frames and batches (TODO!)
                 #frames = labels.shape[1]
@@ -76,7 +77,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         
         # Report to RayTune
         train.report({
-            "Training Loss": train_loss,
-            "Validation Loss": val_loss,
+            "Training Loss": train_loss / n_batches_train,
+            "Validation Loss": val_loss / n_batches_val,
             })
     print("Finished training")
