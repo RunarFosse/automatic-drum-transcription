@@ -11,7 +11,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
         self.batchnorm2 = nn.BatchNorm2d(32)
 
         self.pool1 = nn.MaxPool2d(kernel_size=(1, 3))
-        self.dropout1 = nn.Dropout2d(p=0.3)
+        self.dropout1 = nn.Dropout2d(p=0.0)
 
         self.conv3 = nn.Conv2d(32, 64, kernel_size=(3, 3), padding=1)
         self.batchnorm3 = nn.BatchNorm2d(64)
@@ -19,7 +19,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
         self.batchnorm4 = nn.BatchNorm2d(64)
 
         self.pool2 = nn.MaxPool2d(kernel_size=(1, 3))
-        self.dropout2 = nn.Dropout2d(p=0.3)
+        self.dropout2 = nn.Dropout2d(p=0.0)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = F.relu(self.conv1(x))
@@ -99,7 +99,7 @@ class AttentionLayer(nn.Module):
         return self.fc2(out)
 
 class AttentionDecoder(nn.Module):
-    def __init__(self, n_heads: int = 5, n_layers: int = 5):
+    def __init__(self, n_heads: int = 1, n_layers: int = 1):
         super().__init__()
         self.positional_encoding = PositionalEncoding(d_model=576)
         self.layers = nn.ModuleList([AttentionLayer(n_heads=n_heads) for _ in range(n_layers)])
