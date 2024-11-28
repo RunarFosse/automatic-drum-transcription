@@ -52,6 +52,9 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             train_loss += loss.item()
             if (i+1) % 2000 == 0:
                 print(f"[Epoch {epoch+1}, {i+1}] loss: {train_loss / (i+1) :.4f}")
+        
+        print(outputs)
+        print(labels)
 
         # After a training epoch, compute validation performance
         model.eval()
@@ -69,9 +72,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 #for frame in range(frames):
                 #    val_f1_micro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="micro").mean() / frames
                 #    val_f1_macro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="macro").mean() / frames
-            
-        print(outputs)
-        print(labels)
         
         # Report to RayTune
         train.report({"Validation Loss": val_loss / (i+1)})
