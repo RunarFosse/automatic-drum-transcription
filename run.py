@@ -38,7 +38,7 @@ config = {
     #"lr": tune.loguniform(1e-3, 1e-1),
     "lr": 0.01,
     #"weight_decay": tune.loguniform(1e-5, 1e-4),
-    "weight_decay": 0,
+    "weight_decay": 1e-4,
     #"amsgrad": tune.choice([True, False]),
     "amsgrad": False,
 }
