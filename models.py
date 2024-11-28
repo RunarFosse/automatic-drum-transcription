@@ -74,6 +74,7 @@ class PositionalEncoding(nn.Module):
     
 class AttentionLayer(nn.Module):
     def __init__(self, n_heads: int):
+        super().__init__()
         self.layer_norm = nn.LayerNorm(288)
         self.attention = nn.MultiheadAttention(embed_dim=288, num_heads=n_heads, kdim=288 // n_heads)
         self.dropout = nn.Dropout(p = 0.1)
