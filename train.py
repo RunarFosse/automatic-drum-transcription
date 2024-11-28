@@ -26,12 +26,15 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=False, seed=seed)
     val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=False, seed=seed)
 
+    # Compute number of batches for each dataset
+    n_batches_train, n_batches_val = len(train_loader), len(val_loader)
+
     # Create the model, loss function and optimizer
     model = Model().to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
     optimizer.zero_grad(set_to_none=True)
-
+    
     # Start training
     print(f"Started training on {device}")
     for epoch in range(n_epochs):
@@ -48,10 +51,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             optimizer.step()
             optimizer.zero_grad()
 
-            # Print statistics every 2000th mini-batch
-            train_loss += loss.item()
-            if (i+1) % 2000 == 0:
-                print(f"[Epoch {epoch+1}, {i+1}] loss: {train_loss / (i+1) :.4f}")
+            # And store average training loss
+            train_loss += loss.item() / n_batches_train
         
         print(outputs)
         print(labels)
@@ -65,7 +66,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 outputs = model(inputs)
 
                 loss = loss_fn(outputs, labels).mean()
-                val_loss += loss.item()
+                val_loss += loss.item() / n_batches_val
 
                 # Compute F1 score over frames and batches (TODO!)
                 #frames = labels.shape[1]
@@ -74,5 +75,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 #    val_f1_macro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="macro").mean() / frames
         
         # Report to RayTune
-        train.report({"Validation Loss": val_loss / (i+1)})
+        train.report({
+            "Training Loss": train_loss,
+            "Validation Loss": val_loss,
+            })
     print("Finished training")
