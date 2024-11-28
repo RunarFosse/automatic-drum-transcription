@@ -74,7 +74,7 @@ class AttentionLayer(nn.Module):
     def __init__(self, n_heads: int):
         super().__init__()
         self.layer_norm = nn.LayerNorm(288)
-        self.attentions = nn.ModuleList([nn.MultiheadAttention(embed_dim=288, num_heads=6, kdim=288 // 6) for _ in range(n_heads)])
+        self.attentions = nn.ModuleList([nn.MultiheadAttention(embed_dim=288, num_heads=6) for _ in range(n_heads)])
         self.dropout = nn.Dropout(p = 0.1)
 
         self.fc1 = nn.Linear(288, 4 * 288)
