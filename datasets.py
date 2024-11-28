@@ -21,6 +21,7 @@ class TensorFlowDatasetIterable(IterableDataset):
         # Iterate the dataset
         i = 0
         for data, label in self._tf_dataset.as_numpy_iterator():
+            i += 1
             if i > 1000:
                 raise StopIteration
             features = torch.tensor(data["x"])
