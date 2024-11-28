@@ -17,6 +17,9 @@ class TensorFlowDatasetIterable(IterableDataset):
         self._tf_dataset = tf_dataset
         self._transform = transform
     
+    def __len__(self):
+        return self._tf_dataset.cardinality().numpy()
+    
     def __iter__(self):
         # Iterate the dataset
         i = 0
