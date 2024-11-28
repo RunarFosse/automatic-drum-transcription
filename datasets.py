@@ -25,7 +25,7 @@ class TensorFlowDatasetIterable(IterableDataset):
         i = 0
         for data, label in self._tf_dataset.as_numpy_iterator():
             i += 1
-            if i > 100:
+            if i > 1:
                 break
             features = torch.tensor(data["x"])
             label = torch.tensor(label)
@@ -51,7 +51,7 @@ def ADTOF_load(path: Path, batch_size = 1, shuffle = False, transform=None, seed
         # Let TensorFlow handle batching and shuffling
         tf_dataset = tf_dataset.batch(batch_size = batch_size)
         tf_dataset = tf_dataset.prefetch(tf.data.AUTOTUNE)
-        
+
         if shuffle:
             tf_dataset = tf_dataset.shuffle(buffer_size = batch_size * 50, seed = seed)
 
