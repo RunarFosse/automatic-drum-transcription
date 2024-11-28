@@ -3,7 +3,7 @@ import torch
 from ray import init, tune
 from ray.tune.schedulers import ASHAScheduler
 from time import time
-from models import ADTOF_FrameRNN
+from models import ADTOF_FrameRNN, ADTOF_FrameAttention
 from train import train_model
 from pathlib import Path
 import tensorflow as tf
@@ -43,7 +43,7 @@ config = {
     "amsgrad": False,
 }
 
-Model = ADTOF_FrameRNN
+Model = ADTOF_FrameAttention
 
 print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 
