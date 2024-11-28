@@ -5,18 +5,18 @@ import torch.nn.functional as F
 class FrameSynchronousCNNEncoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(1, 4, kernel_size=(3, 3), padding=1)
-        self.batchnorm1 = nn.BatchNorm2d(4)
-        self.conv2 = nn.Conv2d(4, 8, kernel_size=(3, 3), padding=1)
-        self.batchnorm2 = nn.BatchNorm2d(8)
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=(3, 3), padding=1)
+        self.batchnorm1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(32, 32, kernel_size=(3, 3), padding=1)
+        self.batchnorm2 = nn.BatchNorm2d(32)
 
         self.pool1 = nn.MaxPool2d(kernel_size=(1, 3))
         self.dropout1 = nn.Dropout2d(p=0.3)
 
-        self.conv3 = nn.Conv2d(8, 16, kernel_size=(3, 3), padding=1)
-        self.batchnorm3 = nn.BatchNorm2d(16)
-        self.conv4 = nn.Conv2d(16, 32, kernel_size=(3, 3), padding=1)
-        self.batchnorm4 = nn.BatchNorm2d(32)
+        self.conv3 = nn.Conv2d(64, 64, kernel_size=(3, 3), padding=1)
+        self.batchnorm3 = nn.BatchNorm2d(64)
+        self.conv4 = nn.Conv2d(64, 64, kernel_size=(3, 3), padding=1)
+        self.batchnorm4 = nn.BatchNorm2d(64)
 
         self.pool2 = nn.MaxPool2d(kernel_size=(1, 3))
         self.dropout2 = nn.Dropout2d(p=0.3)
@@ -40,8 +40,8 @@ class FrameSynchronousCNNEncoder(nn.Module):
 class RNNDecoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.bigrus = nn.ModuleList([nn.GRU(288, 288 // 2, 60, bidirectional=True) for _ in range(3)])
-        self.fc = nn.Linear(288, 5)
+        self.bigrus = nn.ModuleList([nn.GRU(576, 576 // 2, 60, bidirectional=True) for _ in range(3)])
+        self.fc = nn.Linear(576, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         for bigru in self.bigrus:
@@ -73,12 +73,12 @@ class PositionalEncoding(nn.Module):
 class AttentionLayer(nn.Module):
     def __init__(self, n_heads: int):
         super().__init__()
-        self.layer_norm = nn.LayerNorm(288)
-        self.attentions = nn.ModuleList([nn.MultiheadAttention(embed_dim=288, num_heads=6) for _ in range(n_heads)])
+        self.layer_norm = nn.LayerNorm(576)
+        self.attentions = nn.ModuleList([nn.MultiheadAttention(embed_dim=576, num_heads=6) for _ in range(n_heads)])
         self.dropout = nn.Dropout(p = 0.1)
 
-        self.fc1 = nn.Linear(288, 4 * 288)
-        self.fc2 = nn.Linear(4 * 288, 288)
+        self.fc1 = nn.Linear(576, 4 * 576)
+        self.fc2 = nn.Linear(4 * 576, 576)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.layer_norm(x)
@@ -101,9 +101,9 @@ class AttentionLayer(nn.Module):
 class AttentionDecoder(nn.Module):
     def __init__(self, n_heads: int = 5, n_layers: int = 5):
         super().__init__()
-        self.positional_encoding = PositionalEncoding(d_model=288)
+        self.positional_encoding = PositionalEncoding(d_model=576)
         self.layers = nn.ModuleList([AttentionLayer(n_heads=n_heads) for _ in range(n_layers)])
-        self.fc = nn.Linear(288, 5)
+        self.fc = nn.Linear(576, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.positional_encoding(x)
