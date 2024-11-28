@@ -27,7 +27,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=False, seed=seed)
 
     # Compute number of batches for each dataset
-    n_batches_train, n_batches_val = len(train_loader), len(val_loader)
+    n_batches_train, n_batches_val = len(train_loader) / config["batch_size"], len(val_loader) / config["batch_size"]
 
     # Create the model, loss function and optimizer
     model = Model().to(device)
