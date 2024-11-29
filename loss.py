@@ -8,7 +8,7 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     n_timesteps = 0.0
     for _, labels in dataloader:
         # If probability tensor is not defined, count number of classes and do so
-        if not probabilities:
+        if probabilities == None:
             n_classes = labels.shape[-1]
             probabilities = torch.zeros(n_classes)
         
