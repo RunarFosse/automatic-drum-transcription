@@ -132,9 +132,6 @@ class ADTOF_FrameAttention(nn.Module):
         self.decoder = AttentionDecoder()
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print(x.shape)
         latent = self.encoder(x)
-        print(latent.shape)
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
-        print(latent.shape)
         return self.decoder(latent)
