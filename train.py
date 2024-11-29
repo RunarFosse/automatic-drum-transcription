@@ -51,7 +51,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             # Compute class weights given labels and infrequency weights
             class_weights = torch.where(labels == 0, torch.tensor(1.0), infrequency_weights)
 
-            loss = (loss_fn(outputs, labels) * class_weights).sum()
+            loss = (loss_fn(outputs, labels) * class_weights).mean()
             loss.backward()
 
             optimizer.step()
@@ -61,7 +61,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             train_loss += loss.item()
             n_batches_train += 1
         
-        #print(torch.stack((outputs, labels), dim=-1))
+        print(torch.stack((outputs, labels), dim=-1))
 
         # After a training epoch, compute validation performance
         model.eval()
