@@ -51,14 +51,10 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             # Compute class weights given labels and infrequency weights
             class_weights = torch.where(labels == 0, torch.tensor(1.0), infrequency_weights)
 
-            print(outputs.shape)
-            print(labels.shape)
-            loss = loss_fn(outputs, labels)
-            print(loss)
-            print(loss.mean())
-            print(loss.sum())
-            #print(torch.stack((loss, class_weights), dim=-1))
-            loss.mean().backward()
+            print(torch.stack((loss_fn(outputs, labels), class_weights), dim=-1))
+
+            loss = (loss_fn(outputs, labels) * class_weights).mean()
+            loss.backward()
 
             optimizer.step()
             optimizer.zero_grad()
