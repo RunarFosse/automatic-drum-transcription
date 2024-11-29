@@ -52,7 +52,7 @@ device = args.device
 seed = int(time())
 
 scheduler = ASHAScheduler(
-    metric="Validation Loss",
+    metric="Training Loss",
     mode="min",
     max_t=num_epochs,
     grace_period=25
