@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from ray import train, tune
 
 from datasets import ADTOF_load
+from loss import compute_infrequency_weights
 
 from pathlib import Path
 from typing import Optional
@@ -31,6 +32,10 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     loss_fn = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
     optimizer.zero_grad(set_to_none=True)
+
+    # Compute infrequent instrument weights from the training dataset
+    infrequency_weights = compute_infrequency_weights(train_loader)
+    print("Infrequency weights: ", infrequency_weights)
     
     # Start training
     print(f"Started training on {device}")
