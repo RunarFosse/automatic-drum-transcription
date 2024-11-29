@@ -34,7 +34,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     optimizer.zero_grad(set_to_none=True)
 
     # Compute infrequent instrument weights from the training dataset
-    infrequency_weights = compute_infrequency_weights(train_loader)
+    infrequency_weights = compute_infrequency_weights(train_loader).to(device)
     print("Infrequency weights: ", infrequency_weights)
     
     # Start training
