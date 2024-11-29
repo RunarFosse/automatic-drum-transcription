@@ -18,6 +18,9 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     # Divide to finish computing probabilities
     probabilities /= n_classes * n_timesteps
 
+    # To prevent Nan's, set probabilities of 0 to a very low number
+    probabilities = torch.where(probabilities == 0, torch.tensor(1e-10), probabilities)
+
     # And compute final weights
     weights = 1.0 / (-probabilities * torch.log(probabilities) - (1 - probabilities) * torch.log(1 - probabilities))
     return weights
