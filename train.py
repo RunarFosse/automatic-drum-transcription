@@ -54,7 +54,9 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
             loss = loss_fn(outputs, labels)
             print(loss)
-            print(torch.stack((loss, class_weights), dim=-1))
+            print(loss.mean())
+            print(loss.sum())
+            #print(torch.stack((loss, class_weights), dim=-1))
             loss.mean().backward()
 
             optimizer.step()
