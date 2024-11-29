@@ -111,7 +111,7 @@ class AttentionDecoder(nn.Module):
         for layer in self.layers:
             out = layer(out)
 
-        return F.sigmoid(self.fc(out))
+        return self.fc(out)
 
 
 class ADTOF_FrameRNN(nn.Module):
