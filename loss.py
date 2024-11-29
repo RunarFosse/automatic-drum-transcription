@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 
-def compute_infrequency_loss(dataloader: DataLoader) -> torch.Tensor:
+def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     n_classes = None
     probabilities = None
 
