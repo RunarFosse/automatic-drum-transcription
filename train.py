@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
-import torch.functional as F
+import torch.nn.functional as F
 
 from ray import train, tune
 
