@@ -27,15 +27,15 @@ init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
-num_samples = 25
-num_epochs = 2500
+num_samples = 10
+num_epochs = 150
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
 
 config = {
-    #"batch_size": tune.choice([128]),
-    "batch_size": 16,
+    "batch_size": tune.choice([128]),
+    #"batch_size": 16,
     "lr": tune.loguniform(1e-5, 1e-3),
     #"lr": 0.01,
     "weight_decay": tune.loguniform(1e-5, 1e-4),
@@ -55,7 +55,7 @@ scheduler = ASHAScheduler(
     metric="Training Loss",
     mode="min",
     max_t=num_epochs,
-    grace_period=25
+    grace_period=5
 )
 
 # Run the experiments
