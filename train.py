@@ -64,8 +64,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             train_loss += loss.item()
             n_batches_train += 1
         
-        if epoch % 50 == 0:
-            print(torch.stack((F.sigmoid(outputs), labels), dim=-1))
+        print(torch.stack((F.sigmoid(outputs), labels), dim=-1))
 
         # After a training epoch, compute validation performance
         model.eval()
