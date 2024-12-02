@@ -54,7 +54,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
             #print(torch.stack((loss_fn(outputs, labels), class_weights), dim=-1))
 
-            loss = (loss_fn(outputs, labels) * class_weights).mean()
+            loss = (loss_fn(outputs, labels) * class_weights).sum(dim=(1, 2)).mean()
             loss.backward()
 
             optimizer.step()
@@ -75,7 +75,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(inputs)
 
-                loss = loss_fn(outputs, labels).mean()
+                loss = loss_fn(outputs, labels).sum(dim=(1, 2)).mean()
                 val_loss += loss.item()
                 n_batches_val += 1
 
