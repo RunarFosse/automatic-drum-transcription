@@ -22,7 +22,11 @@ class TensorFlowDatasetIterable(IterableDataset):
     
     def __iter__(self):
         # Iterate the dataset
+        i = 0
         for data, label in self._tf_dataset.as_numpy_iterator():
+            i += 1
+            if i > 50:
+                break
             features = torch.tensor(data["x"])
             label = torch.tensor(label)
 
