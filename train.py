@@ -25,8 +25,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     print(f"Training: Can use CUDA: {torch.cuda.is_available()}")
         
     # Load the datasets
-    train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=False, seed=seed)
-    val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=False, seed=seed)
+    train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
+    val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=True, seed=seed)
 
     # Create the model, loss function and optimizer
     model = Model().to(device)
