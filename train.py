@@ -9,7 +9,7 @@ import torch.nn.functional as F
 from ray import train, tune
 
 from datasets import ADTOF_load
-from loss import compute_infrequency_weights
+from preprocess import compute_infrequency_weights
 
 from pathlib import Path
 from typing import Optional
