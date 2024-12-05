@@ -31,7 +31,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     # Create the model, loss function and optimizer
     model = Model().to(device)
     loss_fn = nn.BCEWithLogitsLoss(reduction="none")
-    optimizer = optim.Adam(model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
+    optimizer = config["optimizer"](model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
     optimizer.zero_grad(set_to_none=True)
 
     # Compute infrequent instrument weights from the training dataset

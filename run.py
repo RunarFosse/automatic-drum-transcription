@@ -1,5 +1,6 @@
 import argparse
 import torch
+from torch import optim
 from ray import init, tune
 from ray.tune.schedulers import ASHAScheduler
 from time import time
@@ -42,6 +43,7 @@ config = {
     #"weight_decay": 0,
     "amsgrad": tune.choice([True, False]),
     #"amsgrad": False,
+    "optimizer": tune.grid_search([optim.Adam, optim.AdamW])
 }
 
 Model = ADTOF_FrameAttention
