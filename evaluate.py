@@ -90,7 +90,7 @@ def f_measure(predictions: torch.Tensor):
     return global_f1, class_f1
 
 if __name__ == "__main__":
-    batch_data = torch.tensor([[
+    y_pred = torch.tensor([[
         [0.1, 0.3, 0.7, 0.4, 0.5, 0.9, 0.2, 0.8, 0.2, 0.4, 0.6, 0.3],
         [0.2, 0.6, 0.1, 0.4, 0.8, 0.3, 0.7, 0.2, 0.5, 0.9, 0.2, 0.1]
     ],
@@ -99,10 +99,19 @@ if __name__ == "__main__":
         [0.0, 0.2, 0.3, 0.2, 0.1, 0.0, 0.0, 0.9, 0.0, 0.9, 0.0, 0.9]
     ]])
 
-    peaks = compute_peaks(batch_data)
-    print("Predictions:\n", peaks[0].round())
-    print("Annotations:\n", peaks[1].round())
-    predictions = compute_predictions(peaks[0].unsqueeze(dim=0), peaks[1].unsqueeze(dim=0), w=2)
+    annotations = torch.tensor([[
+        [0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 0.5],
+        [0.0, 0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    ],
+    [
+        [0.5, 1.0, 0.5, 0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5],
+        [0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5, 1.0, 0.5, 1.0]
+    ]])
+
+    prediction = compute_peaks(y_pred)
+    print("Predictions:\n", prediction.round())
+    print("Annotations:\n", annotations.round())
+    predictions = compute_predictions(prediction, annotations, w=2)
     f_global, f_class = f_measure(predictions)
     print("Global F1-score:", f_global)
     print("Classwise F1-score:", f_class)
