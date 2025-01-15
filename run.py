@@ -57,7 +57,7 @@ scheduler = ASHAScheduler(
     metric="Training Loss",
     mode="min",
     max_t=num_epochs,
-    grace_period=5
+    grace_period=num_epochs
 )
 
 # Run the experiments
