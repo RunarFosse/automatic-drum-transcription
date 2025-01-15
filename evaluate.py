@@ -28,7 +28,7 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
     
     # Return the output masked by the peaks
     mask = torch.zeros_like(activations)
-    mask[*torch.tensor(filtered_peaks).T] = 1
+    mask[*torch.tensor(filtered_peaks).mT] = 1
 
     return activations * mask
 
