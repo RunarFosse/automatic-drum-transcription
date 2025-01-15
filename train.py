@@ -82,6 +82,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
                 # Compute F1 score over frames and batches (TODO!)
                 predictions = compute_predictions(compute_peaks(outputs), labels)
+                print(predictions)
                 val_f1 = f_measure(predictions)
                 val_f1_global += val_f1[0]
                 val_f1_class += val_f1[1]
