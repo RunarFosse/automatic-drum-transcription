@@ -10,6 +10,7 @@ from ray import train, tune
 
 from datasets import ADTOF_load
 from preprocess import compute_infrequency_weights
+from evaluate import compute_peaks, compute_predictions, f_measure
 
 from pathlib import Path
 from typing import Optional
@@ -68,7 +69,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
         # After a training epoch, compute validation performance
         model.eval()
-        val_loss, val_f1_micro, val_f1_macro = 0.0, 0.0, 0.0
+        val_loss, val_f1_global, val_f1_class = 0.0, 0.0, 0.0
         n_batches_val = 0
         for i, data in enumerate(val_loader):
             with torch.no_grad():
@@ -80,14 +81,16 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 n_batches_val += 1
 
                 # Compute F1 score over frames and batches (TODO!)
-                #frames = labels.shape[1]
-                #for frame in range(frames):
-                #    val_f1_micro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="micro").mean() / frames
-                #    val_f1_macro += multiclass_f1_score(outputs[:, frame], labels[:, frame], num_classes=5, average="macro").mean() / frames
+                predictions = compute_predictions(compute_peaks(outputs), labels)
+                val_f1 = f_measure(predictions)
+                val_f1_global += val_f1[0]
+                val_f1_class += val_f1[1]
         
         # Report to RayTune
         train.report({
             "Training Loss": train_loss / n_batches_train,
             "Validation Loss": val_loss / n_batches_val,
+            "Global F1": val_f1_global / n_batches_val,
+            "Class F1": val_f1_class / n_batches_val,
             })
     print("Finished training")
