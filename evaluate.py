@@ -23,12 +23,13 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
             last_peak = -(w - 1)
             for peak in peak_indices:
                 if peak - last_peak > w:
-                    filtered_peaks.append([batch, label, peak])
+                    filtered_peaks.append([batch, label, peak.item()])
                     last_peak = peak
     
     # Return the output masked by the peaks
     mask = torch.zeros_like(activations)
-    mask[*torch.tensor(filtered_peaks).mT] = 1
+    if filtered_peaks:
+        mask[*torch.tensor(filtered_peaks).mT] = 1
 
     return activations * mask
 
