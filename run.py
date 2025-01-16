@@ -66,7 +66,7 @@ result = tune.run(
     config=config,
     num_samples=num_samples,
     scheduler=scheduler,
-    resources_per_trial={"gpu": 1, "accelerator_type:A100-80G": 1}
+    resources_per_trial={"gpu": 1, "accelerator_type:A100": 1}
 )
 
 # Print the results
