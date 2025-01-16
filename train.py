@@ -100,6 +100,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             "Training Loss": train_loss / n_batches_train,
             "Validation Loss": val_loss / n_batches_val,
             "Global F1": val_f1_global.item() / n_batches_val,
-            "Class F1": (val_f1_class / n_batches_val).round(decimals=3).tolist(),
+            "Class F1": [round(f1, 3) for f1 in (val_f1_class / n_batches_val).tolist()],
             })
     print("Finished training")
