@@ -6,28 +6,31 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
     """ Compute the peaks of a given activation time series using Vogl's peak picking algorithm """
 
     # First pad the data to handle boundary conditions
-    padded_activations = F.pad(activations, (m, m), value = 0)
+    padded_activations = F.pad(activations, (0, 0, m, m), value = 0)
 
     # Then compute sliding windows over each of the activations
-    windows = padded_activations.unfold(dimension = -1, size = 2*m + 1, step = 1)
+    windows = padded_activations.unfold(dimension = -2, size = 2*m + 1, step = 1)
+    print(windows)
 
     # Then compute peaks using Vogl's max and mean criteria
     is_peak = (activations == torch.amax(windows, dim=-1)) & (activations >= torch.mean(windows, dim=-1) + delta)
+    print(is_peak)
     
     # Enforce minimum distance between peaks
-    n_batches, n_labels = activations.shape[0:2]
+    n_batches, n_labels = activations.shape[0], activations.shape[2]
     filtered_peaks = []
     for batch in range(n_batches):
         for label in range(n_labels):
-            peak_indices = torch.where(is_peak[batch][label])[0]
+            peak_indices = torch.where(is_peak[batch, :, label])[0]
             last_peak = -(w - 1)
             for peak in peak_indices:
                 if peak - last_peak > w:
-                    filtered_peaks.append([batch, label, peak.item()])
+                    filtered_peaks.append([batch, peak.item(), label])
                     last_peak = peak
     
     # Return the output masked by the peaks
     mask = torch.zeros_like(activations)
+    print(filtered_peaks)
     if filtered_peaks:
         mask[*torch.tensor(filtered_peaks).mT] = 1
 
@@ -37,15 +40,15 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
 def compute_predictions(activations: torch.Tensor, annotations: torch.Tensor, w: int = 5) -> torch.Tensor:
     """ Compute the F-measure of a given an activation sequence """
 
-    n_batches, n_labels = activations.shape[0:2]
+    n_batches, n_labels = activations.shape[0], activations.shape[2]
 
     # Store predictions per class, [True Positives, False Positives, False Negatives]
     predictions = torch.zeros(size=(n_labels, 3))
 
     for batch in range(n_batches):
         for label in range(n_labels):
-            activation_onsets = torch.where(activations[batch][label] > 0.5)[0]
-            annotation_onsets = torch.where(annotations[batch][label] > 0.5)[0]
+            activation_onsets = torch.where(activations[batch, :, label] > 0.5)[0]
+            annotation_onsets = torch.where(annotations[batch, :, label] > 0.5)[0]
     
             activation_pointer, annotation_pointer = 0, 0
             while activation_pointer < activation_onsets.shape[0] and annotation_pointer < annotation_onsets.shape[0]:
@@ -103,7 +106,7 @@ if __name__ == "__main__":
         [0.0, 0.1, 0.7, 0.2, 0.3, 0.7, 0.9, 0.8, 0.7, 0.7, 0.7, 0.9],
         [0.0, 0.2, 0.3, 0.2, 0.1, 0.0, 0.0, 0.9, 0.0, 0.9, 0.0, 0.9],
         [0.1, 0.2, 0.3, 0.4, 0.5, 0.4, 0.3, 0.2, 0.1, 0.1, 0.0, 0.0]
-    ]])
+    ]]).permute((0, 2, 1))
 
     annotations = torch.tensor([[
         [0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 0.5],
@@ -114,12 +117,13 @@ if __name__ == "__main__":
         [0.5, 1.0, 0.5, 0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5],
         [0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5, 1.0, 0.5, 1.0],
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    ]])
+    ]]).permute((0, 2, 1))
 
     prediction = compute_peaks(y_pred)
     print("Predictions:\n", prediction.round())
     print("Annotations:\n", annotations.round())
     predictions = compute_predictions(prediction, annotations, w=2)
+    print("Predictions:", predictions)
     f_global, f_class = f_measure(predictions)
     print("Global F1-score:", f_global)
     print("Classwise F1-score:", f_class)
