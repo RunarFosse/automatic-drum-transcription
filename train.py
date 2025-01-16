@@ -46,8 +46,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         train_loss = 0.0
         n_batches_train = 0
         for i, data in enumerate(train_loader):
-            if i > 5:
-                break
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
             outputs = model(inputs)
@@ -75,8 +73,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         val_predictions = None
         n_batches_val = 0
         for i, data in enumerate(val_loader):
-            if i > 5:
-                break
             with torch.no_grad():
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(inputs)
