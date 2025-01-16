@@ -10,11 +10,9 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
 
     # Then compute sliding windows over each of the activations
     windows = padded_activations.unfold(dimension = -2, size = 2*m + 1, step = 1)
-    print(windows)
 
     # Then compute peaks using Vogl's max and mean criteria
     is_peak = (activations == torch.amax(windows, dim=-1)) & (activations >= torch.mean(windows, dim=-1) + delta)
-    print(is_peak)
     
     # Enforce minimum distance between peaks
     n_batches, n_labels = activations.shape[0], activations.shape[2]
@@ -30,7 +28,6 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
     
     # Return the output masked by the peaks
     mask = torch.zeros_like(activations)
-    print(filtered_peaks)
     if filtered_peaks:
         mask[*torch.tensor(filtered_peaks).mT] = 1
 
