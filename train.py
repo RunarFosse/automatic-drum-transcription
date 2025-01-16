@@ -69,7 +69,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
         # After a training epoch, compute validation performance
         model.eval()
-        val_loss, val_f1_global, val_f1_class = 0.0, 0.0, 0.0
+        val_loss = 0.0
+        val_predictions = None
         n_batches_val = 0
         for i, data in enumerate(val_loader):
             with torch.no_grad():
@@ -80,18 +81,21 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 val_loss += loss.item()
                 n_batches_val += 1
 
-                # Compute F1 score over frames and batches (TODO!)
-                predictions = compute_predictions(compute_peaks(outputs), labels)
-                print(predictions)
-                val_f1 = f_measure(predictions)
-                val_f1_global += val_f1[0]
-                val_f1_class += val_f1[1]
+                # Add to predictions
+                if val_predictions is None:
+                    val_predictions = compute_predictions(compute_peaks(outputs), labels)
+                else:
+                    val_predictions += compute_predictions(compute_peaks(outputs), labels)
+                    
+        # Compute F1 score
+        print(val_predictions)
+        val_f1_global, val_f1_class = f_measure(val_predictions)
         
         # Report to RayTune
         train.report({
             "Training Loss": train_loss / n_batches_train,
             "Validation Loss": val_loss / n_batches_val,
             "Global F1": val_f1_global.item() / n_batches_val,
-            #"Class F1": val_f1_class / n_batches_val,
+            "Class F1": val_f1_class / n_batches_val,
             })
     print("Finished training")
