@@ -46,6 +46,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         train_loss = 0.0
         n_batches_train = 0
         for i, data in enumerate(train_loader):
+            if i > 5:
+                break
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
             outputs = model(inputs)
@@ -73,6 +75,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         val_predictions = None
         n_batches_val = 0
         for i, data in enumerate(val_loader):
+            if i > 5:
+                break
             with torch.no_grad():
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(inputs)
@@ -96,6 +100,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             "Training Loss": train_loss / n_batches_train,
             "Validation Loss": val_loss / n_batches_val,
             "Global F1": val_f1_global.item() / n_batches_val,
-            "Class F1": [round(f1 / n_batches_val, 3) for f1 in val_f1_class],
+            "Class F1": (val_f1_class / n_batches_val).round(decimals=3).tolist(),
             })
     print("Finished training")
