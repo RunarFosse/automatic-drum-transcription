@@ -79,17 +79,18 @@ def compute_predictions(activations: torch.Tensor, annotations: torch.Tensor, w:
 def f_measure(predictions: torch.Tensor):
     """ Given computed predictions (True Positives, False Positives, False Negatives), compute the F-measure, precision and recall, global and per class """
 
-    # Don't divide by zero, which could happen if there are no True Positives
-    zero_mask = predictions[:, 0] == 0
+    global_precision = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 1])
+    class_precision = predictions[:, 0] / (predictions[:, 0] + predictions[:, 1])
 
-    global_precision = torch.sum(predictions[:, 0]) / max(torch.sum(predictions[:, 0] + predictions[:, 1]), 1.0)
-    class_precision = predictions[:, 0] / torch.where(zero_mask, 1.0, predictions[:, 0] + predictions[:, 1])
+    global_recall = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 2])
+    class_recall = predictions[:, 0] / (predictions[:, 0] + predictions[:, 2])
 
-    global_recall = torch.sum(predictions[:, 0]) / max(torch.sum(predictions[:, 0] + predictions[:, 2]), 1.0)
-    class_recall = predictions[:, 0] / torch.where(zero_mask, 1.0, predictions[:, 0] + predictions[:, 2])
+    global_f1 = 2.0 * (global_precision * global_recall) / (global_precision + global_recall)
+    class_f1 = 2.0 * (class_precision * class_recall) / (class_precision + class_recall)
 
-    global_f1 = 2.0 * (global_precision * global_recall) / max(global_precision + global_recall, 1.0)
-    class_f1 = 2.0 * (class_precision * class_recall) / torch.where(zero_mask, 1.0, class_precision + class_recall)
+    # Replace any NaN resulting from zero-division, with zeros
+    global_f1 = global_f1.nan_to_num(nan=0.0)
+    class_f1 = class_f1.nan_to_num(nan=0.0)
 
     return global_f1, class_f1
 
