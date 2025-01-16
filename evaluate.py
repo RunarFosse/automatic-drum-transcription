@@ -79,34 +79,41 @@ def compute_predictions(activations: torch.Tensor, annotations: torch.Tensor, w:
 def f_measure(predictions: torch.Tensor):
     """ Given computed predictions (True Positives, False Positives, False Negatives), compute the F-measure, precision and recall, global and per class """
 
-    global_precision = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 1])
-    class_precision = predictions[:, 0] / (predictions[:, 0] + predictions[:, 1])
+    # Don't divide by zero, which could happen if there are no True Positives
+    zero_mask = predictions[:, 0] == 0
 
-    global_recall = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 2])
-    class_recall = predictions[:, 0] / (predictions[:, 0] + predictions[:, 2])
+    global_precision = torch.sum(predictions[:, 0]) / max(torch.sum(predictions[:, 0] + predictions[:, 1]), 1.0)
+    class_precision = predictions[:, 0] / torch.where(zero_mask, 1.0, predictions[:, 0] + predictions[:, 1])
 
-    global_f1 = 2.0 * (global_precision * global_recall) / (global_precision + global_recall)
-    class_f1 = 2.0 * (class_precision * class_recall) / (class_precision + class_recall)
+    global_recall = torch.sum(predictions[:, 0]) / max(torch.sum(predictions[:, 0] + predictions[:, 2]), 1.0)
+    class_recall = predictions[:, 0] / torch.where(zero_mask, 1.0, predictions[:, 0] + predictions[:, 2])
+
+    global_f1 = 2.0 * (global_precision * global_recall) / max(global_precision + global_recall, 1.0)
+    class_f1 = 2.0 * (class_precision * class_recall) / torch.where(zero_mask, 1.0, class_precision + class_recall)
 
     return global_f1, class_f1
 
 if __name__ == "__main__":
     y_pred = torch.tensor([[
         [0.1, 0.3, 0.7, 0.4, 0.5, 0.9, 0.2, 0.8, 0.2, 0.4, 0.6, 0.3],
-        [0.2, 0.6, 0.1, 0.4, 0.8, 0.3, 0.7, 0.2, 0.5, 0.9, 0.2, 0.1]
+        [0.2, 0.6, 0.1, 0.4, 0.8, 0.3, 0.7, 0.2, 0.5, 0.9, 0.2, 0.1],
+        [0.1, 0.2, 0.3, 0.4, 0.7, 0.4, 0.3, 0.2, 0.1, 0.1, 0.0, 0.0]
     ],
     [
         [0.0, 0.1, 0.7, 0.2, 0.3, 0.7, 0.9, 0.8, 0.7, 0.7, 0.7, 0.9],
-        [0.0, 0.2, 0.3, 0.2, 0.1, 0.0, 0.0, 0.9, 0.0, 0.9, 0.0, 0.9]
+        [0.0, 0.2, 0.3, 0.2, 0.1, 0.0, 0.0, 0.9, 0.0, 0.9, 0.0, 0.9],
+        [0.1, 0.2, 0.3, 0.4, 0.5, 0.4, 0.3, 0.2, 0.1, 0.1, 0.0, 0.0]
     ]])
 
     annotations = torch.tensor([[
         [0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 1.0, 0.5],
-        [0.0, 0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        [0.0, 0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ],
     [
         [0.5, 1.0, 0.5, 0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5],
-        [0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5, 1.0, 0.5, 1.0]
+        [0.0, 0.0, 0.5, 1.0, 0.5, 0.0, 0.5, 1.0, 0.5, 1.0, 0.5, 1.0],
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     ]])
 
     prediction = compute_peaks(y_pred)
