@@ -12,7 +12,7 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
             n_classes = torch.tensor(labels.shape[-1])
             probabilities = torch.zeros(n_classes)
         
-        n_timesteps += torch.sum(torch.tensor(labels.shape[:-1]))
+        n_timesteps += torch.prod(torch.tensor(labels.shape[:-1]))
         probabilities += torch.sum(labels == 1.0, dim=(0, 1))
     
     # Divide to finish computing probabilities
