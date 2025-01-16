@@ -73,8 +73,8 @@ result = tune.run(
 best_trial = result.get_best_trial("Validation Loss", "min")
 print(f"Best trial config: {best_trial.config}")
 print(f"Best trial final validation loss: {best_trial.last_result['Validation Loss']}")
-#print(f"Best trial final validation F1 micro: {best_trial.last_result['Validation F1 micro']}")
-#print(f"Best trial final validation F1 macro: {best_trial.last_result['Validation F1 macro']}")
+print(f"Best trial final validation global F1: {best_trial.last_result['Global F1']}")
+print(f"Best trial final validation class F1: {best_trial.last_result['Class F1']}")
 
 """train_model({
     "batch_size": 1,
