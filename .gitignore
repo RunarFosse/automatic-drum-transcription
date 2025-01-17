@@ -2,9 +2,10 @@
 data/
 */data/
 
-# Mac specific temporary folder
+# Temporary folders
 .DS_Store
-
+.vscode
+.latex_temp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
