@@ -88,14 +88,15 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                     val_predictions += compute_predictions(compute_peaks(outputs), labels)
                     
         # Compute F1 score
-        print(val_predictions)
         val_f1_global, val_f1_class = f_measure(val_predictions)
+        print("Predictions:", val_predictions)
+        print("Class F1s:", val_f1_class)
         
         # Report to RayTune
         train.report({
             "Training Loss": train_loss / n_batches_train,
             "Validation Loss": val_loss / n_batches_val,
             "Global F1": val_f1_global.item(),
-            "Class F1": [round(f1, 3) for f1 in val_f1_class.tolist()],
+            "Class F1": val_f1_class.tolist(),
             })
     print("Finished training")
