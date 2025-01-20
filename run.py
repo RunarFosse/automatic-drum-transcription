@@ -39,7 +39,7 @@ config = {
     #"batch_size": 16,
     "lr": tune.loguniform(5e-6, 5e-4),
     #"lr": 0.01,
-    "weight_decay": tune.loguniform(1e-5, 1e-4),
+    "weight_decay": tune.choice([tune.loguniform(1e-5, 1e-4), 0]),
     #"weight_decay": 0,
     "amsgrad": tune.choice([True, False]),
     #"amsgrad": False,
