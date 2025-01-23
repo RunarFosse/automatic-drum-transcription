@@ -41,6 +41,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     
     # Start training
     print(f"Started training on {device}")
+    epochs_since_improvement, val_f1_global_best = 0, 0.0
     for epoch in range(n_epochs):
         model.train()
         train_loss = 0.0
@@ -94,7 +95,12 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         print("Class F1s:", val_f1_class)
 
         # Check if we should stop trial early
-        early_stop = torch.tensor(train_loss).isnan().item()
+        if val_f1_global > val_f1_global_best:
+            val_f1_global_best = val_f1_global
+            epochs_since_improvement = 0
+        else:
+            epochs_since_improvement += 1
+        loss_is_nan = torch.tensor(train_loss).isnan().item()
         
         # Report to RayTune
         train.report({
@@ -102,6 +108,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             "Validation Loss": val_loss / n_batches_val,
             "Global F1": val_f1_global.item(),
             "Class F1": val_f1_class.tolist(),
-            "early_stop": early_stop,
+            "loss_is_nan": loss_is_nan,
+            "epochs_since_improvement": epochs_since_improvement
             })
     print("Finished training")
