@@ -79,7 +79,10 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(inputs)
 
-                loss = loss_fn(outputs, labels).sum(dim=(1, 2)).mean()
+                class_weights = torch.where(labels == 0, torch.tensor(0.0), infrequency_weights).sum(dim=2)
+                class_weights = torch.where(class_weights == 0.0, torch.tensor(1.0), class_weights)
+
+                loss = (loss_fn(outputs, labels).sum(dim=2) * class_weights).mean()
                 val_loss += loss.item()
                 n_batches_val += 1
 
