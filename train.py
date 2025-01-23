@@ -92,6 +92,9 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         val_f1_global, val_f1_class = f_measure(val_predictions)
         print("Predictions:", val_predictions)
         print("Class F1s:", val_f1_class)
+
+        # Check if we should stop trial early
+        early_stop = torch.tensor(train_loss).isnan().item()
         
         # Report to RayTune
         train.report({
@@ -99,5 +102,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             "Validation Loss": val_loss / n_batches_val,
             "Global F1": val_f1_global.item(),
             "Class F1": val_f1_class.tolist(),
+            "early_stop": early_stop,
             })
     print("Finished training")
