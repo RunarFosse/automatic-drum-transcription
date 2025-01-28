@@ -41,7 +41,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     
     # Start training
     print(f"Started training on {device}")
-    epochs_since_improvement, val_loss_best = 0, 0.0
+    epochs_since_improvement, val_loss_best = 0, None
     for epoch in range(n_epochs):
         model.train()
         train_loss = 0.0
@@ -105,7 +105,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         print("Class F1s:", val_f1_class)
 
         # Check if we should stop trial early
-        if val_loss > val_loss_best:
+        if val_loss_best is None or val_loss < val_loss_best:
             val_loss_best = val_loss
             epochs_since_improvement = 0
         else:
