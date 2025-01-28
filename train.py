@@ -77,8 +77,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         val_loss = 0.0
         val_predictions = None
         n_batches_val = 0
-        for i, data in enumerate(val_loader):
-            with torch.no_grad():
+        with torch.no_grad():
+            for i, data in enumerate(val_loader):
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(inputs)
 
