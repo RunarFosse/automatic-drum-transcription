@@ -60,6 +60,9 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             loss = (loss_fn(outputs, labels).sum(dim=2) * class_weights).mean()
             loss.backward()
 
+            # Clip the gradients to prevent explosions
+            nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+
             optimizer.step()
             optimizer.zero_grad()
 
