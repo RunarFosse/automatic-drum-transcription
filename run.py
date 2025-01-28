@@ -37,7 +37,7 @@ val_path = "adtof/adtof_yt_validation"
 config = {
     "batch_size": tune.choice([128]),
     #"batch_size": 16,
-    "lr": tune.loguniform(1e-5, 1e-3),
+    "lr": tune.loguniform(1e-5, 5e-4),
     #"lr": 0.01,
     "weight_decay": tune.loguniform(1e-5, 1e-2),
     #"weight_decay": 0,
