@@ -41,7 +41,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     
     # Start training
     print(f"Started training on {device}")
-    epochs_since_improvement, val_f1_global_best = 0, 0.0
+    epochs_since_improvement, val_loss_best = 0, 0.0
     for epoch in range(n_epochs):
         model.train()
         train_loss = 0.0
@@ -92,14 +92,18 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 else:
                     val_predictions += compute_predictions(compute_peaks(outputs), labels)
                     
+        # Average the losses
+        train_loss /= n_batches_train
+        val_loss /= n_batches_val
+
         # Compute F1 score
         val_f1_global, val_f1_class = f_measure(val_predictions)
         print("Predictions:", val_predictions)
         print("Class F1s:", val_f1_class)
 
         # Check if we should stop trial early
-        if val_f1_global > val_f1_global_best:
-            val_f1_global_best = val_f1_global
+        if val_loss > val_loss_best:
+            val_loss_best = val_loss
             epochs_since_improvement = 0
         else:
             epochs_since_improvement += 1
@@ -107,8 +111,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         
         # Report to RayTune
         train.report({
-            "Training Loss": train_loss / n_batches_train,
-            "Validation Loss": val_loss / n_batches_val,
+            "Training Loss": train_loss,
+            "Validation Loss": val_loss,
             "Global F1": val_f1_global.item(),
             "Class F1": val_f1_class.tolist(),
             "loss_is_nan": loss_is_nan,
