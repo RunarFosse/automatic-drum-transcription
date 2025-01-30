@@ -110,7 +110,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             epochs_since_improvement = 0
         else:
             epochs_since_improvement += 1
-        loss_is_nan = torch.tensor(train_loss).isnan().item()
         
         # Report to RayTune
         train.report({
@@ -118,7 +117,6 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
             "Validation Loss": val_loss,
             "Global F1": val_f1_global.item(),
             "Class F1": val_f1_class.tolist(),
-            "loss_is_nan": loss_is_nan,
             "epochs_since_improvement": epochs_since_improvement
             })
     print("Finished training")
