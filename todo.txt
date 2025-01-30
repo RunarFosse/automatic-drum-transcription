@@ -5,3 +5,5 @@
 
 # Find and include all datasets
 # Perform training and testing over several datasets
+
+# Optimize evaluation to run faster (switch between GPU and CPU optimally)
