@@ -43,9 +43,9 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
     batch_indices, peak_indices, label_indices = zip(*filtered_peaks)
     mask = torch.sparse_coo_tensor(
         torch.tensor([batch_indices, peak_indices, label_indices]),
-        torch.ones(len(filtered_peaks), device=activations.device),
+        torch.ones(len(filtered_peaks)),
         activations.shape
-    ).to_dense()
+    ).to(device=activations.device).to_dense()
 
     # Return the output masked by the peaks
     return activations * mask
