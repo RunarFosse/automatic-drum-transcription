@@ -47,8 +47,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     epochs_since_improvement, val_loss_best = 0, None
     for epoch in range(n_epochs):
         model.train()
-        train_loss = 0.0
-        n_batches_train = 0
+        train_loss, n_batches_train = 0.0, 0
         for i, data in enumerate(train_loader):
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
@@ -77,9 +76,8 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
 
         # After a training epoch, compute validation performance
         model.eval()
-        val_loss = 0.0
-        val_predictions = None
-        n_batches_val = 0
+        val_loss, n_batches_val = 0.0, 0
+        val_predictions = torch.zeros(size=(infrequency_weights, 3))
         with torch.no_grad():
             for i, data in enumerate(val_loader):
                 inputs, labels = data[0].to(device), data[1].to(device)
@@ -93,10 +91,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 n_batches_val += 1
 
                 # Add to predictions
-                if val_predictions is None:
-                    val_predictions = compute_predictions(compute_peaks(outputs), labels)
-                else:
-                    val_predictions += compute_predictions(compute_peaks(outputs), labels)
+                val_predictions += compute_predictions(compute_peaks(outputs), labels)
                     
         # Average the losses
         train_loss /= n_batches_train
