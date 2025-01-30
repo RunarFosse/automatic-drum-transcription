@@ -67,7 +67,8 @@ result = tune.run(
     num_samples=num_samples,
     scheduler=scheduler,
     resources_per_trial={"gpu": 1, "accelerator_type:A100": 1},
-    stop={"epochs_since_improvement": 10}
+    stop={"epochs_since_improvement": 10},
+    keep_checkpoints_num=1,
 )
 
 # Print the results
