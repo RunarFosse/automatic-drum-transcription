@@ -1,0 +1,7 @@
+# Extract weights on best training iteration
+# Test selected model on test data
+
+# Implement new model architectures
+
+# Find and include all datasets
+# Perform training and testing over several datasets
