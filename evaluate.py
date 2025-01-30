@@ -6,31 +6,48 @@ def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2,
     """ Compute the peaks of a given activation time series using Vogl's peak picking algorithm """
 
     # First pad the data to handle boundary conditions
-    padded_activations = F.pad(activations, (0, 0, m, m), value = 0)
+    padded_activations = F.pad(activations, (0, 0, m, m), value=0)
 
     # Then compute sliding windows over each of the activations
-    windows = padded_activations.unfold(dimension = -2, size = 2*m + 1, step = 1)
+    windows = padded_activations.unfold(dimension=-2, size=2*m + 1, step=1)
 
     # Then compute peaks using Vogl's max and mean criteria
-    is_peak = (activations == torch.amax(windows, dim=-1)) & (activations >= torch.mean(windows, dim=-1) + delta)
+    window_max = torch.amax(windows, dim=-1)
+    window_mean = torch.mean(windows, dim=-1)
+    is_peak = (activations == window_max) & (activations >= window_mean + delta)
+
+    # Compute peak indices
+    peak_indices = torch.where(is_peak)
+
+    # Perform sequential logic below on CPU
+    peak_indices = [indices.cpu() for indices in peak_indices]
     
     # Enforce minimum distance between peaks
     n_batches, n_labels = activations.shape[0], activations.shape[2]
     filtered_peaks = []
     for batch in range(n_batches):
         for label in range(n_labels):
-            peak_indices = torch.where(is_peak[batch, :, label])[0]
+            peaks = peak_indices[1][(peak_indices[0] == batch) & (peak_indices[2] == label)]
+
             last_peak = -(w - 1)
-            for peak in peak_indices:
+            for peak in peaks:
                 if peak - last_peak > w:
-                    filtered_peaks.append([batch, peak.item(), label])
+                    filtered_peaks.append((batch, peak.item(), label))
                     last_peak = peak
     
-    # Return the output masked by the peaks
-    mask = torch.zeros_like(activations)
-    if filtered_peaks:
-        mask[*torch.tensor(filtered_peaks).mT] = 1
+    # If there are no peaks, return zero tensor
+    if not filtered_peaks:
+        return torch.zeros_like(activations)
+        
+    # Use a sparse tensor as peaks are generally rare
+    batch_indices, peak_indices, label_indices = zip(*filtered_peaks)
+    mask = torch.sparse_coo_tensor(
+        torch.tensor([batch_indices, peak_indices, label_indices]),
+        torch.ones(len(filtered_peaks), device=activations.device),
+        activations.shape
+    ).to_dense()
 
+    # Return the output masked by the peaks
     return activations * mask
 
 
@@ -42,21 +59,30 @@ def compute_predictions(activations: torch.Tensor, annotations: torch.Tensor, w:
     # Store predictions per class, [True Positives, False Positives, False Negatives]
     predictions = torch.zeros(size=(n_labels, 3))
 
+    # Compute onsets for both activations and annotations
+    activation_onsets = torch.where(activations > 0.5)
+    annotation_onsets = torch.where(annotations > 0.5)
+    
+    # Perform sequential logic below on CPU
+    activation_onsets = [onsets.cpu() for onsets in activation_onsets]
+    annotation_onsets = [onsets.cpu() for onsets in annotation_onsets]
+
     for batch in range(n_batches):
         for label in range(n_labels):
-            activation_onsets = torch.where(activations[batch, :, label] > 0.5)[0]
-            annotation_onsets = torch.where(annotations[batch, :, label] > 0.5)[0]
+            # Extract onsets for current label and batch
+            batch_activation_onsets = activation_onsets[1][(activation_onsets[0] == batch) & (activation_onsets[2] == label)]
+            batch_annotation_onsets = annotation_onsets[1][(annotation_onsets[0] == batch) & (annotation_onsets[2] == label)]
     
             activation_pointer, annotation_pointer = 0, 0
-            while activation_pointer < activation_onsets.shape[0] and annotation_pointer < annotation_onsets.shape[0]:
+            while activation_pointer < len(batch_activation_onsets) and annotation_pointer < len(batch_annotation_onsets):
                 # Check for True Positive
-                if abs(activation_onsets[activation_pointer] - annotation_onsets[annotation_pointer]) <= w:
+                if abs(batch_activation_onsets[activation_pointer] - batch_annotation_onsets[annotation_pointer]) <= w:
                     predictions[label, 0] += 1
                     activation_pointer += 1
                     annotation_pointer += 1
 
                 # Check for False Positive
-                elif activation_onsets[activation_pointer] < annotation_onsets[annotation_pointer]:
+                elif batch_activation_onsets[activation_pointer] < batch_annotation_onsets[annotation_pointer]:
                     predictions[label, 1] += 1
                     activation_pointer += 1
 
@@ -65,13 +91,9 @@ def compute_predictions(activations: torch.Tensor, annotations: torch.Tensor, w:
                     predictions[label, 2] += 1
                     annotation_pointer += 1
         
-            # Count remaining False Positives
-            if activation_pointer < activation_onsets.shape[0]:
-                predictions[label, 1] += activation_onsets.shape[0] - activation_pointer
-    
-            # Count remaining False Negatives
-            if annotation_pointer < annotation_onsets.shape[0]:
-                predictions[label, 2] += annotation_onsets.shape[0] - annotation_pointer
+            # Count remaining False Positives and False Negatives
+            predictions[label, 1] += len(batch_activation_onsets) - activation_pointer
+            predictions[label, 2] += len(batch_annotation_onsets) - annotation_pointer
     
     return predictions
 
