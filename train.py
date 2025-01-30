@@ -77,7 +77,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         # After a training epoch, compute validation performance
         model.eval()
         val_loss, n_batches_val = 0.0, 0
-        val_predictions = torch.zeros(size=(infrequency_weights, 3))
+        val_predictions = torch.zeros(size=(infrequency_weights.shape[0], 3))
         with torch.no_grad():
             for i, data in enumerate(val_loader):
                 inputs, labels = data[0].to(device), data[1].to(device)
