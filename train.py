@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 import torch.nn.functional as F
 
 from ray import train, tune
+from ray.train import Checkpoint
 
 from datasets import ADTOF_load
 from preprocess import compute_infrequency_weights
@@ -16,6 +17,8 @@ from pathlib import Path
 from typing import Optional
 
 from time import sleep, time
+from os import path
+from tempfile import TemporaryDirectory
 
 
 def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_path: Path, val_path: Path, device: str = "cpu", seed: Optional[int] = None):
@@ -104,19 +107,30 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         print("Predictions:", val_predictions)
         print("Class F1s:", val_f1_class)
 
-        # Check if we should stop trial early
-        if val_loss_best is None or val_loss < val_loss_best:
-            val_loss_best = val_loss
-            epochs_since_improvement = 0
-        else:
-            epochs_since_improvement += 1
+        with TemporaryDirectory() as temp_checkpoint_dir:
+            checkpoint = None
+
+            # Check if we should checkpoint current epoch
+            if val_loss_best is None or val_loss < val_loss_best:
+                # Store current best validation loss
+                val_loss_best = val_loss
+
+                # And save model parameters
+                torch.save(model.state_dict(), path.join(temp_checkpoint_dir, "model.pt"))
+                checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
+
+                epochs_since_improvement = 0
+            else:
+                epochs_since_improvement += 1
         
-        # Report to RayTune
-        train.report({
-            "Training Loss": train_loss,
-            "Validation Loss": val_loss,
-            "Global F1": val_f1_global.item(),
-            "Class F1": val_f1_class.tolist(),
-            "epochs_since_improvement": epochs_since_improvement
-            })
+            # Report to RayTune
+            train.report({
+                "Training Loss": train_loss,
+                "Validation Loss": val_loss,
+                "Global F1": val_f1_global.item(),
+                "Class F1": val_f1_class.tolist(),
+                "epochs_since_improvement": epochs_since_improvement
+                },
+                checkpoint=checkpoint
+            )
     print("Finished training")
