@@ -82,14 +82,7 @@ class AttentionLayer(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.layer_norm(x)
-
-        # Transpose before attention
-        x = x.transpose(0, 1)
-        out= self.attention(out, out, out)
-
-        # Transpose back
-        x = x.transpose(0, 1)
-
+        out, _ = self.attention(out, out, out)
         out = self.dropout(out)
 
         out = out + x
