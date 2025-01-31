@@ -74,7 +74,7 @@ class AttentionLayer(nn.Module):
     def __init__(self, n_heads: int):
         super().__init__()
         self.layer_norm = nn.LayerNorm(576)
-        self.attentions = nn.ModuleList([nn.MultiheadAttention(embed_dim=576, num_heads=6) for _ in range(n_heads)])
+        self.attention = nn.MultiheadAttention(embed_dim=576, num_heads=n_heads)
         self.dropout = nn.Dropout(p = 0.1)
 
         self.fc1 = nn.Linear(576, 4 * 576)
@@ -85,9 +85,7 @@ class AttentionLayer(nn.Module):
 
         # Transpose before attention
         x = x.transpose(0, 1)
-
-        for attention in self.attentions:
-            out, _ = attention(out, out, out)
+        out= self.attention(out, out, out)
 
         # Transpose back
         x = x.transpose(0, 1)
