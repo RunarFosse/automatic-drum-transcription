@@ -15,7 +15,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
 
         self.conv3 = nn.Conv2d(32, 64, kernel_size=(3, 3), padding=1, bias=False)
         self.batchnorm3 = nn.BatchNorm2d(64)
-        self.conv4 = nn.Conv2d(64, 64, kernel_size=(3, 3), padding=1), bias=False
+        self.conv4 = nn.Conv2d(64, 64, kernel_size=(3, 3), padding=1, bias=False)
         self.batchnorm4 = nn.BatchNorm2d(64)
 
         self.pool2 = nn.MaxPool2d(kernel_size=(1, 3))
