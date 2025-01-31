@@ -1,3 +1,5 @@
+# Add learning rate scheduler (ReduceLROnPlateau)
+
 # Test selected model on test data
 
 # Implement new model architectures
