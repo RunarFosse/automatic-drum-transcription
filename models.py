@@ -10,7 +10,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
         self.conv2 = nn.Conv2d(32, 32, kernel_size=(3, 3), padding=1, bias=False)
         self.batchnorm2 = nn.BatchNorm2d(32)
 
-        self.pool1 = nn.MaxPool2d(kernel_size=(1, 3))
+        self.pool1 = nn.MaxPool2d(kernel_size=(1, 3), stride=(1, 3))
         self.dropout1 = nn.Dropout2d(p=0.3)
 
         self.conv3 = nn.Conv2d(32, 64, kernel_size=(3, 3), padding=1, bias=False)
@@ -18,7 +18,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
         self.conv4 = nn.Conv2d(64, 64, kernel_size=(3, 3), padding=1, bias=False)
         self.batchnorm4 = nn.BatchNorm2d(64)
 
-        self.pool2 = nn.MaxPool2d(kernel_size=(1, 3))
+        self.pool2 = nn.MaxPool2d(kernel_size=(1, 3), stride=(1, 3))
         self.dropout2 = nn.Dropout2d(p=0.3)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
