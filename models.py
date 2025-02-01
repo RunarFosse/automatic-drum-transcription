@@ -40,7 +40,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
 class RNNDecoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.bigrus = nn.ModuleList([nn.GRU(576, 576 // 2, 60, bidirectional=True) for _ in range(3)])
+        self.bigrus = nn.ModuleList([nn.GRU(576, 576 // 2, 60, bidirectional=True, batch_first=True) for _ in range(3)])
         self.fc = nn.Linear(576, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -74,7 +74,7 @@ class AttentionLayer(nn.Module):
     def __init__(self, n_heads: int):
         super().__init__()
         self.layer_norm = nn.LayerNorm(576)
-        self.attention = nn.MultiheadAttention(embed_dim=576, num_heads=n_heads)
+        self.attention = nn.MultiheadAttention(embed_dim=576, num_heads=n_heads, batch_first=True)
         self.dropout = nn.Dropout(p = 0.1)
 
         self.fc1 = nn.Linear(576, 4 * 576)
