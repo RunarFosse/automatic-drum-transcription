@@ -90,7 +90,7 @@ class AttentionLayer(nn.Module):
         return self.fc2(out)
 
 class AttentionDecoder(nn.Module):
-    def __init__(self, n_heads: int = 5, n_layers: int = 5):
+    def __init__(self, n_heads: int = 6, n_layers: int = 5):
         super().__init__()
         self.positional_encoding = PositionalEncoding(d_model=576)
         self.layers = nn.ModuleList([AttentionLayer(n_heads=n_heads) for _ in range(n_layers)])
@@ -124,5 +124,6 @@ class ADTOF_FrameAttention(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
+        print("SHAPE IS:", x.shape)
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
         return self.decoder(latent)
