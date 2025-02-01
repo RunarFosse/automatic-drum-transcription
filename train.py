@@ -101,7 +101,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         val_loss /= n_batches_val
 
         # Step the scheduler
-        scheduler.step(val_loss, epoch)
+        scheduler.step(val_loss)
         print("Learning rate:", scheduler.get_last_lr())
 
         # Compute F1 score
