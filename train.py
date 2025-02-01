@@ -38,6 +38,9 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
     optimizer = config["optimizer"](model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
     optimizer.zero_grad(set_to_none=True)
 
+    # Add a learning rate scheduler
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.2, patience=5)
+
     # Compute infrequent instrument weights from the training dataset
     infrequency_weights = compute_infrequency_weights(train_loader).to(device)
     print("Infrequency weights: ", infrequency_weights)
@@ -96,6 +99,10 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
         # Average the losses
         train_loss /= n_batches_train
         val_loss /= n_batches_val
+
+        # Step the scheduler
+        scheduler.step(val_loss, epoch)
+        print("Learning rate:", scheduler.get_last_lr())
 
         # Compute F1 score
         val_f1_global, val_f1_class = f_measure(val_predictions)
