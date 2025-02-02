@@ -1,7 +1,7 @@
 import argparse
 import torch
 from torch import optim
-from ray import init, tune
+from ray import init, tune, train
 from time import time
 from models import ADTOF_FrameRNN, ADTOF_FrameAttention
 from evaluate import evaluate_model
@@ -64,14 +64,18 @@ config = {
 
 # Run the experiments
 tuner = tune.Tuner(
-    tune.with_parameters(train_model, train_path=data_dir/train_path, val_path=data_dir/val_path),
+    tune.with_resources(
+        trainable=tune.with_parameters(train_model, train_path=data_dir/train_path, val_path=data_dir/val_path),
+        resources={"gpu": 1, "accelerator_type:A100": 1}
+    ),
     param_space=config,
-    run_config= {
-        "num_samples": num_samples,
-        "resources_per_trial": {"gpu": 1, "accelerator_type:A100": 1},
-        "stop": {"epochs_since_improvement": 10},
-        "keep_checkpoints_num": 1,
-    }
+    tune_config=tune.TuneConfig(
+        num_samples=num_samples
+    ),
+    run_config=train.RunConfig(
+        stop={"epochs_since_improvement": 10},
+        checkpoint_config=train.CheckpointConfig(num_to_keep=1)
+    )
 )
 results = tuner.fit()
 
