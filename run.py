@@ -93,4 +93,4 @@ test_f1_global, test_f1_class = evaluate_model(model, test_path=test_path, devic
 
 print(" ---------- Evaluation of best perfoming model ---------- ")
 print(f"Global F1: {test_f1_global:.4f}")
-print(f"Class F1: {[f"{test_f1:.4f}" for test_f1 in test_f1_class]}")
+print(f"Class F1: {["%.4f" % test_f1 for test_f1 in test_f1_class]}")
