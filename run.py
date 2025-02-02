@@ -86,16 +86,16 @@ print(f"Best result config: {best_result.config}")
 print(f"Best result final validation loss: {best_result.metrics['Validation Loss']}")
 print(f"Best result final validation global F1: {best_result.metrics['Global F1']}")
 print(f"Best result final validation class F1: {best_result.metrics['Class F1']}")
-print(f"Best result metrics dataframe: {best_result.metrics_dataframe}")
 
 # Load the state_dict of the best performing model
 checkpoint_path = Path(best_result.get_best_checkpoint("Global F1", mode="max").path)
 state_dict = torch.load(checkpoint_path / "model.pt")
 
-# Store the best performing model to study / experiment path
+# Store the best performing model and its metrics to study/experiment path
 model_path = (root_dir / "study" / study / experiment / dataset)
 model_path.mkdir(parents=True, exist_ok=True)
 torch.save(state_dict, model_path / "model.pt")
+best_result.metrics_dataframe.to_csv(model_path / "metrics.csv")
 
 # Load the best performing model and evaluate it on the test dataset
 model = Model().load_state_dict(state_dict)
