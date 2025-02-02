@@ -1,6 +1,10 @@
 # Test selected model on test data
 
+# Save selected model to experiment directory
+
 # Implement new model architectures
 
 # Find and include all datasets
 # Perform training and testing over several datasets
+
+# Create analysis notebooks for model performance and plotting
