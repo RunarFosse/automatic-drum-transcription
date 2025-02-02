@@ -15,9 +15,6 @@ from evaluate import compute_peaks, compute_predictions, f_measure
 
 from pathlib import Path
 from typing import Optional
-
-from time import sleep, time
-from os import path
 from tempfile import TemporaryDirectory
 
 
@@ -118,7 +115,7 @@ def train_model(config: tune.TuneConfig, Model: nn.Module, n_epochs: int, train_
                 val_loss_best = val_loss
 
                 # And save model parameters
-                torch.save(model.state_dict(), path.join(temp_checkpoint_dir, "model.pt"))
+                torch.save(model.state_dict(), Path(temp_checkpoint_dir) / "model.pt")
                 checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
 
                 epochs_since_improvement = 0
