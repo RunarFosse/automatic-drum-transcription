@@ -2,7 +2,6 @@ import argparse
 import torch
 from torch import optim
 from ray import init, tune
-from ray.tune.schedulers import ASHAScheduler
 from time import time
 from models import ADTOF_FrameRNN, ADTOF_FrameAttention
 from train import train_model
@@ -28,44 +27,43 @@ init(num_gpus=1, num_cpus=16)
 
 # ----------------------------------------------------------------------------------------------------------------
 
+study = "Architectural Performance"
+experiment = "Convolutional Transformer"
+dataset = "ADTOF-YT"
+
+Model = ADTOF_FrameAttention
+
 num_samples = 10
 num_epochs = 100
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
 
-config = {
-    "batch_size": tune.choice([128, 256]),
-    #"batch_size": 16,
-    "lr": tune.loguniform(1e-5, 1e-3),
-    #"lr": 0.01,
-    "weight_decay": tune.loguniform(1e-5, 1e-2),
-    #"weight_decay": 0,
-    "amsgrad": tune.choice([True, False]),
-    #"amsgrad": False,
-    "optimizer": optim.AdamW
-}
-
-Model = ADTOF_FrameAttention
-
 print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 
 device = args.device
 seed = int(time())
 
-scheduler = ASHAScheduler(
-    metric="Training Loss",
-    mode="min",
-    max_t=num_epochs,
-    grace_period=num_epochs
-)
+config = {
+    "batch_size": tune.choice([128, 256]),
+
+    "lr": tune.loguniform(1e-5, 1e-3),
+    "weight_decay": tune.loguniform(1e-5, 1e-2),
+    "amsgrad": tune.choice([True, False]),
+    "optimizer": optim.AdamW,
+
+    "Model": Model,
+    "n_epochs": num_epochs,
+
+    "device": device,
+    "seed": seed,
+}
 
 # Run the experiments
 result = tune.run(
-    tune.with_parameters(train_model, Model=Model, n_epochs=num_epochs, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed),
+    tune.with_parameters(train_model, train_path=data_dir/train_path, val_path=data_dir/val_path),
     config=config,
     num_samples=num_samples,
-    scheduler=scheduler,
     resources_per_trial={"gpu": 1, "accelerator_type:A100": 1},
     stop={"epochs_since_improvement": 10},
     keep_checkpoints_num=1,
