@@ -2,6 +2,8 @@
 
 # Save selected model to experiment directory
 
+# Implement both computing micro and macro F1-scores
+
 # Implement new model architectures
 
 # Find and include all datasets
