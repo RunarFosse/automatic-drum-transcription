@@ -81,14 +81,17 @@ print(f"Best trial final validation class F1: {best_trial.last_result['Class F1'
 print("Best trial metric analysis:", best_trial.metric_analysis)
 print("Best trial metric n_steps:", best_trial.metric_n_steps)
 
+# Load the state_dict of the best performing model
+checkpoint_path = Path(best_trial.checkpoint.path)
+state_dict = torch.load(checkpoint_path / "model.pt")
+
 # Store the best performing model to study / experiment path
-model_path = (root_dir / "study" / study / experiment / dataset).mkdir(parents=True, exist_ok=True)
-best_trial.checkpoint.to_directory(model_path)
+model_path = (root_dir / "study" / study / experiment / dataset)
+model_path.mkdir(parents=True, exist_ok=True)
+torch.save(state_dict, model_path / "model.pt")
 
 # Load the best performing model and evaluate it on the test dataset
-state_dict = torch.load(model_path / "model.pt")
 model = Model().load_state_dict(state_dict)
-
 test_f1_global, test_f1_class = evaluate_model(model, test_path=test_path, device=device)
 
 print(" ---------- Evaluation of best perfoming model ---------- ")
