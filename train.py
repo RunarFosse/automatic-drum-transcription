@@ -39,7 +39,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
     
     # Start training
     print(f"Started training on {device}")
-    epochs_since_improvement, val_loss_best = 0, None
+    epochs_since_improvement, val_loss_best, val_f1_global_best = 0, None, None
     for epoch in range(config["n_epochs"]):
         model.train()
         train_loss, n_batches_train = 0.0, 0
@@ -102,18 +102,20 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
         with TemporaryDirectory() as temp_checkpoint_dir:
             checkpoint = None
 
-            # Check if we should checkpoint current epoch
+            # Check if we should increment early stop count
             if val_loss_best is None or val_loss < val_loss_best:
-                # Store current best validation loss
                 val_loss_best = val_loss
-
-                # And save model parameters
-                torch.save(model.state_dict(), Path(temp_checkpoint_dir) / "model.pt")
-                checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
-
                 epochs_since_improvement = 0
             else:
                 epochs_since_improvement += 1
+            
+            # Check if we should checkpoint current model
+            if val_f1_global_best is None or val_f1_global > val_f1_global_best:
+                val_f1_global_best = val_f1_global
+
+                # If so, save model parameters
+                torch.save(model.state_dict(), Path(temp_checkpoint_dir) / "model.pt")
+                checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
         
             # Report to RayTune
             train.report({
