@@ -1,6 +1,33 @@
 import torch
 import torch.nn.functional as F
 
+from pathlib import Path
+from datasets import ADTOF_load
+
+def evaluate_model(model: torch.nn.Module, test_path: Path, device: str):
+    """ Evaluate a given model on a given test dataset """
+
+    # Declare device and move model
+    device = device if torch.cuda.is_available() else "cpu"
+    print(f"Testing: Can use CUDA: {torch.cuda.is_available()}")
+    model.to(device)
+
+    # Load the test dataset into a dataloader
+    test_loader = ADTOF_load(test_path, shuffle=False)
+
+    model.eval()
+    predictions = None
+    for data in test_loader:
+        inputs, labels = data[0].to(device), data[1].to(device)
+        outputs = model(inputs)
+
+        if predictions is None:
+            predictions = compute_predictions(compute_peaks(outputs), labels)
+        else:
+            predictions += compute_predictions(compute_peaks(outputs), labels)
+    
+    # Return F1-score
+    return f_measure(predictions)
 
 def compute_peaks(activations: torch.Tensor, m: int = 2, o: int = 2, w: int = 2, delta: float = 0.1) -> torch.Tensor:
     """ Compute the peaks of a given activation time series using Vogl's peak picking algorithm """

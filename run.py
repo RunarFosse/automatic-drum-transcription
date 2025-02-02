@@ -4,6 +4,7 @@ from torch import optim
 from ray import init, tune
 from time import time
 from models import ADTOF_FrameRNN, ADTOF_FrameAttention
+from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
 import tensorflow as tf
@@ -39,6 +40,7 @@ num_epochs = 100
 
 train_path = "adtof/adtof_yt_train"
 val_path = "adtof/adtof_yt_validation"
+test_path = "adtof/adtof_yt_test"
 
 print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 
@@ -82,3 +84,13 @@ print("Best trial metric n_steps:", best_trial.metric_n_steps)
 # Store the best performing model to study / experiment path
 model_path = (root_dir / "study" / study / experiment / dataset).mkdir(parents=True, exist_ok=True)
 best_trial.checkpoint.to_directory(model_path)
+
+# Load the best performing model and evaluate it on the test dataset
+state_dict = torch.load(model_path / "model.pt")
+model = Model().load_state_dict(state_dict)
+
+test_f1_global, test_f1_class = evaluate_model(model, test_path=test_path, device=device)
+
+print(" ---------- Evaluation of best perfoming model ---------- ")
+print(f"Global F1: {test_f1_global:.4f}")
+print(f"Class F1: {[f"{test_f1:.4f}" for test_f1 in test_f1_class]}")
