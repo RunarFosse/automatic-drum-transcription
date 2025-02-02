@@ -17,7 +17,8 @@ parser.add_argument("device", help="The device to run experiments on", type=str,
 args = parser.parse_args()
 
 # Extract the absolute path of the data directory
-data_dir = Path(__file__).resolve().parent / "data"
+root_dir = Path(__file__).resolve().parent
+data_dir = root_dir / "data"
 
 # Disable all GPUs for TensorFlow
 tf.config.set_visible_devices([], 'GPU')
@@ -75,10 +76,9 @@ print(f"Best trial config: {best_trial.config}")
 print(f"Best trial final validation loss: {best_trial.last_result['Validation Loss']}")
 print(f"Best trial final validation global F1: {best_trial.last_result['Global F1']}")
 print(f"Best trial final validation class F1: {best_trial.last_result['Class F1']}")
+print("Best trial metric analysis:", best_trial.metric_analysis)
+print("Best trial metric n_steps:", best_trial.metric_n_steps)
 
-"""train_model({
-    "batch_size": 1,
-    "lr": 1e-3,
-    "weight_decay": 1e-4,
-    "amsgrad": True,
-}, Model=Model, n_epochs=100, train_path=data_dir/train_path, val_path=data_dir/val_path, device=device, seed=seed)"""
+# Store the best performing model to study / experiment path
+model_path = (root_dir / "study" / study / experiment / dataset).mkdir(parents=True, exist_ok=True)
+best_trial.checkpoint.to_directory(model_path)
