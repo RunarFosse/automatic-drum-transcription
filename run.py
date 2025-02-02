@@ -91,6 +91,10 @@ print(f"Best result final validation class F1: {best_result.metrics['Class F1']}
 checkpoint_path = Path(best_result.get_best_checkpoint("Global F1", mode="max").path)
 state_dict = torch.load(checkpoint_path / "model.pt")
 
+print("State_dict stored at:", best_result.get_best_checkpoint("Global F1", mode="max").path)
+print(state_dict)
+print(Model().load_state_dict(state_dict))
+
 # Store the best performing model and its metrics to study/experiment path
 model_path = (root_dir / "study" / study / experiment / dataset)
 model_path.mkdir(parents=True, exist_ok=True)
