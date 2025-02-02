@@ -63,26 +63,28 @@ config = {
 }
 
 # Run the experiments
-result = tune.run(
+tuner = tune.Tuner(
     tune.with_parameters(train_model, train_path=data_dir/train_path, val_path=data_dir/val_path),
-    config=config,
-    num_samples=num_samples,
-    resources_per_trial={"gpu": 1, "accelerator_type:A100": 1},
-    stop={"epochs_since_improvement": 10},
-    keep_checkpoints_num=1,
+    param_space=config,
+    run_config= {
+        "num_samples": num_samples,
+        "resources_per_trial": {"gpu": 1, "accelerator_type:A100": 1},
+        "stop": {"epochs_since_improvement": 10},
+        "keep_checkpoints_num": 1,
+    }
 )
+results = tuner.fit()
 
 # Print the results
-best_trial = result.get_best_trial("Global F1", mode="max", scope="all")
-print(f"Best trial config: {best_trial.config}")
-print(f"Best trial final validation loss: {best_trial.last_result['Validation Loss']}")
-print(f"Best trial final validation global F1: {best_trial.last_result['Global F1']}")
-print(f"Best trial final validation class F1: {best_trial.last_result['Class F1']}")
-print("Best trial metric analysis:", best_trial.metric_analysis)
-print("Best trial metric n_steps:", best_trial.metric_n_steps)
+best_result = results.get_best_result("Global F1", mode="max", scope="all")
+print(f"Best result config: {best_result.config}")
+print(f"Best result final validation loss: {best_result.metrics['Validation Loss']}")
+print(f"Best result final validation global F1: {best_result.metrics['Global F1']}")
+print(f"Best result final validation class F1: {best_result.metrics['Class F1']}")
+print(f"Best result metrics dataframe: {best_result.metrics_dataframe}")
 
 # Load the state_dict of the best performing model
-checkpoint_path = Path(best_trial.checkpoint.path)
+checkpoint_path = Path(best_result.get_best_checkpoint("Global F1", mode="max").path)
 state_dict = torch.load(checkpoint_path / "model.pt")
 
 # Store the best performing model to study / experiment path
