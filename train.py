@@ -99,23 +99,29 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
         print("Predictions:", val_predictions)
         print("Class F1s:", val_f1_class)
 
-        with TemporaryDirectory() as temp_checkpoint_dir:
-            checkpoint = None
-
-            # Check if we should increment early stop count
-            if val_loss_best is None or val_loss < val_loss_best:
-                val_loss_best = val_loss
-                epochs_since_improvement = 0
-            else:
-                epochs_since_improvement += 1
+        # Check if we should increment early stop count
+        if val_loss_best is None or val_loss < val_loss_best:
+            val_loss_best = val_loss
+            epochs_since_improvement = 0
+        else:
+            epochs_since_improvement += 1
             
-            # Check if we should checkpoint current model
-            if val_f1_global_best is None or val_f1_global > val_f1_global_best:
-                val_f1_global_best = val_f1_global
+        # Check if we should checkpoint current model
+        checkpoint = None
+        if val_f1_global_best is None or val_f1_global > val_f1_global_best:
+            val_f1_global_best = val_f1_global
 
-                # If so, save model parameters
-                torch.save(model.state_dict(), Path(temp_checkpoint_dir) / "model.pt")
-                checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
+            # Create a temporary checkpoint directory
+            with train.get_context().get_trial_dir() as trial_dir:
+                checkpoint_dir = Path(trial_dir) / f"checkpoint_epoch_{epoch}"
+                checkpoint_dir.mkdir(parents=True, exist_ok=True)
+            
+                # Save model to the checkpoint directory
+                model_path = checkpoint_dir / "model.pt"
+                torch.save(model.state_dict(), model_path)
+            
+                # Create a Checkpoint object
+                checkpoint = Checkpoint.from_directory(checkpoint_dir)
         
             # Report to RayTune
             train.report({
