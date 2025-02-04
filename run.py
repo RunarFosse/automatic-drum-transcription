@@ -73,7 +73,7 @@ tuner = tune.Tuner(
         num_samples=num_samples
     ),
     run_config=train.RunConfig(
-        stop={"epochs_since_improvement": 10},
+        stop={"epochs_since_improvement": 5},
         checkpoint_config=train.CheckpointConfig(num_to_keep=1),
         verbose=2
     )
