@@ -48,7 +48,7 @@ device = args.device
 seed = int(time())
 
 config = {
-    "batch_size": tune.choice([128, 256]),
+    "batch_size": 128,
 
     "lr": tune.loguniform(1e-5, 1e-3),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
