@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from pathlib import Path
 from datasets import ADTOF_load
 
-def evaluate_model(model: torch.nn.Module, test_path: Path, device: str):
+def evaluate_model(model: torch.nn.Module, test_path: Path, batch_size: int, device: str):
     """ Evaluate a given model on a given test dataset """
 
     # Declare device and move model
@@ -13,7 +13,7 @@ def evaluate_model(model: torch.nn.Module, test_path: Path, device: str):
     model.to(device)
 
     # Load the test dataset into a dataloader
-    test_loader = ADTOF_load(test_path, shuffle=False)
+    test_loader = ADTOF_load(test_path, shuffle=False, batch_size=batch_size)
 
     model.eval()
     predictions = None

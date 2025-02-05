@@ -38,6 +38,8 @@ Model = ADTOF_FrameAttention
 num_samples = 10
 num_epochs = 100
 
+batch_size = 128
+
 train_path = data_dir / "adtof/adtof_yt_train"
 val_path = data_dir / "adtof/adtof_yt_validation"
 test_path = data_dir / "adtof/adtof_yt_test"
@@ -48,7 +50,7 @@ device = args.device
 seed = int(time())
 
 config = {
-    "batch_size": 128,
+    "batch_size": batch_size,
 
     "lr": tune.loguniform(1e-5, 1e-3),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
@@ -101,7 +103,7 @@ state_dict = torch.load(root_dir / "study" / study / experiment / dataset / "mod
 # Load the best performing model and evaluate it on the test dataset
 model = Model()
 model.load_state_dict(state_dict)
-test_f1_global, test_f1_class = evaluate_model(model, test_path=test_path, device=device)
+test_f1_global, test_f1_class = evaluate_model(model, test_path=test_path, batch_size=batch_size, device=device)
 
 print(" ---------- Evaluation of best perfoming model ---------- ")
 print(f"Global F1: {test_f1_global.item():.4f}")
