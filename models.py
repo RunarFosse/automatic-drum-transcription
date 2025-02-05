@@ -45,9 +45,7 @@ class RNNDecoder(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out, _ = self.bigrus(x)
-
-        out = F.sigmoid(self.fc(out))
-        return out
+        return self.fc(out)
     
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model: int, dropout: float = 0.0, max_len: int = 5000):
