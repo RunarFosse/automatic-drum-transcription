@@ -123,14 +123,14 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
             # Create a Checkpoint object
             checkpoint = Checkpoint.from_directory(checkpoint_dir)
         
-            # Report to RayTune
-            train.report({
-                "Training Loss": train_loss,
-                "Validation Loss": val_loss,
-                "Global F1": val_f1_global.item(),
-                "Class F1": val_f1_class.tolist(),
-                "epochs_since_improvement": epochs_since_improvement
-                },
-                checkpoint=checkpoint
-            )
+        # Report to RayTune
+        train.report({
+            "Training Loss": train_loss,
+            "Validation Loss": val_loss,
+            "Global F1": val_f1_global.item(),
+            "Class F1": val_f1_class.tolist(),
+            "epochs_since_improvement": epochs_since_improvement
+            },
+            checkpoint=checkpoint
+        )
     print("Finished training")
