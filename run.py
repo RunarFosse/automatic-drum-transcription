@@ -46,7 +46,7 @@ print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 
 device = args.device
 seed = int(time())
-
+"""
 config = {
     "batch_size": 128,
 
@@ -95,8 +95,9 @@ state_dict = torch.load(Path(best_checkpoint.path) / "model.pt")
 model_path = (root_dir / "study" / study / experiment / dataset)
 model_path.mkdir(parents=True, exist_ok=True)
 torch.save(state_dict, model_path / "model.pt")
-best_result.metrics_dataframe.to_csv(model_path / "metrics.csv")
+best_result.metrics_dataframe.to_csv(model_path / "metrics.csv") """
 
+state_dict = torch.load(root_dir / "study" / study / experiment / dataset)
 # Load the best performing model and evaluate it on the test dataset
 model = Model()
 model.load_state_dict(state_dict)
