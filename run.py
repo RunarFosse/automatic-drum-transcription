@@ -52,7 +52,7 @@ seed = int(time())
 config = {
     "batch_size": batch_size,
 
-    "lr": tune.loguniform(1e-5, 1e-3),
+    "lr": tune.loguniform(1e-5, 1e-1),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
     "amsgrad": tune.choice([True, False]),
     "optimizer": optim.AdamW,
