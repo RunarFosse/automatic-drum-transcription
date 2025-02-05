@@ -112,16 +112,13 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
             val_f1_global_best = val_f1_global
 
             # Create a temporary checkpoint directory
-            with train.get_context().get_trial_dir() as trial_dir:
-                checkpoint_dir = Path(trial_dir) / f"checkpoint_epoch_{epoch}"
-                checkpoint_dir.mkdir(parents=True, exist_ok=True)
-            
-                # Save model to the checkpoint directory
-                model_path = checkpoint_dir / "model.pt"
+            with TemporaryDirectory() as temp_checkpoint_dir:
+                # Save model to the temporary checkpoint directory
+                model_path = Path(temp_checkpoint_dir) / "model.pt"
                 torch.save(model.state_dict(), model_path)
             
                 # Create a Checkpoint object
-                checkpoint = Checkpoint.from_directory(checkpoint_dir)
+                checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
         
             # Report to RayTune
             train.report({
