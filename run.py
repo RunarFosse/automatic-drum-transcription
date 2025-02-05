@@ -38,9 +38,9 @@ Model = ADTOF_FrameAttention
 num_samples = 10
 num_epochs = 100
 
-train_path = "adtof/adtof_yt_train"
-val_path = "adtof/adtof_yt_validation"
-test_path = "adtof/adtof_yt_test"
+train_path = data_dir / "adtof/adtof_yt_train"
+val_path = data_dir / "adtof/adtof_yt_validation"
+test_path = data_dir / "adtof/adtof_yt_test"
 
 print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 
@@ -65,7 +65,7 @@ config = {
 # Run the experiments
 tuner = tune.Tuner(
     tune.with_resources(
-        trainable=tune.with_parameters(train_model, train_path=data_dir/train_path, val_path=data_dir/val_path),
+        trainable=tune.with_parameters(train_model, train_path=train_path, val_path=val_path),
         resources={"gpu": 1, "accelerator_type:A100": 1}
     ),
     param_space=config,
