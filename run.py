@@ -30,10 +30,10 @@ init(num_gpus=1, num_cpus=16)
 # ----------------------------------------------------------------------------------------------------------------
 
 study = "Architectural Performance"
-experiment = "Convolutional Transformer"
+experiment = "Convolutional RNN"
 dataset = "ADTOF-YT"
 
-Model = ADTOF_FrameAttention
+Model = ADTOF_FrameRNN
 
 num_samples = 10
 num_epochs = 100
