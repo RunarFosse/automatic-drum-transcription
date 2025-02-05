@@ -83,8 +83,9 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
                 val_loss += loss.item()
                 n_batches_val += 1
 
-                # Add to predictions
-                val_predictions += compute_predictions(compute_peaks(outputs), labels)
+                # Compute activation probabilties and add to predictions
+                activations = F.sigmoid(outputs)
+                val_predictions += compute_predictions(compute_peaks(activations), labels)
                     
         # Average the losses
         train_loss /= n_batches_train

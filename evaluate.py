@@ -21,10 +21,12 @@ def evaluate_model(model: torch.nn.Module, test_path: Path, batch_size: int, dev
         inputs, labels = data[0].to(device), data[1].to(device)
         outputs = model(inputs)
 
+        # Compute activation probabilties and add to predictions
+        activations = F.sigmoid(outputs)
         if predictions is None:
-            predictions = compute_predictions(compute_peaks(outputs), labels)
+            predictions = compute_predictions(compute_peaks(activations), labels)
         else:
-            predictions += compute_predictions(compute_peaks(outputs), labels)
+            predictions += compute_predictions(compute_peaks(activations), labels)
     
     # Return F1-score
     return f_measure(predictions)
