@@ -53,7 +53,7 @@ config = {
     "batch_size": batch_size,
 
     #"lr": tune.loguniform(1e-5, 1e-1),
-    "lr": tune.choice([1, 10, 100]),
+    "lr": tune.choice([1, 0.1]),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
     "amsgrad": tune.choice([True, False]),
     "optimizer": optim.AdamW,
