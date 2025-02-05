@@ -41,7 +41,7 @@ class RNNDecoder(nn.Module):
     def __init__(self):
         super().__init__()
         self.bigrus = nn.GRU(576, 60, 3, bidirectional=True, batch_first=True)
-        self.fc = nn.Linear(60, 5)
+        self.fc = nn.Linear(2 * 60, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out, _ = self.bigrus(x)
