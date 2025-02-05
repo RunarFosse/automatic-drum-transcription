@@ -40,12 +40,11 @@ class FrameSynchronousCNNEncoder(nn.Module):
 class RNNDecoder(nn.Module):
     def __init__(self):
         super().__init__()
-        self.bigrus = nn.ModuleList([nn.GRU(576, 576 // 2, 60, bidirectional=True, batch_first=True) for _ in range(3)])
-        self.fc = nn.Linear(576, 5)
+        self.bigrus = nn.GRU(576, 60, 3, bidirectional=True, batch_first=True)
+        self.fc = nn.Linear(60, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        for bigru in self.bigrus:
-            out, _ = bigru(x)
+        out, _ = self.bigrus(x)
 
         out = F.sigmoid(self.fc(out))
         return out
