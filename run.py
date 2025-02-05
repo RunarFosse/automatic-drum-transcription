@@ -25,7 +25,7 @@ data_dir = root_dir / "data"
 tf.config.set_visible_devices([], 'GPU')
 
 # Initialize a Ray instance
-init(num_gpus=1, num_cpus=16)
+"init(num_gpus=1, num_cpus=16)"
 
 # ----------------------------------------------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ model_path.mkdir(parents=True, exist_ok=True)
 torch.save(state_dict, model_path / "model.pt")
 best_result.metrics_dataframe.to_csv(model_path / "metrics.csv") """
 
-state_dict = torch.load(root_dir / "study" / study / experiment / dataset)
+state_dict = torch.load(root_dir / "study" / study / experiment / dataset / "model.pt")
 # Load the best performing model and evaluate it on the test dataset
 model = Model()
 model.load_state_dict(state_dict)
