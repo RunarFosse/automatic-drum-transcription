@@ -52,7 +52,7 @@ seed = int(time())
 config = {
     "batch_size": batch_size,
 
-    "lr": tune.loguniform(1e-5, 1e-3),
+    "lr": tune.loguniform(5e-5, 5e-3),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
     "amsgrad": tune.choice([True, False]),
     "optimizer": optim.AdamW,
@@ -75,7 +75,7 @@ tuner = tune.Tuner(
         num_samples=num_samples
     ),
     run_config=train.RunConfig(
-        stop={"epochs_since_improvement": 5},
+        stop={"epochs_since_improvement": 25},
         checkpoint_config=train.CheckpointConfig(num_to_keep=1),
         verbose=2
     )
