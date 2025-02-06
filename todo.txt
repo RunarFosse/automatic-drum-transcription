@@ -5,6 +5,13 @@
 # Implement new model architectures
 
 # Find and include all datasets
+    # These include:
+        - ENST
+        - RBMA
+        - MDB and MDB 2.0
+        - Slakh
+        - ...
+
 # Perform training and testing over several datasets
 
 # Create analysis notebooks for model performance and plotting
