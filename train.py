@@ -39,7 +39,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
     
     # Start training
     print(f"Started training on {device}")
-    epochs_since_improvement, val_loss_best, val_f1_global_best = 0, None, None
+    epochs_since_improvement, val_loss_best, val_f1_micro_best = 0, None, None
     for epoch in range(config["n_epochs"]):
         model.train()
         train_loss, n_batches_train = 0.0, 0
@@ -96,7 +96,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
         print("Learning rate:", scheduler.get_last_lr())
 
         # Compute F1 score
-        val_f1_global, val_f1_class = f_measure(val_predictions)
+        val_f1_micro, val_f1_macro, val_f1_class = f_measure(val_predictions)
         print("Predictions:", val_predictions)
         print("Class F1s:", val_f1_class)
 
@@ -107,10 +107,10 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
         else:
             epochs_since_improvement += 1
             
-        # Check if we should checkpoint current model
+        # Check if we should checkpoint current model by comparing micro F1 score
         checkpoint = None
-        if val_f1_global_best is None or val_f1_global > val_f1_global_best:
-            val_f1_global_best = val_f1_global
+        if val_f1_micro_best is None or val_f1_micro > val_f1_micro_best:
+            val_f1_micro_best = val_f1_micro
 
             # Create a checkpoint directory within the trial directory
             trial_dir = train.get_context().get_trial_dir()
@@ -128,7 +128,8 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
         train.report({
             "Training Loss": train_loss,
             "Validation Loss": val_loss,
-            "Global F1": val_f1_global.item(),
+            "Micro F1": val_f1_micro.item(),
+            "Macro F1": val_f1_macro.item(),
             "Class F1": val_f1_class.tolist(),
             "epochs_since_improvement": epochs_since_improvement
             },

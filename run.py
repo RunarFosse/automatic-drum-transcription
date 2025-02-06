@@ -83,14 +83,15 @@ tuner = tune.Tuner(
 results = tuner.fit()
 
 # Print the results
-best_result = results.get_best_result("Global F1", mode="max", scope="all")
+best_result = results.get_best_result("Micro F1", mode="max", scope="all")
 print(f"Best result config: {best_result.config}")
 print(f"Best result final validation loss: {best_result.metrics['Validation Loss']}")
-print(f"Best result final validation global F1: {best_result.metrics['Global F1']}")
+print(f"Best result final validation micro F1: {best_result.metrics['Micro F1']}")
+print(f"Best result final validation macro F1: {best_result.metrics['Macro F1']}")
 print(f"Best result final validation class F1: {best_result.metrics['Class F1']}")
 
 # Load the state_dict of the best performing model
-best_checkpoint = best_result.get_best_checkpoint("Global F1", mode="max")
+best_checkpoint = best_result.get_best_checkpoint("Micro F1", mode="max")
 state_dict = torch.load(Path(best_checkpoint.path) / "model.pt")
 
 # Store the best performing model and its metrics to study/experiment path
@@ -103,8 +104,9 @@ state_dict = torch.load(root_dir / "study" / study / experiment / dataset / "mod
 # Load the best performing model and evaluate it on the test dataset
 model = Model()
 model.load_state_dict(state_dict)
-test_f1_global, test_f1_class = evaluate_model(model, test_path=test_path, batch_size=batch_size, device=device)
+test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_path=test_path, batch_size=batch_size, device=device)
 
 print(" ---------- Evaluation of best perfoming model ---------- ")
-print(f"Global F1: {test_f1_global.item():.4f}")
+print(f"Micro F1: {test_f1_micro.item():.4f}")
+print(f"Macro F1: {test_f1_macro.item():.4f}")
 print(f"Class F1: {[f'{test_f1.item():.4f}' for test_f1 in test_f1_class]}")

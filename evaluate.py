@@ -128,22 +128,25 @@ def compute_predictions(activations: torch.Tensor, annotations: torch.Tensor, w:
 
 
 def f_measure(predictions: torch.Tensor):
-    """ Given computed predictions (True Positives, False Positives, False Negatives), compute the F-measure, precision and recall, global and per class """
+    """ Given computed predictions (True Positives, False Positives, False Negatives), compute the F-measure, precision and recall, micro, macro and per class """
 
-    global_precision = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 1])
+    micro_precision = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 1])
     class_precision = predictions[:, 0] / (predictions[:, 0] + predictions[:, 1])
 
-    global_recall = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 2])
+    micro_recall = torch.sum(predictions[:, 0]) / torch.sum(predictions[:, 0] + predictions[:, 2])
     class_recall = predictions[:, 0] / (predictions[:, 0] + predictions[:, 2])
 
-    global_f1 = 2.0 * (global_precision * global_recall) / (global_precision + global_recall)
+    micro_f1 = 2.0 * (micro_precision * micro_recall) / (micro_precision + micro_recall)
     class_f1 = 2.0 * (class_precision * class_recall) / (class_precision + class_recall)
 
     # Replace any NaN resulting from zero-division, with zeros
-    global_f1 = global_f1.nan_to_num(nan=0.0)
+    micro_f1 = micro_f1.nan_to_num(nan=0.0)
     class_f1 = class_f1.nan_to_num(nan=0.0)
 
-    return global_f1, class_f1
+    # Compute the macro F1 as the arithemic mean of class F1s
+    macro_f1 = torch.mean(class_f1)
+
+    return micro_f1, macro_f1, class_f1
 
 if __name__ == "__main__":
     y_pred = torch.tensor([[
@@ -173,6 +176,7 @@ if __name__ == "__main__":
     print("Annotations:\n", annotations.round())
     predictions = compute_predictions(prediction, annotations, w=2)
     print("Predictions:", predictions)
-    f_global, f_class = f_measure(predictions)
-    print("Global F1-score:", f_global)
+    f_micro, f_macro, f_class = f_measure(predictions)
+    print("Micro F1-score:",  f_micro)
+    print("Macro F1-score:", f_macro)
     print("Classwise F1-score:", f_class)
