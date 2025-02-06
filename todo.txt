@@ -1,6 +1,3 @@
-# Test selected model on test data
-
-# Save selected model to experiment directory
 
 # Implement both computing micro and macro F1-scores
 
