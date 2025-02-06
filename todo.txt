@@ -1,3 +1,4 @@
+# Use BCE's pos_weight instead of manual implementation
 
 # Implement both computing micro and macro F1-scores
 
