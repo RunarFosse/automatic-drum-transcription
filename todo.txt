@@ -2,8 +2,6 @@
 
 # Hyperparameter search over number of layers L
 
-# Save test performance measure to .txt after model selection
-
 # Implement new model architectures
 
 # Find and include all datasets

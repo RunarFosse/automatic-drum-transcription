@@ -95,12 +95,12 @@ best_checkpoint = best_result.get_best_checkpoint("Micro F1", mode="max")
 state_dict = torch.load(Path(best_checkpoint.path) / "model.pt")
 
 # Store the best performing model and its metrics to study/experiment path
-model_path = (root_dir / "study" / study / experiment / dataset)
-model_path.mkdir(parents=True, exist_ok=True)
-torch.save(state_dict, model_path / "model.pt")
-best_result.metrics_dataframe.to_csv(model_path / "metrics.csv")
+study_path = (root_dir / "study" / study / experiment / dataset)
+study_path.mkdir(parents=True, exist_ok=True)
+torch.save(state_dict, study_path / "model.pt")
+best_result.metrics_dataframe.to_csv(study_path / "metrics.csv")
 
-state_dict = torch.load(root_dir / "study" / study / experiment / dataset / "model.pt")
+state_dict = torch.load(study_path / "model.pt")
 # Load the best performing model and evaluate it on the test dataset
 model = Model()
 model.load_state_dict(state_dict)
@@ -110,3 +110,15 @@ print(" ---------- Evaluation of best perfoming model ---------- ")
 print(f"Micro F1: {test_f1_micro.item():.4f}")
 print(f"Macro F1: {test_f1_macro.item():.4f}")
 print(f"Class F1: {[f'{test_f1.item():.4f}' for test_f1 in test_f1_class]}")
+
+# Finally, write the results to an output file
+with open(study_path / "results.txt", "w") as output:
+    print(f"Best result config: {best_result.config}", file=output)
+    print(f"Best result final validation loss: {best_result.metrics['Validation Loss']}", file=output)
+    print(f"Best result final validation micro F1: {best_result.metrics['Micro F1']}", file=output)
+    print(f"Best result final validation macro F1: {best_result.metrics['Macro F1']}", file=output)
+    print(f"Best result final validation class F1: {best_result.metrics['Class F1']}", file=output)
+    print(" ---------- Evaluation of best perfoming model ---------- ", file=output)
+    print(f"Micro F1: {test_f1_micro.item():.4f}", file=output)
+    print(f"Macro F1: {test_f1_macro.item():.4f}", file=output)
+    print(f"Class F1: {[f'{test_f1.item():.4f}' for test_f1 in test_f1_class]}", file=output)
