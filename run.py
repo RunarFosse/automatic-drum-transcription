@@ -58,7 +58,7 @@ config = {
     "optimizer": optim.AdamW,
 
     "Model": Model,
-    "n_epochs": num_epochs,
+    "num_epochs": num_epochs,
 
     "device": device,
     "seed": seed,

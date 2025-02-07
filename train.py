@@ -40,7 +40,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
     # Start training
     print(f"Started training on {device}")
     epochs_since_improvement, val_loss_best, val_f1_micro_best = 0, None, None
-    for epoch in range(config["n_epochs"]):
+    for epoch in range(config["num_epochs"]):
         model.train()
         train_loss, n_batches_train = 0.0, 0
         for i, data in enumerate(train_loader):
