@@ -38,9 +38,9 @@ class FrameSynchronousCNNEncoder(nn.Module):
 
 
 class RNNDecoder(nn.Module):
-    def __init__(self):
+    def __init__(self, num_layers: int = 3):
         super().__init__()
-        self.bigrus = nn.GRU(576, 60, 3, bidirectional=True, batch_first=True)
+        self.bigrus = nn.GRU(576, 60, num_layers=num_layers, bidirectional=True, batch_first=True)
         self.fc = nn.Linear(2 * 60, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -68,10 +68,10 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
     
 class AttentionLayer(nn.Module):
-    def __init__(self, n_heads: int):
+    def __init__(self, num_heads: int):
         super().__init__()
         self.layer_norm = nn.LayerNorm(576)
-        self.attention = nn.MultiheadAttention(embed_dim=576, num_heads=n_heads, batch_first=True)
+        self.attention = nn.MultiheadAttention(embed_dim=576, num_heads=num_heads, batch_first=True)
         self.dropout = nn.Dropout(p = 0.1)
 
         self.fc1 = nn.Linear(576, 4 * 576)
@@ -87,10 +87,10 @@ class AttentionLayer(nn.Module):
         return self.fc2(out)
 
 class AttentionDecoder(nn.Module):
-    def __init__(self, n_heads: int = 6, n_layers: int = 5):
+    def __init__(self, num_heads: int = 6, num_layers: int = 5):
         super().__init__()
         self.positional_encoding = PositionalEncoding(d_model=576)
-        self.layers = nn.Sequential(*[AttentionLayer(n_heads=n_heads) for _ in range(n_layers)])
+        self.layers = nn.Sequential(*[AttentionLayer(num_heads=num_heads) for _ in range(num_layers)])
         self.fc = nn.Linear(576, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -101,10 +101,10 @@ class AttentionDecoder(nn.Module):
 
 
 class ADTOF_FrameRNN(nn.Module):
-    def __init__(self):
+    def __init__(self, num_layers: int = 3):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
-        self.decoder = RNNDecoder()
+        self.decoder = RNNDecoder(num_layers=num_layers)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
@@ -112,10 +112,10 @@ class ADTOF_FrameRNN(nn.Module):
         return self.decoder(latent)
     
 class ADTOF_FrameAttention(nn.Module):
-    def __init__(self):
+    def __init__(self, num_heads: int = 6, num_layers: int = 5):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
-        self.decoder = AttentionDecoder()
+        self.decoder = AttentionDecoder(num_heads=num_heads, num_layers=num_layers)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
