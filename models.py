@@ -90,14 +90,12 @@ class AttentionDecoder(nn.Module):
     def __init__(self, n_heads: int = 6, n_layers: int = 5):
         super().__init__()
         self.positional_encoding = PositionalEncoding(d_model=576)
-        self.layers = nn.ModuleList([AttentionLayer(n_heads=n_heads) for _ in range(n_layers)])
+        self.layers = nn.Sequential(*[AttentionLayer(n_heads=n_heads) for _ in range(n_layers)])
         self.fc = nn.Linear(576, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.positional_encoding(x)
-
-        for layer in self.layers:
-            out = layer(out)
+        out = self.layers(out)
 
         return self.fc(out)
 
