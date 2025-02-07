@@ -25,7 +25,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
     val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=False, seed=config["seed"])
 
     # Create the model, loss function and optimizer
-    model = config["Model"]().to(device)
+    model = config["Model"](**config["parameters"]).to(device)
     loss_fn = nn.BCEWithLogitsLoss(reduction="none")
     optimizer = config["optimizer"](model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
     optimizer.zero_grad(set_to_none=True)

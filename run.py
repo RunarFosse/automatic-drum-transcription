@@ -30,10 +30,10 @@ init(num_gpus=1, num_cpus=16)
 # ----------------------------------------------------------------------------------------------------------------
 
 study = "Architectural Performance"
-experiment = "Convolutional RNN"
+experiment = "Test Test"
 dataset = "ADTOF-YT"
 
-Model = ADTOF_FrameRNN
+Model = ADTOF_FrameAttention
 
 num_samples = 10
 num_epochs = 100
@@ -51,6 +51,7 @@ seed = int(time())
 
 config = {
     "batch_size": batch_size,
+    "num_epochs": num_epochs,
 
     "lr": tune.loguniform(5e-5, 5e-3),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
@@ -58,7 +59,10 @@ config = {
     "optimizer": optim.AdamW,
 
     "Model": Model,
-    "num_epochs": num_epochs,
+    "parameters": {
+        "num_heads": tune.choice([4, 6, 8]),
+        "num_layers": tune.grid_search([3, 4, 5, 6])
+    },
 
     "device": device,
     "seed": seed,
