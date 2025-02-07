@@ -1,7 +1,5 @@
 # Use BCE's pos_weight instead of manual implementation
 
-# Hyperparameter search over number of layers L
-
 # Implement new model architectures
 
 # Find and include all datasets
