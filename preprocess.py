@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 
 def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
+    """ Compute the infrequency weight of an instrument, given as the 'inverse estimated entropy of their event activity distribution'. """
     n_classes = None
     probabilities = None
 
