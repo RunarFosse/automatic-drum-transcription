@@ -35,7 +35,7 @@ dataset = "ADTOF-YT"
 
 Model = ADTOF_FrameAttention
 
-num_samples = 10
+num_samples = 1
 num_epochs = 100
 
 batch_size = 128
@@ -60,7 +60,7 @@ config = {
 
     "Model": Model,
     "parameters": {
-        "num_heads": tune.choice([4, 6, 8]),
+        "num_heads": tune.grid_search([4, 6, 8]),
         "num_layers": tune.grid_search([3, 4, 5, 6])
     },
 
