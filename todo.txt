@@ -1,6 +1,5 @@
-# Use BCE's pos_weight instead of manual implementation
-
 # Implement new model architectures
+    # And fixing transformer model
 
 # Find and include all datasets
     # These include:
