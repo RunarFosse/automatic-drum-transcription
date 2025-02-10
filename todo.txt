@@ -1,6 +1,8 @@
 # Implement new model architectures
     # And fixing transformer model
 
+# -> Implement groundbreaking transformer model
+
 # Find and include all datasets
     # These include:
         - ENST
