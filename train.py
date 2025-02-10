@@ -64,8 +64,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
             # And store training loss
             train_loss += loss.item()
             n_batches_train += 1
-        
-        print(torch.stack((F.sigmoid(outputs), labels), dim=-1))
+
 
         # After a training epoch, compute validation performance
         model.eval()
@@ -86,6 +85,9 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
                 # Compute activation probabilties and add to predictions
                 activations = F.sigmoid(outputs)
                 val_predictions += compute_predictions(compute_peaks(activations), labels)
+
+                if i == 0:
+                    print(torch.stack((F.sigmoid(outputs), labels), dim=-1))
                     
         # Average the losses
         train_loss /= n_batches_train
