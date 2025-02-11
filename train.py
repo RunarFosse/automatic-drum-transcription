@@ -10,7 +10,6 @@ from preprocess import compute_infrequency_weights
 from evaluate import compute_peaks, compute_predictions, f_measure
 
 from pathlib import Path
-from tempfile import TemporaryDirectory
 
 
 def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
@@ -39,7 +38,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
     
     # Start training
     print(f"Started training on {device}")
-    epochs_since_improvement, val_loss_best, val_f1_micro_best = 0, None, None
+    epochs_since_improvement, val_loss_best, val_f1_micro_best, model_val_state_dict = 0, None, None, None
     for epoch in range(config["num_epochs"]):
         model.train()
         train_loss, n_batches_train = 0.0, 0
@@ -106,6 +105,8 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
         if val_loss_best is None or val_loss < val_loss_best:
             val_loss_best = val_loss
             epochs_since_improvement = 0
+
+            model_val_state_dict = model.state_dict().detatch()
         else:
             epochs_since_improvement += 1
             
@@ -122,6 +123,10 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
             # Save model to the checkpoint directory
             model_path = checkpoint_dir / "model.pt"
             torch.save(model.state_dict(), model_path)
+
+            # Also save model with lowest validation loss
+            model_val_path = checkpoint_dir / "model_val.pt"
+            torch.save(model_val_state_dict, model_val_path)
             
             # Create a Checkpoint object
             checkpoint = Checkpoint.from_directory(checkpoint_dir)
