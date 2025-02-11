@@ -25,8 +25,8 @@ data_dir = root_dir / "data"
 tf.config.set_visible_devices([], 'GPU')
 
 # Initialize a Ray instance
-home_dir = Path("~").resolve()
-init(num_gpus=1, num_cpus=16, _temp_dir=home_dir / ".ray_tmp")
+temp_dir = Path.home() / ".ray_temp"
+init(num_gpus=1, num_cpus=16, _temp_dir=temp_dir.as_uri())
 
 # ----------------------------------------------------------------------------------------------------------------
 
