@@ -1,5 +1,4 @@
 # Implement new model architectures
-    # And fixing transformer model
 
 # -> Implement groundbreaking transformer model
 
