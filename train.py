@@ -10,6 +10,7 @@ from preprocess import compute_infrequency_weights
 from evaluate import compute_peaks, compute_predictions, f_measure
 
 from pathlib import Path
+from copy import deepcopy
 
 
 def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
@@ -106,7 +107,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
             val_loss_best = val_loss
             epochs_since_improvement = 0
 
-            model_val_state_dict = model.state_dict().detatch()
+            model_val_state_dict = deepcopy(model.state_dict())
         else:
             epochs_since_improvement += 1
             
