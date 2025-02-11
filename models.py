@@ -82,7 +82,7 @@ class AttentionLayer(nn.Module):
         out1, _ = self.attention(x, x, x)
         out1 = self.norm1(self.dropout(out1) + x)
 
-        out2 = F.Gelu(self.fc1(out1))
+        out2 = F.gelu(self.fc1(out1))
         out2 = self.fc2(out2)
         out2 = self.norm2(self.dropout(out2) + out1)
         return out2
