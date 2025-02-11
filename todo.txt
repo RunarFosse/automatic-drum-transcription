@@ -2,8 +2,6 @@
 
 # -> Implement groundbreaking transformer model
 
-# Store non-overfitting model temporarily to test generality 
-
 # Find and include all datasets
     # These include:
         - ENST
