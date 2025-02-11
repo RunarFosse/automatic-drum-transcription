@@ -22,7 +22,7 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
         
     # Load the datasets
     train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=config["seed"])
-    val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=False, seed=config["seed"])
+    val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=True, seed=config["seed"])
 
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)
