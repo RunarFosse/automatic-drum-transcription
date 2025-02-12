@@ -2,8 +2,6 @@
 
 # -> Implement groundbreaking transformer model
 
-# Add dataloaders into config, remove loading from training function
-
 # Find and include all datasets
     # These include:
         - ENST
