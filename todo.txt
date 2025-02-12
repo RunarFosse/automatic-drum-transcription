@@ -8,6 +8,7 @@
         - RBMA
         - MDB and MDB 2.0
         - Slakh
+        - EGMD
         - ADTOS
 
 # Perform training and testing over several datasets
