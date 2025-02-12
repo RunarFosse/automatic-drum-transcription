@@ -35,12 +35,14 @@ class AttentionLayer(nn.Module):
         self.norm2 = nn.LayerNorm(576)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        out1, _ = self.attention(x, x, x)
-        out1 = self.norm1(self.dropout(out1) + x)
+        out1 = self.norm1(x)
+        out1, _ = self.attention(out1, out1, out1)
+        out1 = self.dropout(out1) + x
 
-        out2 = F.gelu(self.fc1(out1))
-        out2 = self.fc2(out2)
-        out2 = self.norm2(self.dropout(out2) + out1)
+        out2 = self.norm2(out1)
+        out2 = F.gelu(self.fc1(out2))
+        out2 = self.dropout(self.fc2(out2))
+        out2 = out2 + out1
         return out2
 
 class AttentionDecoder(nn.Module):
