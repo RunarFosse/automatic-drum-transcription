@@ -52,6 +52,7 @@ test_path = data_dir / "adtof/adtof_yt_test"
 
 train_loader = ADTOF_load(train_path, batch_size=batch_size, shuffle=True, seed=seed)
 val_loader = ADTOF_load(val_path, batch_size=batch_size, shuffle=True, seed=seed)
+test_loader = ADTOF_load(test_path, batch_size=batch_size, shuffle=False, seed=seed)
 
 config = {
     "num_epochs": num_epochs,
@@ -111,11 +112,10 @@ study_path.mkdir(parents=True, exist_ok=True)
 torch.save(state_dict, study_path / "model.pt")
 best_result.metrics_dataframe.to_csv(study_path / "metrics.csv")
 
-state_dict = torch.load(study_path / "model.pt")
 # Load the best performing model and evaluate it on the test dataset
 model = Model()
 model.load_state_dict(state_dict)
-test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_path=test_path, batch_size=batch_size, device=device)
+test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, device=device)
 
 print(" ---------- Evaluation of best perfoming model ---------- ")
 print(f"Micro F1: {test_f1_micro.item():.4f}")

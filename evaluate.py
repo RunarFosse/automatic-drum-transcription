@@ -1,19 +1,15 @@
 import torch
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 
-from pathlib import Path
-from datasets import ADTOF_load
 
-def evaluate_model(model: torch.nn.Module, test_path: Path, batch_size: int, device: str):
+def evaluate_model(model: torch.nn.Module, test_loader: DataLoader, device: str):
     """ Evaluate a given model on a given test dataset """
 
     # Declare device and move model
     device = device if torch.cuda.is_available() else "cpu"
     print(f"Testing: Can use CUDA: {torch.cuda.is_available()}")
     model.to(device)
-
-    # Load the test dataset into a dataloader
-    test_loader = ADTOF_load(test_path, shuffle=False, batch_size=batch_size)
 
     model.eval()
     predictions = None
