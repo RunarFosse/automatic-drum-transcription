@@ -13,7 +13,7 @@ from pathlib import Path
 from copy import deepcopy
 
 
-def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
+def train_model(config: tune.TuneConfig):
     """ Training function to use with RayTune """
 
     # Declare device
@@ -21,8 +21,8 @@ def train_model(config: tune.TuneConfig, train_path: Path, val_path: Path):
     print(f"Training: Can use CUDA: {torch.cuda.is_available()}")
         
     # Load the datasets
-    train_loader = ADTOF_load(train_path, batch_size=config["batch_size"], shuffle=True, seed=config["seed"])
-    val_loader = ADTOF_load(val_path, batch_size=config["batch_size"], shuffle=True, seed=config["seed"])
+    train_loader = config["train_loader"]
+    val_loader = config["val_loader"]
 
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)

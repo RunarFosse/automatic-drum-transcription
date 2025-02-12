@@ -4,6 +4,7 @@ from torch import optim
 from ray import init, tune, train
 from time import time
 from models import ADTOF_FrameRNN, ADTOF_FrameAttention
+from datasets import ADTOF_load
 from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
@@ -30,6 +31,10 @@ init(num_gpus=1, num_cpus=16, _temp_dir=temp_dir.as_posix())
 
 # ----------------------------------------------------------------------------------------------------------------
 
+print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
+device = args.device
+seed = int(time())
+
 study = "Architectural Performance"
 experiment = "Test Test"
 dataset = "ADTOF-YT"
@@ -45,14 +50,15 @@ train_path = data_dir / "adtof/adtof_yt_train"
 val_path = data_dir / "adtof/adtof_yt_validation"
 test_path = data_dir / "adtof/adtof_yt_test"
 
-print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
-
-device = args.device
-seed = int(time())
+train_loader = ADTOF_load(train_path, batch_size=batch_size, shuffle=True, seed=seed)
+val_loader = ADTOF_load(val_path, batch_size=batch_size, shuffle=True, seed=seed)
 
 config = {
-    "batch_size": batch_size,
     "num_epochs": num_epochs,
+    "batch_size": batch_size,
+
+    "train_loader": train_loader,
+    "val_loader": val_loader,
 
     "lr": tune.loguniform(5e-5, 5e-4),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
@@ -72,7 +78,7 @@ config = {
 # Run the experiments
 tuner = tune.Tuner(
     tune.with_resources(
-        trainable=tune.with_parameters(train_model, train_path=train_path, val_path=val_path),
+        trainable=train_model,
         resources={"gpu": 1, "accelerator_type:A100": 1}
     ),
     param_space=config,
