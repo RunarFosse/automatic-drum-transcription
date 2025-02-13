@@ -14,7 +14,7 @@ def compute_normalization(train_path: Path, batch_size: int = 1) -> Tuple[torch.
     num_batches = len(train_loader)
 
     # And compute values
-    mean, std = torch.zeros(1), torch.zeors(1)
+    mean, std = torch.zeros(1), torch.zeros(1)
     for features, _ in train_loader:
         mean = torch.mean(features, dim=(0, 1, 2))
         std = torch.std(features, dim=(0, 1, 2))
