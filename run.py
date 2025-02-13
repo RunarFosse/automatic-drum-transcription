@@ -113,7 +113,7 @@ torch.save(state_dict, study_path / "model.pt")
 best_result.metrics_dataframe.to_csv(study_path / "metrics.csv")
 
 # Load the best performing model and evaluate it on the test dataset
-model = Model()
+model = Model(**best_result.config["parameters"])
 model.load_state_dict(state_dict)
 test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, device=device)
 
