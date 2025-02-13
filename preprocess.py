@@ -25,15 +25,15 @@ def compute_normalization(train_path: Path, batch_size: int = 1) -> Tuple[torch.
 def create_transform(mean: torch.Tensor, std: torch.Tensor, channels_last: bool) -> transforms.Compose:
     """ Create a preprocessing transforms pipeline. """
     # Normalize the data
-    transforms = [
+    composition = [
         transforms.Normalize(mean=mean, std=std),
         ]
 
     # Permute the images if channels_last is set to True
     if channels_last:
-        transforms.append(ops.Permute((0, 3, 1, 2)))
+        composition.append(ops.Permute((0, 3, 1, 2)))
 
-    return transforms.Compose(transforms)
+    return transforms.Compose(composition)
 
 
 def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
