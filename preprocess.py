@@ -5,10 +5,10 @@ from pathlib import Path
 from typing import Tuple
 
 
-def compute_normalization(train_path: Path, batch_size: int = 1) -> Tuple[torch.Tensor]:
+def compute_normalization(train_path: Path) -> Tuple[torch.Tensor]:
     """ Compute the normalization terms, (mean, std), of the training dataset. """
     # Insert the training dataset into a dataloader
-    train_loader = DataLoader(torch.load(train_path), shuffle=True, batch_size=batch_size, num_workers=16)
+    train_loader = DataLoader(torch.load(train_path), shuffle=True, batch_size=1, num_workers=16)
 
     # And compute values
     features = torch.stack([feature for feature, _ in train_loader])
