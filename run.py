@@ -71,7 +71,7 @@ config = {
     "Model": Model,
     "parameters": {
         "num_heads": tune.grid_search([4, 6, 8]),
-        "num_layers": tune.grid_search([6, 8, 10])
+        "num_layers": tune.grid_search([2, 4, 6, 8, 10])
     },
 
     "device": device,
