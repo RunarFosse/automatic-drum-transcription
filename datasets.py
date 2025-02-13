@@ -68,10 +68,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser("datasets.py")
     parser.add_argument("dataset", help="The dataset to convert", type=str)
     args = parser.parse_args()
-    print(args.dataset)
 
     # Get the path of the folder
     path = Path(__file__).resolve().parent / args.dataset
+
+    print("Loading TensorFlow dataset from disk")
 
     # Load the dataset
     tf_dataset = tf.data.Dataset.load(str(path))
