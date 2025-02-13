@@ -54,7 +54,7 @@ def train_model(config: tune.TuneConfig):
         for i, data in enumerate(train_loader):
             # Perform forward, backward and optimization step
             inputs, labels = data[0].to(device), data[1].to(device)
-            outputs = model(inputs)
+            outputs = model(transforms(inputs))
 
             # Compute class weights given labels and infrequency weights
             class_weights = torch.where(labels == 0, torch.tensor(0.0), infrequency_weights).sum(dim=2)
@@ -81,7 +81,7 @@ def train_model(config: tune.TuneConfig):
         with torch.no_grad():
             for i, data in enumerate(val_loader):
                 inputs, labels = data[0].to(device), data[1].to(device)
-                outputs = model(inputs)
+                outputs = model(transforms(inputs))
 
                 class_weights = torch.where(labels == 0, torch.tensor(0.0), infrequency_weights).sum(dim=2)
                 class_weights = torch.where(class_weights == 0.0, torch.tensor(1.0), class_weights)
