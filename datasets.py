@@ -100,11 +100,11 @@ if __name__ == "__main__":
     
     # Load dataset and verify that everything is correct
     dataset = torch.load(path.with_suffix(".pt"))
-    print("Final dataset contains ", "\033[92m", len(dataset), "\033[0m", " entries", sep="")
-    print("Each entry has features of shape: ", "\033[92m", dataset[0][0].shape, "\033[0m", ", and labels of shape: ", "\033[92m", dataset[0][1].shape, "\033[0m", sep="")
+    print("\033[92m", "Final dataset contains ", "\033[0m", len(dataset), "\033[92m", " entries", "\033[0m", sep="")
+    print("\033[92m", "Each entry has features of shape: ", "\033[0m", dataset[0][0].shape, "\033[92m", ", and labels of shape: ", "\033[0m", dataset[0][1].shape, sep="")
 
     # Verify that dataloaders work
     dataloader = DataLoader(dataset, batch_size=16)
     for features, labels in dataloader:
-        print("Batched entry in dataloader has features of shape: ", "\033[92m", features.shape, "\033[0m", ", and labels of shape: ", "\033[92m", labels.shape, "\033[0m", sep="")
+        print("\033[92m", "Batched entry in dataloader has features of shape: ", "\033[0m", features.shape, "\033[92m", ", and labels of shape: ", "\033[0m", labels.shape, sep="")
         break
