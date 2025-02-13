@@ -96,15 +96,15 @@ if __name__ == "__main__":
     # And store the dataset to the disk under the first path
     torch.save(dataset, path.with_suffix(".pt"))
 
-    print("\033[92m", "Finished!", "\033[0m")
+    print("\033[95m", "Finished!", "\033[0m")
     
     # Load dataset and verify that everything is correct
     dataset = torch.load(path.with_suffix(".pt"))
-    print("Final dataset contains", "\033[95m", len(dataset), "\033[0m", "entries")
-    print("Each entry has features of shape:", "\033[95m", dataset[0][0].shape, "\033[0m", "and labels of shape", "\033[95m", dataset[0][1].shape, "\033[0m")
+    print("Final dataset contains", "\033[92m", len(dataset), "\033[0m", "entries")
+    print("Each entry has features of shape:", "\033[92m", dataset[0][0].shape, "\033[0m", "and labels of shape", "\033[92m", dataset[0][1].shape, "\033[0m")
 
     # Verify that dataloaders work
     dataloader = DataLoader(dataset, batch_size=16)
     for features, labels in dataloader:
-        print("Batched entry in dataloader has features of shape:", "\033[95m", features.shape, "\033[0m", "and labels of shape", "\033[95m", labels.shape, "\033[0m")
+        print("Batched entry in dataloader has features of shape:", "\033[92m", features.shape, "\033[0m", "and labels of shape", "\033[92m", labels.shape, "\033[0m")
         break
