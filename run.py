@@ -58,9 +58,6 @@ config = {
     "num_epochs": num_epochs,
     "batch_size": batch_size,
 
-    "train_loader": train_loader,
-    "val_loader": val_loader,
-
     "lr": tune.loguniform(5e-5, 5e-4),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
     "amsgrad": tune.choice([True, False]),
@@ -79,7 +76,7 @@ config = {
 # Run the experiments
 tuner = tune.Tuner(
     tune.with_resources(
-        trainable=train_model,
+        trainable=tune.with_parameters(train_model, train_loader=train_loader, val_loader=val_loader),
         resources={"gpu": 1, "accelerator_type:A100": 1}
     ),
     param_space=config,
