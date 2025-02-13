@@ -52,6 +52,8 @@ test_path = data_dir / "adtof/adtof_yt_test.pt"
 
 feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size)
 
+print(f"Traning data has a mean of: {feature_mean}, and a std of: {feature_std}")
+
 config = {
     "num_epochs": num_epochs,
     "batch_size": batch_size,
