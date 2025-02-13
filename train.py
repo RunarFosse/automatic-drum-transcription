@@ -3,7 +3,6 @@ import torch.nn.functional as F
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
-
 from ray import train, tune
 from ray.train import Checkpoint
 
@@ -14,12 +13,21 @@ from pathlib import Path
 from copy import deepcopy
 
 
-def train_model(config: tune.TuneConfig, train_loader: DataLoader, val_loader: DataLoader):
+def train_model(config: tune.TuneConfig):
     """ Training function to use with RayTune """
+    # Seed torch and cuda
+    seed = config["seed"]
+    if seed is not None:
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed(seed)
 
     # Declare device
     device = config["device"] if torch.cuda.is_available() else "cpu"
     print(f"Training: Can use CUDA: {torch.cuda.is_available()}")
+
+    # Load the datasets into dataloaders
+    train_loader = DataLoader(torch.load(config["train_path"]), shuffle=True, batch_size=config["batch_size"])
+    val_loader = DataLoader(torch.load(config["train_val"]), shuffle=True, batch_size=config["batch_size"])
 
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)

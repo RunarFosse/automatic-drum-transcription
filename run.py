@@ -50,13 +50,12 @@ train_path = data_dir / "adtof/adtof_yt_train"
 val_path = data_dir / "adtof/adtof_yt_validation"
 test_path = data_dir / "adtof/adtof_yt_test"
 
-train_loader = ADTOF_load(train_path, batch_size=batch_size, shuffle=True, seed=seed)
-val_loader = ADTOF_load(val_path, batch_size=batch_size, shuffle=True, seed=seed)
-test_loader = ADTOF_load(test_path, batch_size=batch_size, shuffle=False, seed=seed)
-
 config = {
     "num_epochs": num_epochs,
     "batch_size": batch_size,
+
+    "train_path": train_path,
+    "val_path": val_path,
 
     "lr": tune.loguniform(5e-5, 5e-4),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
@@ -76,7 +75,7 @@ config = {
 # Run the experiments
 tuner = tune.Tuner(
     tune.with_resources(
-        trainable=tune.with_parameters(train_model, train_loader=train_loader, val_loader=val_loader),
+        trainable=train_model,
         resources={"gpu": 1, "accelerator_type:A100": 1}
     ),
     param_space=config,
@@ -113,7 +112,7 @@ best_result.metrics_dataframe.to_csv(study_path / "metrics.csv")
 # Load the best performing model and evaluate it on the test dataset
 model = Model(**best_result.config["parameters"])
 model.load_state_dict(state_dict)
-test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, device=device)
+test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_path=test_path, batch_size=batch_size, seed=seed, device=device)
 
 print(" ---------- Evaluation of best perfoming model ---------- ")
 print(f"Micro F1: {test_f1_micro.item():.4f}")

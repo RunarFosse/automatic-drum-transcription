@@ -1,15 +1,22 @@
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from pathlib import Path
 
-
-def evaluate_model(model: torch.nn.Module, test_loader: DataLoader, device: str):
+def evaluate_model(model: torch.nn.Module, test_path: Path, device: str, batch_size: int = 1, seed: int = None):
     """ Evaluate a given model on a given test dataset """
+    # Seed torch and cuda
+    if seed is not None:
+        torch.manual_seed(seed)
+        torch.cuda.manual_seed(seed)
 
     # Declare device and move model
     device = device if torch.cuda.is_available() else "cpu"
     print(f"Testing: Can use CUDA: {torch.cuda.is_available()}")
     model.to(device)
+
+    # Load the test dataset into a dataloader
+    test_loader = DataLoader(torch.load(test_path), batch_size=batch_size)
 
     model.eval()
     predictions = None
