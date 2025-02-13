@@ -46,9 +46,9 @@ num_epochs = 100
 
 batch_size = 128
 
-train_path = data_dir / "adtof/adtof_yt_train"
-val_path = data_dir / "adtof/adtof_yt_validation"
-test_path = data_dir / "adtof/adtof_yt_test"
+train_path = data_dir / "adtof/adtof_yt_train.pt"
+val_path = data_dir / "adtof/adtof_yt_validation.pt"
+test_path = data_dir / "adtof/adtof_yt_test.pt"
 
 config = {
     "num_epochs": num_epochs,
