@@ -20,8 +20,8 @@ def train_model(config: tune.TuneConfig):
     print(f"Training: Can use CUDA: {torch.cuda.is_available()}")
         
     # Load the datasets
-    train_loader = config["train_loader"]
-    val_loader = config["val_loader"]
+    train_loader = config["data"]["train_loader"]
+    val_loader = config["data"]["val_loader"]
 
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)

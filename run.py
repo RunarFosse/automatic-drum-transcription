@@ -58,8 +58,10 @@ config = {
     "num_epochs": num_epochs,
     "batch_size": batch_size,
 
-    "train_loader": train_loader,
-    "val_loader": val_loader,
+    "data": {
+        "train_loader": train_loader,
+        "val_loader": val_loader,
+    },
 
     "lr": tune.loguniform(5e-5, 5e-4),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
