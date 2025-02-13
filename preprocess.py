@@ -1,5 +1,35 @@
 import torch
 from torch.utils.data import DataLoader
+from torchvision import transforms, ops
+from pathlib import Path
+from typing import Tuple
+
+
+def compute_normalization(train_path: Path, batch_size: int = 1) -> Tuple[torch.Tensor]:
+    """ Compute the normalization terms, (mean, std), of the training dataset. """
+    # Insert the training dataset into a dataloader
+    train_loader = DataLoader(torch.load(train_path), shuffle=True, batch_size=batch_size, num_workers=16)
+
+    # And compute values
+    features = torch.stack([feature for feature, _ in train_loader])
+    feature_mean = features.mean((0, 1, 2))
+    feature_std = features.std((0, 1, 2))
+
+    return feature_mean, feature_std
+
+def create_transform(mean: torch.Tensor, std: torch.Tensor, channels_last: bool) -> transforms.Compose:
+    """ Create a preprocessing transforms pipeline. """
+    # Normalize the data
+    transforms = [
+        transforms.Normalize(mean=mean, std=std),
+        ]
+
+    # Permute the images if channels_last is set to True
+    if channels_last:
+        transforms.append(ops.Permute((0, 3, 1, 2)))
+
+    return transforms.Compose(transforms)
+
 
 def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     """ Compute the infrequency weight of an instrument, given as the 'inverse estimated entropy of their event activity distribution'. """

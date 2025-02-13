@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from ray import train, tune
 from ray.train import Checkpoint
 
-from preprocess import compute_infrequency_weights
+from preprocess import compute_infrequency_weights, create_transform
 from evaluate import compute_peaks, compute_predictions, f_measure
 
 from pathlib import Path
@@ -27,7 +27,10 @@ def train_model(config: tune.TuneConfig):
 
     # Load the datasets into dataloaders
     train_loader = DataLoader(torch.load(config["train_path"]), shuffle=True, batch_size=config["batch_size"], num_workers=16)
-    val_loader = DataLoader(torch.load(config["train_val"]), shuffle=True, batch_size=config["batch_size"], num_workers=16)
+    val_loader = DataLoader(torch.load(config["val_path"]), shuffle=True, batch_size=config["batch_size"], num_workers=16)
+
+    # Create a transform preprocessing pipeline
+    transforms = create_transform(**config["transforms"], channels_last=True)
 
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)

@@ -4,6 +4,7 @@ from torch import optim
 from ray import init, tune, train
 from time import time
 from models import ADTOF_FrameRNN, ADTOF_FrameAttention
+from preprocess import compute_normalization
 from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
@@ -49,12 +50,19 @@ train_path = data_dir / "adtof/adtof_yt_train.pt"
 val_path = data_dir / "adtof/adtof_yt_validation.pt"
 test_path = data_dir / "adtof/adtof_yt_test.pt"
 
+feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size)
+
 config = {
     "num_epochs": num_epochs,
     "batch_size": batch_size,
 
     "train_path": train_path,
     "val_path": val_path,
+
+    "transforms": {
+        "mean": feature_mean,
+        "std": feature_std
+    },
 
     "lr": tune.loguniform(5e-5, 5e-4),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
