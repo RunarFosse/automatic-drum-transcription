@@ -2,6 +2,8 @@
 
 # -> Implement groundbreaking transformer model
 
+# Implement test-only run in run.py
+
 # Find and include all datasets
     # These include:
         - ENST
