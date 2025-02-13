@@ -1,8 +1,10 @@
-import tensorflow as tf
 import torch
-from torch.utils.data import IterableDataset, DataLoader
+import numpy as np
+import tensorflow as tf
+from torch.utils.data import IterableDataset, DataLoader, TensorDataset
 from pathlib import Path
 
+""" Run this file to turn a stored Tensorflow dataset into a stored PyTorch dataset """
 
 
 class TensorFlowDatasetIterable(IterableDataset):
@@ -57,3 +59,51 @@ def ADTOF_load(path: Path, batch_size = 1, shuffle = False, transform=None, seed
     # And return it as a PyTorch DataLoader
     dataloader = DataLoader(dataset, batch_size = None)
     return dataloader
+
+
+
+if __name__ == "__main__":
+    # Declare an argument parser for this file
+    import argparse
+    parser = argparse.ArgumentParser("datasets.py")
+    parser.add_argument("dataset", help="The dataset to convert", type=str)
+    args = parser.parse_args()
+    print(args.dataset)
+
+    # Get the path of the folder
+    path = Path(__file__).resolve().parent / args.dataset
+
+    # Load the dataset
+    tf_dataset = tf.data.Dataset.load(str(path))
+
+    print("Loading data into lists")
+
+    # Store all features and labels
+    features, labels = [], []
+    for data, label in tf_dataset.as_numpy_iterator():
+        features.append(data["x"])
+        labels.append(label)
+    features, labels = np.array(features), np.array(labels)
+
+    print("Creating tensor datasets")
+
+    # Turn them into a Pytorch tensor dataset
+    dataset = TensorDataset(torch.tensor(features), torch.tensor(labels))
+
+    print("Store dataset to disk")
+
+    # And store the dataset to the disk under the first path
+    torch.save(dataset, path.with_suffix(".pt"))
+
+    print("Finished!")
+    
+    # Load dataset and verify that everything is correct
+    dataset = torch.load(path.with_suffix(".pt"))
+    print("Final dataset contains", len(dataset), "entries")
+    print("Each entry has features of shape:", dataset[0][0].shape, "and labels of shape", dataset[0][1].shape)
+
+    # Verify that dataloaders work
+    dataloader = DataLoader(dataset, batch_size=16)
+    for features, labels in dataloader:
+        print("Batched entry in dataloader has features of shape:", features.shape, "and labels of shape", labels.shape)
+        break
