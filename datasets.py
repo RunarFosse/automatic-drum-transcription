@@ -96,7 +96,7 @@ if __name__ == "__main__":
     # And store the dataset to the disk under the first path
     torch.save(dataset, path.with_suffix(".pt"))
 
-    print("\033[95m", "Finished!", "\033[0m")
+    print("\033[95m", "Finished!", "\033[0m", sep="")
     
     # Load dataset and verify that everything is correct
     dataset = torch.load(path.with_suffix(".pt"))
