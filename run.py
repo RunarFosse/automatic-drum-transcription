@@ -1,10 +1,11 @@
 import argparse
 import torch
 from torch import optim
+from torch.utils.data import DataLoader
 from ray import init, tune, train
 from time import time
 from models import ADTOF_FrameRNN, ADTOF_FrameAttention
-from preprocess import compute_normalization
+from preprocess import compute_normalization, create_transform
 from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
@@ -118,10 +119,16 @@ torch.save(state_dict, study_path / "model.pt")
 torch.save(best_result.config, study_path / "config.pt")
 best_result.metrics_dataframe.to_csv(study_path / "metrics.csv")
 
-# Load the best performing model and evaluate it on the test dataset
+# Load the best performing model
 model = Model(**best_result.config["parameters"])
 model.load_state_dict(state_dict)
-test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_path=test_path, batch_size=batch_size, seed=seed, device=device)
+
+# Create a test dataloader and preprocessing transforms
+test_loader = DataLoader(torch.load(test_path), batch_size=batch_size, num_workers=16)
+transforms = create_transform(mean=feature_mean, std=feature_std, channels_last=True)
+
+# And evaluate it
+test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, transforms=transforms, seed=seed, device=device)
 
 print(" ---------- Evaluation of best perfoming model ---------- ")
 print(f"Micro F1: {test_f1_micro.item():.4f}")

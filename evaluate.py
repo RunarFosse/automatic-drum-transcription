@@ -1,9 +1,9 @@
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from pathlib import Path
+from torchvision.transforms import Compose
 
-def evaluate_model(model: torch.nn.Module, test_path: Path, device: str, batch_size: int = 1, seed: int = None):
+def evaluate_model(model: torch.nn.Module, test_loader: DataLoader, transforms: Compose, device: str, seed: int = None):
     """ Evaluate a given model on a given test dataset """
     # Seed torch and cuda
     if seed is not None:
@@ -15,14 +15,11 @@ def evaluate_model(model: torch.nn.Module, test_path: Path, device: str, batch_s
     print(f"Testing: Can use CUDA: {torch.cuda.is_available()}")
     model.to(device)
 
-    # Load the test dataset into a dataloader
-    test_loader = DataLoader(torch.load(test_path), batch_size=batch_size, num_workers=16)
-
     model.eval()
     predictions = None
     for data in test_loader:
         inputs, labels = data[0].to(device), data[1].to(device)
-        outputs = model(inputs)
+        outputs = model(transforms(inputs))
 
         # Compute activation probabilties and add to predictions
         activations = F.sigmoid(outputs)
