@@ -16,7 +16,7 @@ def evaluate_model(model: torch.nn.Module, test_path: Path, device: str, batch_s
     model.to(device)
 
     # Load the test dataset into a dataloader
-    test_loader = DataLoader(torch.load(test_path), batch_size=batch_size)
+    test_loader = DataLoader(torch.load(test_path), batch_size=batch_size, num_workers=16)
 
     model.eval()
     predictions = None

@@ -26,8 +26,8 @@ def train_model(config: tune.TuneConfig):
     print(f"Training: Can use CUDA: {torch.cuda.is_available()}")
 
     # Load the datasets into dataloaders
-    train_loader = DataLoader(torch.load(config["train_path"]), shuffle=True, batch_size=config["batch_size"])
-    val_loader = DataLoader(torch.load(config["train_val"]), shuffle=True, batch_size=config["batch_size"])
+    train_loader = DataLoader(torch.load(config["train_path"]), shuffle=True, batch_size=config["batch_size"], num_workers=16)
+    val_loader = DataLoader(torch.load(config["train_val"]), shuffle=True, batch_size=config["batch_size"], num_workers=16)
 
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)
