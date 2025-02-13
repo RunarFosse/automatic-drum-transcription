@@ -4,7 +4,6 @@ from torch import optim
 from ray import init, tune, train
 from time import time
 from models import ADTOF_FrameRNN, ADTOF_FrameAttention
-from datasets import ADTOF_load
 from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
