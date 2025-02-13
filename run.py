@@ -108,10 +108,11 @@ print(f"Best result final validation class F1: {best_result.metrics['Class F1']}
 best_checkpoint = best_result.get_best_checkpoint("Micro F1", mode="max")
 state_dict = torch.load(Path(best_checkpoint.path) / "model.pt")
 
-# Store the best performing model and its metrics to study/experiment path
+# Store the best performing model, config and its metrics to study/experiment path
 study_path = (root_dir / "study" / study / experiment / dataset)
 study_path.mkdir(parents=True, exist_ok=True)
 torch.save(state_dict, study_path / "model.pt")
+torch.save(best_result.config, study_path / "config.pt")
 best_result.metrics_dataframe.to_csv(study_path / "metrics.csv")
 
 # Load the best performing model and evaluate it on the test dataset
