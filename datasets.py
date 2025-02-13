@@ -72,12 +72,12 @@ if __name__ == "__main__":
     # Get the path of the folder
     path = Path(__file__).resolve().parent / args.dataset
 
-    print("Loading TensorFlow dataset from disk")
+    print("\033[96m", "Loading TensorFlow dataset from disk", "\033[0m")
 
     # Load the dataset
     tf_dataset = tf.data.Dataset.load(str(path))
 
-    print("Loading data into lists")
+    print("\033[96m", "Loading data into lists", "\033[0m")
 
     # Store all features and labels
     features, labels = [], []
@@ -86,25 +86,25 @@ if __name__ == "__main__":
         labels.append(label)
     features, labels = np.array(features), np.array(labels)
 
-    print("Creating tensor datasets")
+    print("\033[96m", "Creating tensor datasets", "\033[0m")
 
     # Turn them into a Pytorch tensor dataset
     dataset = TensorDataset(torch.tensor(features), torch.tensor(labels))
 
-    print("Store dataset to disk")
+    print("\033[96m", "Storing dataset to disk", "\033[0m")
 
     # And store the dataset to the disk under the first path
     torch.save(dataset, path.with_suffix(".pt"))
 
-    print("Finished!")
+    print("\033[92m", "Finished!", "\033[0m")
     
     # Load dataset and verify that everything is correct
     dataset = torch.load(path.with_suffix(".pt"))
-    print("Final dataset contains", len(dataset), "entries")
-    print("Each entry has features of shape:", dataset[0][0].shape, "and labels of shape", dataset[0][1].shape)
+    print("Final dataset contains", "\033[95m", len(dataset), "\033[0m", "entries")
+    print("Each entry has features of shape:", "\033[95m", dataset[0][0].shape, "\033[0m", "and labels of shape", "\033[95m", dataset[0][1].shape, "\033[0m")
 
     # Verify that dataloaders work
     dataloader = DataLoader(dataset, batch_size=16)
     for features, labels in dataloader:
-        print("Batched entry in dataloader has features of shape:", features.shape, "and labels of shape", labels.shape)
+        print("Batched entry in dataloader has features of shape:", "\033[95m", features.shape, "\033[0m", "and labels of shape", "\033[95m", labels.shape, "\033[0m")
         break
