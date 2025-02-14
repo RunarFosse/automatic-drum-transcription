@@ -20,5 +20,9 @@
 # Todos for thesis: 
 
     ---
+    Remember to distinguish what has been done before.
+    Be clear when saying "I've combined these techniques which have been done before".
+    Distinguish own novel contributions with previous ones.
+
     Sort in order of experiments after methods:
     Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Experiment 3? -> Conclusion
