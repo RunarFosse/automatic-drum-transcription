@@ -1,0 +1,106 @@
+\chapter{Methods}
+
+\section{Task}
+
+Precisely explain the task we are solving. Explain what the input data is, what the labels are.
+Give intuition into what exactly we want our model to predict.
+
+Here we also explain the input and output, i.e. the data and the labels.
+What do they look like in their un-preprocessed form?
+
+Here we can also give a figure into the pipeline itself, for better intuition.
+
+\section{Pipeline}
+
+Talk about the general \gls{ADT} pipeline.
+
+\subsection{Preprocessing}
+
+Now explain what we do to the data before prediction.
+Explain why we use log-spectrograms / log-mel-spectrograms and how they are computed.
+Shortely explain what they mean, intuition.
+Explain the preprocessing step we do afterwards.
+
+And explain how we preprocess the labels (target widening, etc.).
+
+Figures?
+
+\subsection{Training}
+
+Mention the loss function used, and why we use this (BCEWithLogitsLoss).
+
+Mention the computation of infrequency weights, i.e. how they are computed, why they are computed, the intuition into how they will help us...
+
+\subsection{Postprocessing}
+
+Mention how model outputs a "confidence in event happening" distribution, which we want to discretize into events.
+I.e. explain Vogl's peak picking algorithm~\cite{vogl2018multiinstrumentdrumtranscription}.
+
+Need some figures here.
+
+\subsection{Performance Measures}
+
+Mention how F-measure (F1-score) is the most used and why. Compare this to accuracy, balanced accuracy. Mention precision, recall and their meaning.
+
+Mention the difference in class-wise, micro- and macro-F1, and why we choose to focus on class-wise and micro in this thesis.
+Also mention how these are all computed.
+
+Lastly, mention what denotes a True Positive. Mention why we allow a window for a prediction to be correct.
+
+Figures!
+
+\section{Architectures}
+
+Mention the different architectures trained in the first task.
+Mention something about why we chose them, (e.g. have they shown to be promising in the past? In other fields?).
+
+Figures!
+
+\section{Datasets}
+
+Talk about the different datasets used, how they differ and why we use them.
+
+\section{Experiments}
+
+Here we mention the setups for each of the experiments.
+
+Mention that we use RayTune to train, with PyTorch models. Mention that we only used RayTune's FIFOScheduler, and how for random search / grid search we used their built in parameter space functionality.
+
+Mention that every single experiment was trained for at most 100 epochs, with a early stopping if validation loss didn't decrease within 10 epochs.
+Mention the learning rate scheduler, where we reduce the learning rate by a factor of 5 if the model hasn't improved in the last 3 epochs.
+
+Mention that we perform early stopping on the validation loss (and why, like the smooth nature, overfitting prevention, etc.), where as we store the best performing model based on the validation F1-score (due to this representing overall prediction performance).
+
+Mention that every experiment is model selected using hold-out validation, and best model is chosen based on micro F1-score.
+
+\subsection{Architecture experiment}
+
+Shortly mention what we do, what the goal is, what we want to figure out.
+
+\subsubsection{Architectures}
+Mention the different architectures trained, and at what hyperparameters they were trained over.
+
+\subsubsection{Datasets}
+Mention the different datasets used, and tested over.
+
+
+\subsection{Dataset generalization experiment}
+
+Shortly mention why, what, like in the previous experiment.
+
+\subsubsection{Architectures}
+
+Mention which architectures we now use, and why we chose them. (And hyperparameters)
+
+\subsubsection{Datasets}
+
+Now mention which datasets / combination of datasets we use. Mention how we now use zero-shot testing (and maybe why).
+
+
+\subsection{Ablation experiments?}
+
+\subsubsection{Technique 1}
+
+\subsubsection{Technique 2}
+
+\subsubsection{Technique 3}

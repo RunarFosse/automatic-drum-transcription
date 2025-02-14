@@ -1,0 +1,62 @@
+\chapter{Results}
+
+\section{Architecture experiment}
+
+Display a table of results, class-wise and micro-F1:
+Best archicecture per dataset is bolded.
+
+\begin{center}
+    \begin{tabular}{|l|cccc|}
+    \hline
+                   & Dataset 1 & Dataset 2 & Dataset 3 & Dataset 4 \\
+    \hline
+    CNN            & 0.5       &           &           &           \\
+    RNN            & 0.4       &           &           &           \\
+    Conv-RNN       & 0.8       &           &           &           \\
+    Conv-Attention & 0.9       &           &           &           \\
+    Transformer    & \textbf{0.95}      &           &           &           \\   
+    \hline
+
+    \end{tabular}
+\end{center}
+
+Display the results in a barplot, to easily capture well-performing models.
+
+Also plot enough information to be able to conclude about overall performance of models, performance on rarer instruments, etc.
+
+
+\section{Dataset generalization experiment}
+
+Display a table of results, possibly both class-wise and micro-F1 (or maybe just micro-F1):
+Zero-shot tests have a grayed background, best zero-shot test are bolded.
+
+\begin{center}
+    \begin{tabular}{|l|cccc|}
+    \hline
+                     & Dataset 1 & Dataset 2 & Dataset 3 & Dataset 4 \\
+    \hline
+    Dataset 1        & 0.5       & 0.3          &           &           \\
+    Dataset 2        & \cellcolor{blue!10}0.4       & 0.8          &           &           \\
+    Dataset 1+2      & 0.8       & 0.7          &           &           \\
+    Dataset 3        & \cellcolor{blue!10}\textbf{0.9}       & \cellcolor{blue!10}{0.6}          &           &           \\
+    Dataset 1+2+3    & 0.95      & 0.8          &           &           \\   
+    Dataset 1+4      & 0.95      & \cellcolor{blue!10}\textbf{0.75}          &           &           \\   
+    Dataset 1+2+3+4  & 0.95      & 0.82          &           &           \\   
+    \hline
+
+    \end{tabular}
+\end{center}
+
+
+Display the results in a barplot, to easily capture well-performing models.
+
+Also plot enough information to be able to conclude about overall performance of models, performance on rarer instruments, etc.
+
+
+\section{Ablation experiments}
+
+Display results and data to be able to conclude if techniques help training / give better end results.
+
+I.e., do we converge faster? Do we converge to a better minimum? 
+
+Could plot some loss over epochs? Need to be thorough (or average) to ensure that gains/losses are due to technique (and not hyperparameter choice, etc.). 
