@@ -16,3 +16,9 @@
 # Perform training and testing over several datasets
 
 # Create analysis notebooks for model performance and plotting
+
+# Todos for thesis: 
+
+    ---
+    Sort in order of experiments after methods:
+    Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Experiment 3? -> Conclusion
