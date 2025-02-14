@@ -17,12 +17,24 @@
 
 # Create analysis notebooks for model performance and plotting
 
+
+
 # Todos for thesis: 
 
     ---
     Remember to distinguish what has been done before.
     Be clear when saying "I've combined these techniques which have been done before".
     Distinguish own novel contributions with previous ones.
+
+    Background should include a lot more information from methodology.
+        - The task should be explained here
+        - Explaining the spectrogram/mel-spectrogram, input data and labels
+        - The postprocessing, peak-picking algorithm should be here
+        - Everything about performance measures should be here
+        - Maybe something about previous architectures here aswell
+    
+    Methods should explain what I've done, not necessarily why or where stuff comes from.
+    
 
     Sort in order of experiments after methods:
     Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Experiment 3? -> Conclusion
