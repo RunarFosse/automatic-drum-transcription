@@ -136,7 +136,7 @@ def train_model(config: tune.TuneConfig):
                 torch.save(model_val_state_dict, model_val_path)
 
                 # Create a Checkpoint object
-                checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
+                checkpoint = Checkpoint.from_directory(checkpoint_path)
 
             # Report to RayTune
             train.report({
