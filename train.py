@@ -9,6 +9,7 @@ from ray.train import Checkpoint
 from preprocess import compute_infrequency_weights, create_transform
 from evaluate import compute_peaks, compute_predictions, f_measure
 
+from tempfile import TemporaryDirectory
 from pathlib import Path
 from copy import deepcopy
 
@@ -120,35 +121,31 @@ def train_model(config: tune.TuneConfig):
             epochs_since_improvement += 1
             
         # Check if we should checkpoint current model by comparing micro F1 score
-        checkpoint = None
-        if val_f1_micro_best is None or val_f1_micro > val_f1_micro_best:
-            val_f1_micro_best = val_f1_micro
+        with TemporaryDirectory() as temp_checkpoint_dir:
+            checkpoint = None
+            if val_f1_micro_best is None or val_f1_micro > val_f1_micro_best:
+                val_f1_micro_best = val_f1_micro
 
-            # Create a checkpoint directory within the trial directory
-            trial_dir = train.get_context().get_trial_dir()
-            checkpoint_dir = Path(trial_dir) / f"checkpoint_epoch_{epoch}"
-            checkpoint_dir.mkdir(parents=True, exist_ok=True)
-            
-            # Save model to the checkpoint directory
-            model_path = checkpoint_dir / "model.pt"
-            torch.save(model.state_dict(), model_path)
+                # Save model to the temporary checkpoint directory
+                model_path = temp_checkpoint_dir / "model.pt"
+                torch.save(model.state_dict(), model_path)
 
-            # Also save model with lowest validation loss
-            model_val_path = checkpoint_dir / "model_val.pt"
-            torch.save(model_val_state_dict, model_val_path)
-            
-            # Create a Checkpoint object
-            checkpoint = Checkpoint.from_directory(checkpoint_dir)
-        
-        # Report to RayTune
-        train.report({
-            "Training Loss": train_loss,
-            "Validation Loss": val_loss,
-            "Micro F1": val_f1_micro.item(),
-            "Macro F1": val_f1_macro.item(),
-            "Class F1": val_f1_class.tolist(),
-            "epochs_since_improvement": epochs_since_improvement
-            },
-            checkpoint=checkpoint
-        )
+                # Also save model with lowest validation loss
+                model_val_path = temp_checkpoint_dir / "model_val.pt"
+                torch.save(model_val_state_dict, model_val_path)
+
+                # Create a Checkpoint object
+                checkpoint = Checkpoint.from_directory(temp_checkpoint_dir)
+
+            # Report to RayTune
+            train.report({
+                "Training Loss": train_loss,
+                "Validation Loss": val_loss,
+                "Micro F1": val_f1_micro.item(),
+                "Macro F1": val_f1_macro.item(),
+                "Class F1": val_f1_class.tolist(),
+                "epochs_since_improvement": epochs_since_improvement
+                },
+                checkpoint=checkpoint
+            )
     print("Finished training")
