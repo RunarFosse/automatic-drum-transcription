@@ -123,15 +123,16 @@ def train_model(config: tune.TuneConfig):
         # Check if we should checkpoint current model by comparing micro F1 score
         with TemporaryDirectory() as temp_checkpoint_dir:
             checkpoint = None
+            checkpoint_path = Path(temp_checkpoint_dir)
             if val_f1_micro_best is None or val_f1_micro > val_f1_micro_best:
                 val_f1_micro_best = val_f1_micro
 
                 # Save model to the temporary checkpoint directory
-                model_path = temp_checkpoint_dir / "model.pt"
+                model_path = checkpoint_path / "model.pt"
                 torch.save(model.state_dict(), model_path)
 
                 # Also save model with lowest validation loss
-                model_val_path = temp_checkpoint_dir / "model_val.pt"
+                model_val_path = checkpoint_path / "model_val.pt"
                 torch.save(model_val_state_dict, model_val_path)
 
                 # Create a Checkpoint object
