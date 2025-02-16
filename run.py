@@ -37,7 +37,7 @@ device = args.device
 seed = int(time())
 
 study = "Architectural Performance"
-experiment = "Test Test"
+experiment = "Infrequency Test"
 dataset = "ADTOF-YT"
 
 Model = ADTOF_FrameAttention
