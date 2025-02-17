@@ -42,7 +42,7 @@ dataset = "ADTOF-YT"
 
 Model = ADTOF_FrameAttention
 
-num_samples = 1
+num_samples = 4
 num_epochs = 100
 
 batch_size = 128
@@ -67,7 +67,7 @@ config = {
         "std": feature_std
     },
 
-    "lr": tune.loguniform(5e-5, 5e-4),
+    "lr": tune.loguniform(5e-5, 5e-2),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
     "amsgrad": tune.choice([True, False]),
     "optimizer": optim.AdamW,
