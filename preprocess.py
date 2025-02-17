@@ -48,6 +48,7 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
         if probabilities == None:
             n_classes = torch.tensor(labels.shape[-1])
             probabilities = torch.zeros(n_classes)
+            positives = torch.zeros(n_classes)
         
         n_timesteps += labels.shape[0] * labels.shape[1]
         probabilities += torch.sum(labels == 1.0, dim=(0, 1))
