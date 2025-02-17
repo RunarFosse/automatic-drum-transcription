@@ -65,7 +65,7 @@ def train_model(config: tune.TuneConfig):
             loss.backward()
 
             # Clip the gradients to prevent explosions
-            nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            nn.utils.clip_grad_norm_(model.parameters(), 2.0)
 
             optimizer.step()
             optimizer.zero_grad()
