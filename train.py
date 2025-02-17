@@ -33,18 +33,18 @@ def train_model(config: tune.TuneConfig):
     # Create a transform preprocessing pipeline
     transforms = create_transform(**config["transforms"], channels_last=True)
 
+    # Compute infrequent instrument weights from the training dataset
+    infrequency_weights = compute_infrequency_weights(train_loader).to(device)
+    print("Infrequency weights: ", infrequency_weights)
+
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)
-    loss_fn = nn.BCEWithLogitsLoss(reduction="none")
+    loss_fn = nn.BCEWithLogitsLoss(pos_weight=infrequency_weights, reduction="mean")
     optimizer = config["optimizer"](model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
     optimizer.zero_grad(set_to_none=True)
 
     # Add a learning rate scheduler
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.2, patience=3)
-
-    # Compute infrequent instrument weights from the training dataset
-    infrequency_weights = compute_infrequency_weights(train_loader).to(device)
-    print("Infrequency weights: ", infrequency_weights)
     
     # Start training
     print(f"Started training on {device}")
@@ -58,10 +58,11 @@ def train_model(config: tune.TuneConfig):
             outputs = model(transforms(inputs))
 
             # Compute class weights given labels and infrequency weights
-            class_weights = torch.where(labels == 0, torch.tensor(0.0), infrequency_weights).sum(dim=2)
-            class_weights = torch.where(class_weights == 0.0, torch.tensor(1.0), class_weights)
+            #class_weights = torch.where(labels == 0, torch.tensor(0.0), infrequency_weights).sum(dim=2)
+            #class_weights = torch.where(class_weights == 0.0, torch.tensor(1.0), class_weights)
 
-            loss = (loss_fn(outputs, labels).sum(dim=2) * class_weights).mean()
+            #loss = (loss_fn(outputs, labels).sum(dim=2) * class_weights).mean()
+            loss = loss_fn(outputs, labels)
             loss.backward()
 
             # Clip the gradients to prevent explosions
@@ -84,10 +85,11 @@ def train_model(config: tune.TuneConfig):
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(transforms(inputs))
 
-                class_weights = torch.where(labels == 0, torch.tensor(0.0), infrequency_weights).sum(dim=2)
-                class_weights = torch.where(class_weights == 0.0, torch.tensor(1.0), class_weights)
+                #class_weights = torch.where(labels == 0, torch.tensor(0.0), infrequency_weights).sum(dim=2)
+                #class_weights = torch.where(class_weights == 0.0, torch.tensor(1.0), class_weights)
 
-                loss = (loss_fn(outputs, labels).sum(dim=2) * class_weights).mean()
+                #loss = (loss_fn(outputs, labels).sum(dim=2) * class_weights).mean()
+                loss = loss_fn(outputs, labels)
                 val_loss += loss.item()
                 n_batches_val += 1
 
