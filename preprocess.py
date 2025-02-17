@@ -40,6 +40,7 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     """ Compute the infrequency weight of an instrument, given as the 'inverse estimated entropy of their event activity distribution'. """
     n_classes = None
     probabilities = None
+    positives = None
 
     n_timesteps = 0.0
     for _, labels in dataloader:
@@ -48,8 +49,9 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
             n_classes = torch.tensor(labels.shape[-1])
             probabilities = torch.zeros(n_classes)
         
-        n_timesteps += torch.prod(torch.tensor(labels.shape[:-1]))
+        n_timesteps += labels.shape[0] * labels.shape[1]
         probabilities += torch.sum(labels == 1.0, dim=(0, 1))
+        positives += torch.sum(labels == 1.0, dim=(0, 1))
     
     # Divide to finish computing probabilities
     probabilities /= n_classes * n_timesteps
@@ -64,4 +66,4 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     print("Old infrequency weights:", weights)
 
     # Return the pos_weight computation
-    return (n_timesteps - probabilities) / (probabilities + torch.tensor(1e-10))
+    return (n_timesteps - positives) / (positives + torch.tensor(1e-10))
