@@ -2,7 +2,7 @@
 
 # -> Implement groundbreaking transformer model
 
-# Implement DeepSeek's correctly computed pos_weights, and compare with current approach
+# Remove infrequency weights from validation loss
 
 # Find and include all datasets
     # These include:
