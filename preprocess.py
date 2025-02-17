@@ -51,9 +51,6 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
         n_timesteps += torch.prod(torch.tensor(labels.shape[:-1]))
         probabilities += torch.sum(labels == 1.0, dim=(0, 1))
     
-    # Return the pos_weight computation
-    return (n_timesteps - probabilities) / (probabilities + torch.tensor(1e-10))
-    
     # Divide to finish computing probabilities
     probabilities /= n_classes * n_timesteps
 
@@ -62,4 +59,9 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
 
     # And compute final weights
     weights = 1.0 / (-probabilities * torch.log(probabilities) - (1 - probabilities) * torch.log(1 - probabilities))
-    return weights
+    #return weights
+
+    print("Old infrequency weights:", weights)
+
+    # Return the pos_weight computation
+    return (n_timesteps - probabilities) / (probabilities + torch.tensor(1e-10))
