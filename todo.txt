@@ -2,8 +2,6 @@
 
 # -> Implement groundbreaking transformer model
 
-# Remove infrequency weights from validation loss
-
 # Find and include all datasets
     # These include:
         - ENST

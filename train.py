@@ -84,10 +84,11 @@ def train_model(config: tune.TuneConfig):
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(transforms(inputs))
 
-                timestep_weights = (labels * infrequency_weights).sum(dim=2)
-                timestep_weights = torch.max(torch.tensor(1.0), timestep_weights)
+                #timestep_weights = (labels * infrequency_weights).sum(dim=2)
+                #timestep_weights = torch.max(torch.tensor(1.0), timestep_weights)
 
-                loss = (loss_fn(outputs, labels).sum(dim=2) * timestep_weights).mean()
+                #loss = (loss_fn(outputs, labels).sum(dim=2) * timestep_weights).mean()
+                loss = loss_fn(outputs, labels).sum(dim=2).mean()
                 val_loss += loss.item()
                 n_batches_val += 1
 
