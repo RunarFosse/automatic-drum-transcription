@@ -124,7 +124,7 @@ model = Model(**best_result.config["parameters"])
 model.load_state_dict(state_dict)
 
 # Create a test dataloader and preprocessing transforms
-test_loader = DataLoader(torch.load(test_path), batch_size=batch_size, num_workers=16)
+test_loader = DataLoader(torch.load(test_path), batch_size=batch_size, num_workers=16, pin_memory=True)
 transforms = create_transform(mean=feature_mean, std=feature_std, channels_last=True)
 
 # And evaluate it

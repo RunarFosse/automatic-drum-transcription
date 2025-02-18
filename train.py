@@ -27,8 +27,8 @@ def train_model(config: tune.TuneConfig):
     print(f"Training: Can use CUDA: {torch.cuda.is_available()}")
 
     # Load the datasets into dataloaders
-    train_loader = DataLoader(torch.load(config["train_path"]), shuffle=True, batch_size=config["batch_size"], num_workers=16)
-    val_loader = DataLoader(torch.load(config["val_path"]), shuffle=True, batch_size=config["batch_size"], num_workers=16)
+    train_loader = DataLoader(torch.load(config["train_path"]), shuffle=True, batch_size=config["batch_size"], num_workers=16, pin_memory=True)
+    val_loader = DataLoader(torch.load(config["val_path"]), shuffle=True, batch_size=config["batch_size"], num_workers=16, pin_memory=True)
 
     # Create a transform preprocessing pipeline
     transforms = create_transform(**config["transforms"], channels_last=True)
