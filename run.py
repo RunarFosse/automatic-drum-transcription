@@ -9,7 +9,6 @@ from preprocess import compute_normalization, create_transform
 from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
-import tensorflow as tf
 
 # Only run this file directly
 assert __name__ == "__main__"
@@ -22,9 +21,6 @@ args = parser.parse_args()
 # Extract the absolute path of the data directory
 root_dir = Path(__file__).resolve().parent
 data_dir = root_dir / "data"
-
-# Disable all GPUs for TensorFlow
-tf.config.set_visible_devices([], 'GPU')
 
 # Initialize a Ray instance
 temp_dir = Path.home().resolve() / ".ray_temp"
