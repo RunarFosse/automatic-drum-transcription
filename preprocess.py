@@ -52,7 +52,7 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
         probabilities += torch.sum(labels == 1.0, dim=(0, 1))
     
     # Divide to finish computing probabilities
-    probabilities /= num_classes * num_timesteps
+    probabilities /= num_timesteps
 
     # To prevent Nan's, set probabilities of 0 to a very low number
     probabilities = torch.where(probabilities == 0, torch.tensor(1e-10), probabilities)
