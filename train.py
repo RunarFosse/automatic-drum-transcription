@@ -48,7 +48,7 @@ def train_model(config: tune.TuneConfig):
     
     # Start training
     print(f"Started training on {device}")
-    epochs_since_improvement, val_loss_best, val_f1_micro_best, model_val_state_dict = 0, None, None, None
+    epochs_since_improvement, val_loss_best, val_f1_micro_best = 0, None, None
     for epoch in range(config["num_epochs"]):
         model.train()
         train_loss, n_batches_train = 0.0, 0
@@ -84,10 +84,6 @@ def train_model(config: tune.TuneConfig):
                 inputs, labels = data[0].to(device), data[1].to(device)
                 outputs = model(transforms(inputs))
 
-                #timestep_weights = (labels * infrequency_weights).sum(dim=2)
-                #timestep_weights = torch.max(torch.tensor(1.0), timestep_weights)
-
-                #loss = (loss_fn(outputs, labels).sum(dim=2) * timestep_weights).mean()
                 loss = loss_fn(outputs, labels).sum(dim=2).mean()
                 val_loss += loss.item()
                 n_batches_val += 1
@@ -116,8 +112,6 @@ def train_model(config: tune.TuneConfig):
         if val_loss_best is None or val_loss < val_loss_best:
             val_loss_best = val_loss
             epochs_since_improvement = 0
-
-            model_val_state_dict = deepcopy(model.state_dict())
         else:
             epochs_since_improvement += 1
             
@@ -131,11 +125,7 @@ def train_model(config: tune.TuneConfig):
                 # Save model to the temporary checkpoint directory
                 model_path = checkpoint_path / "model.pt"
                 torch.save(model.state_dict(), model_path)
-
-                # Also save model with lowest validation loss
-                model_val_path = checkpoint_path / "model_val.pt"
-                torch.save(model_val_state_dict, model_val_path)
-
+                
                 # Create a Checkpoint object
                 checkpoint = Checkpoint.from_directory(checkpoint_path)
 
