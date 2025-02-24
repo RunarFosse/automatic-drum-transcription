@@ -32,11 +32,11 @@ print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 device = args.device
 seed = int(time())
 
-study = "Architectural Performance"
-experiment = "Infrequency Test"
+study = "Architecture"
+experiment = "Convolutional RNN"
 dataset = "ADTOF-YT"
 
-Model = ADTOF_FrameAttention
+Model = ADTOF_FrameRNN
 
 num_samples = 1
 num_epochs = 100
@@ -70,8 +70,9 @@ config = {
 
     "Model": Model,
     "parameters": {
-        "num_heads": tune.grid_search([4, 6, 8]),
-        "num_layers": tune.grid_search([2, 4, 6, 8, 10])
+        "num_layers": tune.grid_search([2, 3, 4, 5]),
+        "hidden_size": tune.grid_search([30, 60, 90]),
+        "use_gru": tune.grid_search([True, False])
     },
 
     "device": device,
