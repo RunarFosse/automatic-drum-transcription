@@ -10,10 +10,10 @@ from .attention import AttentionDecoder
 
 
 class ADTOF_FrameRNN(nn.Module):
-    def __init__(self, num_layers: int = 3):
+    def __init__(self, num_layers: int = 3, hidden_size: int = 60, use_gru: bool = True):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
-        self.decoder = RNNDecoder(num_layers=num_layers)
+        self.decoder = RNNDecoder(num_layers=num_layers, hidden_size=hidden_size, use_gru=use_gru)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
