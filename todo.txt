@@ -2,16 +2,12 @@
 
 # -> Implement groundbreaking transformer model
 
-# -> U-Net implementation?
-
 # Find and include all datasets
     # These include:
-        - ENST
-        - RBMA
-        - MDB and MDB 2.0
+        - ENST and MDB 1.0+2.0, together as small dataset
         - Slakh
         - EGMD
-        - ADTOS
+        - ADTOF-YT (already included)
 
 # Perform training and testing over several datasets
 
