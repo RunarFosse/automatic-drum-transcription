@@ -33,10 +33,10 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "Convolutional RNN"
+experiment = "Convolutional Transformer"
 dataset = "ADTOF-YT"
 
-Model = ADTOF_FrameRNN
+Model = ADTOF_FrameAttention
 
 num_samples = 1
 num_epochs = 100
@@ -70,9 +70,8 @@ config = {
 
     "Model": Model,
     "parameters": {
-        "num_layers": tune.grid_search([2, 3, 4, 5]),
-        "hidden_size": tune.grid_search([30, 60, 90]),
-        "use_gru": tune.grid_search([True, False])
+        "num_heads": tune.grid_search([2, 4, 6, 8]),
+        "num_layers": tune.grid_search([2, 4, 6, 8])
     },
 
     "device": device,
