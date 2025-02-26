@@ -33,8 +33,8 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     # Turn it to log scale
     spectrogram = functional.amplitude_to_DB(spectrogram, multiplier=10, amin=1e-10, db_multiplier=1)
 
-    # Return it on the shape (timesteps, bins)
-    return spectrogram.T
+    # Return it on the shape (timesteps, bins), with a last filter dimension
+    return spectrogram.T.unsqueeze(-1)
     
 
 def readAnnotations(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: int) -> torch.Tensor:
