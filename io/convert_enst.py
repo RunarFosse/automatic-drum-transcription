@@ -1,5 +1,6 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader
+from torchvision.transforms import Normalize
 from load import readAudio, readAnnotations
 from pathlib import Path
 
@@ -155,6 +156,14 @@ if __name__ == "__main__":
 
     # Verify that dataloaders work
     dataloader = DataLoader(dataset, batch_size=16)
-    for features, labels in dataloader:
-        print("\033[92m", "Batched entry in dataloader has features of shape: ", "\033[0m", features.shape, "\033[92m", ", and labels of shape: ", "\033[0m", labels.shape, sep="")
-        break
+    num_batches, mean, std = len(dataloader), torch.zeros(1), torch.zeros(1)
+    for i, (features, labels) in enumerate(dataloader):
+        if i == 0:
+            print("\033[92m", "Batched entry in dataloader has features of shape: ", "\033[0m", features.shape, "\033[92m", ", and labels of shape: ", "\033[0m", labels.shape, sep="")
+        mean += torch.mean(features, dim=(0, 1, 2))
+        std += torch.std(features, dim=(0, 1, 2))
+
+    # Compute mean and std of dataset
+    mean /= num_batches
+    std /= num_batches
+    print("\033[92m", "Dataset has mean of: ", "\033[0m", mean, "\033[92m", ", and std of: ", "\033[0m", std, sep="")

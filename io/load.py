@@ -28,10 +28,11 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     waveform = F.pad(waveform, (0, int(padding)), mode="constant", value=0)
 
     # Turn it into a mel spectrogram, on the shape
-    spectrogram = transforms.MelSpectrogram(sample_rate=sr, n_fft=2048, win_length=2048, hop_length=441, n_mels=84)(waveform)
+    spectrogram = transforms.MelSpectrogram(sample_rate=sr, n_fft=2048, win_length=2048, hop_length=441, n_mels=84, norm="slaney")(waveform)
 
     # Turn it to log scale
-    spectrogram = functional.amplitude_to_DB(spectrogram, multiplier=10, amin=1e-10, db_multiplier=1)
+    #spectrogram = functional.amplitude_to_DB(spectrogram, multiplier=10, amin=1e-10, db_multiplier=1)
+    spectrogram = torch.log10(spectrogram + 1.0)
 
     # Return it on the shape (timesteps, bins), with a last filter dimension
     return spectrogram.T.unsqueeze(-1)
