@@ -1,10 +1,9 @@
 import torch
-import torchaudio
 from torch.utils.data import TensorDataset, DataLoader
-
 from load import readAudio, readAnnotations
-
 from pathlib import Path
+
+""" Run this file to turn ENST-Drums into a stored PyTorch dataset """
 
 # Splits from ADTOF-github (https://github.com/MZehren/ADTOF/blob/master/adtof/ressources/splits.py)
 # Originally from Vogl et al.
