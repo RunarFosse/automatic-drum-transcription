@@ -8,6 +8,8 @@
         - Slakh
         - EGMD
         - ADTOF-YT (already included)
+    
+    # Parse them correctly, get same formatted output
 
 # Perform training and testing over several datasets
 
