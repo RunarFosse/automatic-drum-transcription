@@ -1,7 +1,8 @@
 import torch
 import torchaudio
+from torch.utils.data import TensorDataset, DataLoader
 
-from load import readAnnotations
+from load import readAudio, readAnnotations
 
 from pathlib import Path
 
@@ -85,6 +86,7 @@ ENST_MAPPING = {
     "bd": 0,
 
     "sd": 1,
+    "sd-": 1,
     "sweep": 1,
     "rs": 1,
     "sticks": 1,
@@ -103,11 +105,8 @@ ENST_MAPPING = {
     "cr": 4,
     "spl": 4,
     "ch": 4,
-    "rc1": 4,
-    "rc2": 4,
-    "rc3": 4,
-    "c1": 4,
-    "c2": 4,
+    "rc": 4,
+    "c": 4,
 
     "cb": None,
 }
@@ -121,4 +120,42 @@ if __name__ == "__main__":
 
     path = Path(__file__).resolve().parent.parent / args.path
 
-    readAnnotations(path, ENST_MAPPING)
+    print("\033[96m", "Loading data into lists", "\033[0m", sep="")
+
+    data, labels = [], []
+    for drummer in range(3):
+        for piece in ENST_SPLITS[drummer]:
+            audio_path = (path / f"drummer_{drummer+1}" / "audio" / "wet_mix" / piece).with_suffix(".wav")
+            accompaniment_path = (path / f"drummer_{drummer+1}" / "audio" / "accompaniment" / piece).with_suffix(".wav")
+            annotation_path = (path / f"drummer_{drummer+1}" / "annotation" / piece).with_suffix(".txt")
+
+            spectrogram = readAudio(audio_path, accompaniment_path)
+            timesteps = spectrogram.shape[0]
+            label = readAnnotations(annotation_path, ENST_MAPPING, timesteps, 5)
+
+            partitions = timesteps // 400
+            data += list(spectrogram.tensor_split(partitions, dim=0))
+            labels += list(label.tensor_split(partitions, dim=0))
+
+    data, labels = torch.stack(data), torch.stack(labels)
+    
+    # Turn them into a Pytorch tensor dataset
+    print("\033[96m", "Creating tensor datasets", "\033[0m", sep="")
+    dataset = TensorDataset(torch.tensor(data), torch.tensor(labels))
+
+    # And store the dataset to the disk under the first path
+    print("\033[96m", "Storing dataset to disk", "\033[0m", sep="")
+    torch.save(dataset, path.with_suffix(".pt"))
+
+    print("\033[95m", "Finished!", "\033[0m", sep="")
+    
+    # Load dataset and verify that everything is correct
+    dataset = torch.load(path.with_suffix(".pt"))
+    print("\033[92m", "Final dataset contains ", "\033[0m", len(dataset), "\033[92m", " entries", "\033[0m", sep="")
+    print("\033[92m", "Each entry has features of shape: ", "\033[0m", dataset[0][0].shape, "\033[92m", ", and labels of shape: ", "\033[0m", dataset[0][1].shape, sep="")
+
+    # Verify that dataloaders work
+    dataloader = DataLoader(dataset, batch_size=16)
+    for features, labels in dataloader:
+        print("\033[92m", "Batched entry in dataloader has features of shape: ", "\033[0m", features.shape, "\033[92m", ", and labels of shape: ", "\033[0m", labels.shape, sep="")
+        break

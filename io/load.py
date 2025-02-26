@@ -1,5 +1,6 @@
 import torch
 import torchaudio
+import torch.nn.functional as F
 from torchaudio import transforms, functional
 
 
@@ -15,10 +16,16 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     waveform, sr = torchaudio.load(path)
     waveform = waveform.mean(dim=0)
 
+
     # If accompaniement is set, add to waveform
     if accompaniment:
         accompaniment, _ = torchaudio.load(accompaniment)
         waveform += accompaniment.mean(dim=0)
+
+    # Pad the waveform with zeroes, to be divisible with 4s intervals
+    timesteps = torch.tensor(waveform.shape[0])
+    padding = torch.ceil(timesteps / (4.0 * sr)) * (4.0 * sr) - timesteps - 1
+    waveform = F.pad(waveform, (0, int(padding)), mode="constant", value=0)
 
     # Turn it into a mel spectrogram, on the shape
     spectrogram = transforms.MelSpectrogram(sample_rate=sr, n_fft=2048, win_length=2048, hop_length=441, n_mels=84)(waveform)
@@ -42,6 +49,10 @@ def readAnnotations(path: Path, mapping: Dict[str, int], num_frames: int, num_la
         for line in f.readlines():
             # Parse line
             [time, event] = line.strip().split(" ")
+
+            # If the event ends in a "-" or a digit, remove it
+            if event[-1] in ["-"] or event[-1].isnumeric():
+                event = event[:-1]
 
             # Turn into frames and labels
             frame = int(round(float(time) / MS_PER_FRAME * 1000))
