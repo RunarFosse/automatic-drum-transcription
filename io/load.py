@@ -16,7 +16,6 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     waveform, sr = torchaudio.load(path)
     waveform = waveform.mean(dim=0)
 
-
     # If accompaniement is set, add to waveform
     if accompaniment:
         accompaniment, _ = torchaudio.load(accompaniment)
@@ -28,14 +27,14 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     waveform = F.pad(waveform, (0, int(padding)), mode="constant", value=0)
 
     # Turn it into a mel spectrogram, on the shape
-    spectrogram = transforms.MelSpectrogram(sample_rate=sr, n_fft=2048, win_length=2048, hop_length=441, n_mels=84, f_min=20, f_max=20000, norm="slaney", mel_scale="slaney")(waveform)
+    spectrogram = transforms.MelSpectrogram(sample_rate=sr, n_fft=2048, win_length=2048, hop_length=441, n_mels=84, f_min=20, f_max=20000, norm="slaney", mel_scale="htk")(waveform)
 
     # Turn it to log scale
     #spectrogram = functional.amplitude_to_DB(spectrogram, multiplier=10, amin=1e-10, db_multiplier=1)
-    #spectrogram = torch.log(spectrogram * 1000 + 1.0)
+    spectrogram = torch.log10(spectrogram * 1000 + 1.0)
 
     # Perform min-max normalization
-    spectrogram = (spectrogram - spectrogram.min()) / (spectrogram.max() - spectrogram.min())
+    #spectrogram = (spectrogram - spectrogram.min()) / (spectrogram.max() - spectrogram.min())
 
     # Return it on the shape (timesteps, bins), with a last filter dimension
     return spectrogram.T.unsqueeze(-1)
