@@ -16,6 +16,12 @@
 # Create analysis notebooks for model performance and plotting
 
 
+# Questions:
+
+    - When doing architecture performance comparisons, compare using test scores?
+
+    - When doing cross-dataset prediction, use normalization constants from training dataset (trained on)?
+
 
 # Todos for thesis: 
 
