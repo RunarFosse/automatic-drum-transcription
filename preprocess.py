@@ -1,4 +1,5 @@
 import torch
+import torchaudio
 from torch.utils.data import DataLoader
 from torchvision import transforms, ops
 from pathlib import Path
@@ -60,3 +61,18 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     # And compute final weights
     weights = 1.0 / (-probabilities * torch.log(probabilities) - (1.0 - probabilities) * torch.log(1.0 - probabilities))
     return weights
+
+def invert_mel_spectrogram(spectrogram: torch.Tensor, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, n_mels: int = 84, f_min: int = 20, f_max: int = 20000, norm: str = "slaney", mel_scale: str = "htk", n_iter: int = 32, power: int = 2) -> torch.Tensor:
+    """ Given a log mel spectrogram, invert it, and return its waveform. """
+
+    # Sampling rate corresponds to 44.1 khz
+    sr = 44100
+    n_stft = int((n_fft//2) + 1)
+
+    inverse_transform = torchaudio.transforms.InverseMelScale(sample_rate=sr, n_stft=n_stft, n_mels=n_mels, f_min=f_min, f_max=f_max, norm=norm, mel_scale=mel_scale)
+    grifflim_transform = torchaudio.transforms.GriffinLim(power=power, n_iter=n_iter, n_fft=n_fft, win_length=win_length, hop_length=hop_length)
+
+    inverse_waveform = inverse_transform(spectrogram)
+    pseudo_waveform = grifflim_transform(inverse_waveform)
+
+    return pseudo_waveform
