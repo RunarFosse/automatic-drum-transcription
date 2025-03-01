@@ -128,10 +128,16 @@ def invert_log_filter_spectrogram(spectrogram: torch.Tensor, sr: int = 44100, n_
     # Invert log magnitude
     spectrogram = torch.pow(torch.tensor(10), spectrogram) - 1
     
-    # Remove filters
-    inverse_filterbank = torch.linalg
+    # Remove filters from spectrogram
+    filterbank = compute_log_filterbank(sr=sr, n_fft=n_fft, f_min=f_min, f_max=f_max)
+    inverse_filterbank = torch.linalg.pinv(filterbank)
+    spectrogram = inverse_filterbank @ spectrogram
 
-    grifflim_transform = torchaudio.transforms.GriffinLim(power=power, n_fft=n_fft, win_length=win_length, hop_length=hop_length)
+    # Apply Griffin-Lim transform
+    griffin_lim_transform = torchaudio.transforms.GriffinLim(power=power, n_fft=n_fft, win_length=win_length, hop_length=hop_length)
+    waveform = griffin_lim_transform(spectrogram)
+
+    return waveform
 
 
 def invert_mel_spectrogram(spectrogram: torch.Tensor, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, n_mels: int = 84, f_min: int = 20, f_max: int = 20000, norm: str = "slaney", mel_scale: str = "htk", n_iter: int = 32, power: int = 2) -> torch.Tensor:
