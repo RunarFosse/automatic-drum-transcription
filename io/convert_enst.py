@@ -141,7 +141,7 @@ if __name__ == "__main__":
     
     # Turn them into a Pytorch tensor dataset
     print("\033[96m", "Creating tensor datasets", "\033[0m", sep="")
-    dataset = TensorDataset(torch.tensor(data), torch.tensor(labels))
+    dataset = TensorDataset(data, labels)
 
     # And store the dataset to the disk under the first path
     print("\033[96m", "Storing dataset to disk", "\033[0m", sep="")
