@@ -35,9 +35,9 @@ class ADTOF_FrameAttention(nn.Module):
         return self.decoder(latent)
     
 class VisionTransformer(nn.Module):
-    def __init__(self, num_heads: int = 6, num_layers: int = 5, patch_size: Tuple[int, int] = (1, 12)):
+    def __init__(self, num_heads: int = 6, num_layers: int = 5):
         super().__init__()
-        self.patch_embedding = PatchEmbedding(patch_size=patch_size)
+        self.patch_embedding = PatchEmbedding()
         self.decoder = AttentionDecoder(num_heads=num_heads, num_layers=num_layers)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:

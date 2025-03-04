@@ -5,7 +5,7 @@ import torch.nn.functional as F
 from typing import Tuple
 
 class PatchEmbedding(nn.Module):
-    def __init__(self, patch_size: Tuple[int, int] = (1, 12), embed_dim: int = 576):
+    def __init__(self, patch_size: Tuple[int, int] = (1, 21), embed_dim: int = 144):
         super().__init__()
         num_patches = 84 // patch_size[1]
 

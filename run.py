@@ -70,7 +70,6 @@ config = {
 
     "Model": Model,
     "parameters": {
-        "patch_size": tune.choice([(1, 6), (1, 12), (1, 21)]),
         "num_heads": tune.grid_search([2, 4, 6, 8]),
         "num_layers": tune.grid_search([2, 4, 6, 8])
     },
