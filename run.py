@@ -4,7 +4,7 @@ from torch import optim
 from torch.utils.data import DataLoader
 from ray import init, tune, train
 from time import time
-from models import ADTOF_FrameRNN, ADTOF_FrameAttention
+from models import ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
 from preprocess import compute_normalization, create_transform
 from evaluate import evaluate_model
 from train import train_model
@@ -33,10 +33,10 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "Convolutional Transformer"
+experiment = "Vision Transformer"
 dataset = "ADTOF-YT"
 
-Model = ADTOF_FrameAttention
+Model = VisionTransformer
 
 num_samples = 1
 num_epochs = 100
@@ -70,6 +70,7 @@ config = {
 
     "Model": Model,
     "parameters": {
+        "patch_size": tune.choice([(1, 6), (1, 12), (1, 21)]),
         "num_heads": tune.grid_search([2, 4, 6, 8]),
         "num_layers": tune.grid_search([2, 4, 6, 8])
     },
