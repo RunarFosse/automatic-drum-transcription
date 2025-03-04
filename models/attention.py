@@ -13,7 +13,9 @@ class PatchEmbedding(nn.Module):
         self.position_embedding = nn.Parameter(torch.randn(1, num_patches, embed_dim))
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        out = self.projection(x) + self.position_embedding
+        out = self.projection(x)
+        print(out.shape)
+        print(self.position_embedding.shape)
         return out
 
 class PositionalEncoding(nn.Module):
