@@ -2,6 +2,19 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from typing import Tuple
+
+class PatchEmbedding(nn.Module):
+    def __init__(self, patch_size: Tuple[int, int] = (1, 12), embed_dim: int = 576):
+        super().__init__()
+        num_patches = 84 // patch_size[1]
+
+        self.projection = nn.Conv2d(1, embed_dim, kernel_size=patch_size, stride=patch_size)
+        self.position_embedding = nn.Parameter(torch.randn(1, num_patches, embed_dim))
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        out = self.projection(x) + self.position_embedding
+        return out
 
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model: int, dropout: float = 0.0, max_len: int = 5000):

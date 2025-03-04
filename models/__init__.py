@@ -6,7 +6,9 @@ import torch.nn.functional as F
 
 from .convolutional import FrameSynchronousCNNEncoder
 from .recurrent import RNNDecoder
-from .attention import AttentionDecoder
+from .attention import AttentionDecoder, PatchEmbedding
+
+from typing import Tuple
 
 
 class ADTOF_FrameRNN(nn.Module):
@@ -29,5 +31,16 @@ class ADTOF_FrameAttention(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
+        latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
+        return self.decoder(latent)
+    
+class VisionTransformer(nn.Module):
+    def __init__(self, num_heads: int = 6, num_layers: int = 5, patch_size: Tuple[int, int] = (1, 12)):
+        super().__init__()
+        self.patch_embedding = PatchEmbedding(patch_size=patch_size)
+        self.decoder = AttentionDecoder(num_heads=num_heads, num_layers=num_layers)
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        latent = self.patch_embedding(x)
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
         return self.decoder(latent)
