@@ -107,8 +107,7 @@ ENST_MAPPING = {
     "ch": 4,
     "rc": 4,
     "c": 4,
-
-    "cb": None,
+    "cb": 4,
 }
 
 if __name__ == "__main__":
