@@ -12,7 +12,7 @@ class PatchEmbedding(nn.Module):
             raise ValueError(f"Patch_size {patch_size}, dimension 1 has to be factor of {84}, and their division result a factor of embed_dim {embed_dim}")
 
         self.projection = nn.Conv2d(1, embed_dim // num_patches, kernel_size=patch_size, stride=patch_size)
-        self.position_embedding = nn.Parameter(torch.randn(1, embed_dim, 1, num_patches))
+        self.position_embedding = nn.Parameter(torch.randn(1, embed_dim // num_patches, 1, num_patches))
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.projection(x) + self.position_embedding
