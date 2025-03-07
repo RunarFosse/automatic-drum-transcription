@@ -5,15 +5,18 @@ import torch.nn.functional as F
 from typing import Tuple
 
 class PatchEmbedding(nn.Module):
-    def __init__(self, patch_size: Tuple[int, int] = (1, 21), embed_dim: int = 144):
+    def __init__(self, patch_size: Tuple[int, int] = (1, 21), embed_dim: int = 576):
         super().__init__()
         num_patches = 84 // patch_size[1]
+        if 84 % patch_size[1] or embed_dim % num_patches:
+            raise ValueError(f"Patch_size {patch_size}, dimension 1 has to be factor of {84}, and their division result a factor of embed_dim {embed_dim}")
 
-        self.projection = nn.Conv2d(1, embed_dim, kernel_size=patch_size, stride=patch_size)
+        self.projection = nn.Conv2d(1, embed_dim // num_patches, kernel_size=patch_size, stride=patch_size)
         self.position_embedding = nn.Parameter(torch.randn(1, embed_dim, 1, num_patches))
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.projection(x) + self.position_embedding
+        out = torch.flatten(out.permute(0, 2, 1, 3), start_dim=2)
         return out
 
 class PositionalEncoding(nn.Module):
