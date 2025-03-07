@@ -12,7 +12,7 @@ from typing import Tuple
 
 
 class ADTOF_FrameRNN(nn.Module):
-    def __init__(self, num_layers: int = 3, hidden_size: int = 60, use_gru: bool = True):
+    def __init__(self, num_layers: int = 3, hidden_size: int = 288, use_gru: bool = True):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
         self.decoder = RNNDecoder(num_layers=num_layers, hidden_size=hidden_size, use_gru=use_gru)
@@ -43,3 +43,4 @@ class VisionTransformer(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.patch_embedding(x)
         return self.decoder(latent)
+    
