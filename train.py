@@ -48,7 +48,7 @@ def train_model(config: tune.TuneConfig):
     
     # Start training
     print(f"Started training on {device}")
-    epochs_since_improvement, val_loss_best, val_f1_micro_best = 0, None, None
+    epochs_since_improvement, best_epoch, val_loss_best, val_f1_micro_best = 0, None, None, None
     for epoch in range(config["num_epochs"]):
         model.train()
         train_loss, n_batches_train = 0.0, 0
@@ -129,6 +129,15 @@ def train_model(config: tune.TuneConfig):
                 # Create a Checkpoint object
                 checkpoint = Checkpoint.from_directory(checkpoint_path)
 
+                # Store best epoch information
+                best_epoch = {
+                    "Training Loss": train_loss,
+                    "Validation Loss": val_loss,
+                    "Micro F1": val_f1_micro.item(),
+                    "Macro F1": val_f1_macro.item(),
+                    "Class F1": val_f1_class.tolist(),
+                }
+
             # Report to RayTune
             train.report({
                 "Training Loss": train_loss,
@@ -136,6 +145,7 @@ def train_model(config: tune.TuneConfig):
                 "Micro F1": val_f1_micro.item(),
                 "Macro F1": val_f1_macro.item(),
                 "Class F1": val_f1_class.tolist(),
+                "best_epoch": best_epoch,
                 "epochs_since_improvement": epochs_since_improvement
                 },
                 checkpoint=checkpoint

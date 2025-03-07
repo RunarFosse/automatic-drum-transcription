@@ -100,10 +100,10 @@ results = tuner.fit()
 # Print the results
 best_result = results.get_best_result("Micro F1", mode="max", scope="all")
 print(f"Best result config: {best_result.config}")
-print(f"Best result final validation loss: {best_result.metrics['Validation Loss']}")
-print(f"Best result final validation micro F1: {best_result.metrics['Micro F1']}")
-print(f"Best result final validation macro F1: {best_result.metrics['Macro F1']}")
-print(f"Best result final validation class F1: {best_result.metrics['Class F1']}")
+print(f"Best result validation loss: {best_result.metrics['best_epoch']['Validation Loss']}")
+print(f"Best result validation micro F1: {best_result.metrics['best_epoch']['Micro F1']}")
+print(f"Best result validation macro F1: {best_result.metrics['best_epoch']['Macro F1']}")
+print(f"Best result validation class F1: {best_result.metrics['best_epoch']['Class F1']}")
 
 # Load the state_dict of the best performing model
 best_checkpoint = best_result.get_best_checkpoint("Micro F1", mode="max")
