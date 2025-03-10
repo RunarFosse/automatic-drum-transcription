@@ -22,6 +22,10 @@
 
     - When doing cross-dataset prediction, use normalization constants from training dataset (trained on)?
 
+    - Preprocessing, like the spectrograms and fft? Should be mentioned in background or methods?
+
+    - When talking about datasets, how to differentiate existing with my? What goes under methods, what doesn't. Something in both?
+
 
 # Todos for thesis: 
 
