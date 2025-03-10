@@ -18,13 +18,13 @@
 
 # Questions:
 
-    - When doing architecture performance comparisons, compare using test scores?
+    - When doing architecture performance comparisons, compare using test scores? Yes
 
-    - When doing cross-dataset prediction, use normalization constants from training dataset (trained on)?
+    - When doing cross-dataset prediction, use normalization constants from training dataset (trained on)? Yes
 
-    - Preprocessing, like the spectrograms and fft? Should be mentioned in background or methods?
+    - Preprocessing, like the spectrograms and fft? Should be mentioned in background or methods? Hard to answer, but possibly either/or
 
-    - When talking about datasets, how to differentiate existing with my? What goes under methods, what doesn't. Something in both?
+    - When talking about datasets, how to differentiate existing with my? What goes under methods, what doesn't. Something in both? Either/or
 
 
 # Todos for thesis: 
