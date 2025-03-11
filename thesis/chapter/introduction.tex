@@ -1,18 +1,27 @@
 \chapter{Introduction}
 
-Within the field of \gls{MIR}, the task of \gls{AMT} is considered to be, both an important, and challenging research problem. It describes the process of generating a symbolic notation from audio. Most instruments are melodic, where key information for transcription would be to discern pitch, onset time, and duration. This stands in contrast to percussive instruments, which are inherently event based. This sets the stage for \gls{ADT}, which is a subfield of \gls{AMT}, specifically focusing on drums and percussive instruments.~\cite{8350302}
+Within the field of \gls{MIR}, the task of \gls{AMT} is considered to be, both an important, and challenging research problem. It describes the process of generating a symbolic notation from audio. The majority of instruments are melodic, where key information for transcription would be to discern pitch, onset time, and duration. This stands in contrast to percussive instruments, where instead of pitch and duration one would focus on instrument classification and onset detection. This sets the stage for \gls{ADT}, which is a subfield of \gls{AMT}, specifically focusing on drums and percussive instruments.~\cite{8350302}
 
-Previously, a popular approach to \gls{ADT} was using signal processing, which later developed to using classical machine learning methods~\cite{8350302}. However in later years, deep learning has shown to be quite effective~\cite{signals4040042}.
+Previously, a popular approach to \gls{ADT} was using signal processing, which later developed into using classical machine learning methods~\cite{8350302}. However in later years, deep learning has shown to be quite effective. In recent years, the focus of most authors has therefore been to find the best performing deep learning approaches by either constructing and analysing the best performing model architectures, or by finding datasets which allow models to generalize the best.~\cite{signals4040042}
 
-\textcolor{red}{Provide a good introduction into the master thesis, menitoning \gls{AMT}, \gls{ADT} and why deep learning is suited for such a task.}
+\textcolor{red}{Provide a good introduction into the master thesis, mentioning \gls{AMT}, \gls{ADT} and why deep learning is suited for such a task.}
 
 \section{Thesis statement}
 
-Present the aim of the thesis here. And the \b{questions!}
-How do we train a model capable of solving such a task at a high performing level. More specifically:
+This leads us to two primary questions. Which deep learning architecture is the best suited for solving a task like this? And, what makes a dataset optimal by making models generalize?
 
+These are the two questions we will try to answer in this thesis. In addition, we will also analyse two standard approaches when it comes to \gls{ADT} and see how effective they really are. These are, usage of log-filtered spectrograms, and frequency-based, dynamic timestep loss-weighting during training. 
+
+\textcolor{red}{
+    Present the aim of the thesis here. And the \b{questions!}
+How do we train a model capable of solving such a task at a high performing level. More specifically:
+}
+
+
+\textcolor{red}{
 What architectures are suited for learning such a task?
 What datasets / combination of datasets makes the model generalize best?
 Of the many techniques made to help models learn this task, which ones actually help? (Ablation)
+}
 
 \textbf{Remember the concrete \underline{What do we want to figure out}.}

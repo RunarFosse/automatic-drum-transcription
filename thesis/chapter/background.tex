@@ -1,12 +1,22 @@
 \chapter{Background}
 
-\section{Transcription Task}
+\section{Automatic Drum Transcription}
 
+As mentioned, \gls{ADT} describes the task of transcribing symbolic notation for drums from audio. To be even more descriptive, \gls{ADT} can be split into further tasks. From least to most complex we have: \gls{DSC}, where we classify drum instruments from isolated recordings. \gls{DTD}, where we transcribe audio containing exclusively drum instruments. \gls{DTP}, where we transcribe audio containing drum instruments, and additional percussive instruments which the transcription should exclude. Finally, we have \gls{DTM}, which describes the task of drum transcription with audio containing both drum, and melodic instruments.~\cite{8350302}
+
+In this thesis, we will focus on the most complex of these, namely \gls{DTM}. Intuitively, we want to develop a deep learning model which, given input audio, has the ability to detect and classify different drum instrument onsets (events), while selectively ignoring unrelated, melodic instruments.
+
+This task comes with difficulties not seen in the less complex tasks. Zehren et al.\cite{signals4040042} describes one example, in where \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
+
+\textcolor{red}{
 Mention some more detailed background into \gls{ADT}, \gls{DTM}, etc.
 Mention some more details into how it started, how it is going, etc.
 Also why this is of interest. (Maybe also what is missing)
+}
 
+\textcolor{red}{
 Mention the sequence to sequence prediction.
+}
 
 \section{Related work?}
 
