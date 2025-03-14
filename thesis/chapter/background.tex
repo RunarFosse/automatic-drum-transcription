@@ -8,23 +8,13 @@ In this thesis, we will focus on the most complex of these, namely \gls{DTM}. In
 
 This task comes with difficulties not seen in the less complex tasks. Zehren et al.~\cite{signals4040042} describes one example, in where \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
 
-Even though deep learning has shown to be the most promising method to solve this task, different approaches has been tried, many with great success. Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV} showed good results with both a convolutional, and a convolutional-recurrent neural network. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} focused on datasets, showing that the amount of data and quality of data are equally important to get good performance. Most recently, Chang et al.~\cite{chang2024yourmt3multiinstrumentmusictranscription} explored an autoregressive, language model approach. This approach explored multi-instrument transcriptions, but their results on \gls{ADT} were notable.
+Deep learning has shown to be a promising method to solve such a task, and several different approaches have been tried, many with great success. Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV} displayed good results with both a convolutional, and a convolutional-recurrent neural network. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} focused on datasets, showing that the amount of data and quality of data are equally important to get good performance. Most recently, Chang et al.~\cite{chang2024yourmt3multiinstrumentmusictranscription} explored an autoregressive, language model approach. This approach explored multi-instrument transcriptions, but their results on \gls{ADT} were notable.
 
 This reinforces the fact that there still exist many approaches to attempt, which could lead to a general improvement on \gls{ADT} models.
 
-\textcolor{red}{
-Mention some more detailed background into \gls{ADT}, \gls{DTM}, etc.
-Mention some more details into how it started, how it is going, etc.
-Also why this is of interest. (Maybe also what is missing)
-}
-
-\textcolor{red}{
-Mention the sequence to sequence prediction.
-}
-
 \section{Audio}
 
-The US army~\cite{1953fundamentals} early described sound as \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear."}. In short, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get picked up by our auditory organs and perceived by the brain. 
+The US army~\cite{1953fundamentals} early described sound as \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear."}. In short, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
 
 Thus sound can be described as the propogation and perception of waves. Mathematically, waves can be studied as signals~\cite{8454362}. To represent these sounds digitally, as \textit{audio}, one can express these waves as a signal, giving rise to the \textit{waveform}. The waveform is a representation of a signal as a graph, and charts the amplitude, or strength of the signal, over time.
 
@@ -35,8 +25,73 @@ Thus sound can be described as the propogation and perception of waves. Mathemat
     \label{WaveformFigure}
 \end{figure}
 
-For monophonic sound, this waveform is a one-dimensional representation (in contrast to stereophonic, which is two-dimensional). Even though this is an excellent way of storing audio digitally, it is very compact. There have been deep learning models working directly with these waveforms, e.g. Oord et al.'s WaveNet~\cite{oord2016wavenetgenerativemodelraw}, however the task of just parsing and perceiving such a signal is a complex one.
+For monophonic sound, this waveform is a one-dimensional representation. Even though this is an excellent way of storing audio digitally, it is very compact. There have been deep learning models working directly with these waveforms, e.g. Oord et al.'s WaveNet~\cite{oord2016wavenetgenerativemodelraw}, however the task of parsing and perceiving such a signal is a complex one.
 
 \subsection{Fourier Transform}
 
-By utilising the fact that 
+The Fourier Transform is a mathematical transformation which, given a frequency, computes its significance, or intensity, in a given signal. As we've established, audio is represented as a signal, and we can therefore use this transform to turn this audio signal into frequency space. 
+
+The fourier transform is a complex transformation, but we can attempt an intuitive explanation. Trigonometric functions have the property that they are \textit{orthogonal} to eachother if they have different integer frequencies. In laymen's terms, the \textit{area under the curve} of the product between to sines (or cosines) are zero if they have a different frequency.
+
+$$ \int_{\infty}^{\infty} \text{sin}(ax) \text{sin}(bx) dx = 0, \ a \neq b \wedge (a, b) \in \mathbb{Z} $$
+
+\textcolor{red}{Continue explanation but maybe not as mathy? Define and explain the core Fourier transform equation.}
+
+By doing such a transform, we turn our temporal data into spectral data. This initively \textit{untangles} our signal into its respective base frequencies. Such an transformation could lessen the complexity of the task, making \textit{understanding} of audio easier.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{figures/fft.jpg}
+    \caption{Application of a Fourier Transform}
+    \label{FTFigure}
+\end{figure}
+
+The information obtained from the Fourier Transform is \textit{complex}. This means every value consists of a \textit{real} part and an \textit{imaginary} part. The real part consists of the amplitude of a certain frequency, where as the imaginary part consists of the phase.
+
+\textcolor{red}{Also mention something about the discrete fourier transform?}
+
+\subsection{Nyquist frequency}
+
+\textcolor{red}{Mention and explain the nyquist frequency.}
+
+\subsection{Short-time Fourier Transform}
+
+The Fourier Transform comes with some drawbacks, notably how by moving from time space into frequency space, we lose temporal information. For certain tasks this might be sufficient, but the temporal dimension is vital when working with transcriptions and \gls{ADT} tasks. We've seen how the Fourier Transform computes the frequencies of a signal, but what happens if we had applied the same transform to smaller, \textit{partitions} of a signal.
+
+This leads us to the \gls{STFT}. By instead of transforming the whole signal, we transform smaller \textit{windows}, we could gain insight into the frequency space while keeping temporal information relatively intact. This turns our data from being one-dimensional into two-dimensional, giving us insight into the intensities of different frequencies, along different timesteps.
+
+\textcolor{red}{Talk more about the partitioning. The window functions applied, and why. Spectral leakage..}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{figures/stft}
+    \caption{Example of the \gls{STFT}}
+    \label{STFTFigure}
+\end{figure}
+
+\subsection{Spectrogram}
+
+The \gls{STFT}, as the standard Fourier Transform, returns the data as complex values. To turn these into strictly real values without discarding data, we could compute the spectrogram. This is done by squaring the absolute value of each complex number. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{figures/spectrogram}
+    \caption{The spectrogram of an audio signal}
+    \label{SpectrogramFigure}
+\end{figure}
+
+\textcolor{red}{Mention something about how we are losing some, or all phase information.}
+
+\subsection{Filters}
+
+\textcolor{red}{Explain about spectrogram filtering and filterbanks. Mention mel-filters, logarithmic-filters, and their usages in ADT.}
+
+\subsection{Transcription}
+
+\textcolor{red}{Explain what a transcription is, and what formats they usually are on. Explain what our model is predicting.}
+
+\subsection{Performance Measure}
+
+\textcolor{red}{Mention the different performance measures we have, what they are good for, and which ones are suitable here.}
+
+\textcolor{red}{Also mention what is deemed a "correct prediction", and why we can allow a certain timeframe of "correctness".}
