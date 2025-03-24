@@ -4,6 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from ray import tune
+
 from .convolutional import FrameSynchronousCNNEncoder
 from .recurrent import RNNDecoder
 from .attention import AttentionDecoder, PatchEmbedding
@@ -22,6 +24,12 @@ class ADTOF_FrameRNN(nn.Module):
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
         return self.decoder(latent)
     
+    hyperparameters = {
+        "num_layers": tune.grid_search([2, 3, 4, 5]),
+        "hidden_size": tune.grid_search([30, 60, 90]),
+        "use_gru": tune.grid_search([True, False])
+    }
+    
     
 class ADTOF_FrameAttention(nn.Module):
     def __init__(self, num_heads: int = 6, num_layers: int = 5):
@@ -33,6 +41,11 @@ class ADTOF_FrameAttention(nn.Module):
         latent = self.encoder(x)
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
         return self.decoder(latent)
+
+    hyperparameters = {
+        "num_heads": tune.grid_search([2, 4, 6, 8]),
+        "num_layers": tune.grid_search([2, 4, 6, 8])
+    }
     
 class VisionTransformer(nn.Module):
     def __init__(self, patch_size: Tuple[int, int] = (1, 21), num_heads: int = 6, num_layers: int = 5):
@@ -44,3 +57,8 @@ class VisionTransformer(nn.Module):
         latent = self.patch_embedding(x)
         return self.decoder(latent)
     
+    hyperparameters = {
+        "patch_size": tune.grid_search([(1, 7), (1, 14), (1, 21)]),
+        "num_heads": tune.grid_search([4, 6, 8]),
+        "num_layers": tune.grid_search([6, 8, 10])
+    }

@@ -69,11 +69,7 @@ config = {
     "optimizer": optim.AdamW,
 
     "Model": Model,
-    "parameters": {
-        "patch_size": tune.grid_search([(1, 7), (1, 14)]),
-        "num_heads": tune.grid_search([4, 6, 8]),
-        "num_layers": tune.grid_search([6, 8, 10])
-    },
+    "parameters": Model.hyperparameters,
 
     "device": device,
     "seed": seed,
