@@ -17,9 +17,9 @@ class CNN(nn.Module):
     def __init__(self, num_layers: int = 2, hidden_size: int = 288):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
-        self.dense = nn.Sequential(
-            nn.Sequential([nn.Linear(576, hidden_size), nn.ReLU()]) for _ in range(num_layers)
-        )
+        self.dense = nn.Sequential([
+            layer for _ in range(num_layers) for layer in [nn.Linear(576, hidden_size), nn.ReLU()]
+        ])
         self.fc = nn.Linear(hidden_size, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
