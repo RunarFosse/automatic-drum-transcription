@@ -20,7 +20,7 @@ class CNN(nn.Module):
         self.dense = nn.Sequential(
             nn.Linear(576, hidden_size), 
             nn.ReLU(), 
-            *[layer for _ in range(num_layers) for layer in [nn.Linear(hidden_size, hidden_size), nn.ReLU()]]
+            *[layer for _ in range(num_layers - 1) for layer in [nn.Linear(hidden_size, hidden_size), nn.ReLU()]]
         )
         self.fc = nn.Linear(hidden_size, 5)
     
@@ -30,7 +30,7 @@ class CNN(nn.Module):
         return self.fc(self.dense(latent))
     
     hyperparameters = {
-        "num_layers": tune.grid_search([2, 3, 4]),
+        "num_layers": tune.grid_search([1, 2, 3, 4]),
         "hidden_size": tune.grid_search([72, 144, 288, 576])
     }
 
