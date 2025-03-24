@@ -4,7 +4,7 @@ from torch import optim
 from torch.utils.data import DataLoader
 from ray import init, tune, train
 from time import time
-from models import ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
+from models import CNN, ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
 from preprocess import compute_normalization, create_transform
 from evaluate import evaluate_model
 from train import train_model
@@ -33,10 +33,10 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "Vision Transformer"
+experiment = "CNN"
 dataset = "ADTOF-YT"
 
-Model = VisionTransformer
+Model = CNN
 
 num_samples = 1
 num_epochs = 100

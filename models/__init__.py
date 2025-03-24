@@ -13,6 +13,25 @@ from .attention import AttentionDecoder, PatchEmbedding
 from typing import Tuple
 
 
+class CNN(nn.Module):
+    def __init__(self, num_layers: int = 2, hidden_size: int = 288):
+        super().__init__()
+        self.encoder = FrameSynchronousCNNEncoder()
+        self.dense = nn.Sequential(
+            nn.Sequential([nn.Linear(576, hidden_size), nn.ReLU()]) for _ in range(num_layers)
+        )
+        self.fc = nn.Linear(hidden_size, 5)
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        latent = self.encoder(x)
+        latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
+        return self.fc(self.dense(latent))
+    
+    hyperparameters = {
+        "num_layers": tune.grid_search([2, 3, 4]),
+        "hidden_size": tune.grid_search([72, 144, 288, 576])
+    }
+
 class ADTOF_FrameRNN(nn.Module):
     def __init__(self, num_layers: int = 3, hidden_size: int = 288, use_gru: bool = True):
         super().__init__()
@@ -26,7 +45,7 @@ class ADTOF_FrameRNN(nn.Module):
     
     hyperparameters = {
         "num_layers": tune.grid_search([2, 3, 4, 5]),
-        "hidden_size": tune.grid_search([30, 60, 90]),
+        "hidden_size": tune.grid_search([72, 144, 288]),
         "use_gru": tune.grid_search([True, False])
     }
     
