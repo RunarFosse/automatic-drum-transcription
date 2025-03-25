@@ -33,10 +33,10 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "CNN"
+experiment = "CRNN"
 dataset = "ADTOF-YT"
 
-Model = CNN
+Model = ADTOF_FrameRNN
 
 num_samples = 1
 num_epochs = 100
