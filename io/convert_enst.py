@@ -1,5 +1,5 @@
 import torch
-from torch.utils.data import TensorDataset, DataLoader
+from torch.utils.data import TensorDataset, DataLoader, random_split
 from torchvision.transforms import Normalize
 from load import readAudio, readAnnotations
 from pathlib import Path
@@ -110,14 +110,12 @@ ENST_MAPPING = {
     "cb": 4,
 }
 
-if __name__ == "__main__":
-    # Declare an argument parser for this file
-    import argparse
-    parser = argparse.ArgumentParser("convert_enst.py")
-    parser.add_argument("path", help="The path to the ENST-drums dataset", type=str)
-    args = parser.parse_args()
+# Set a seed for predictable splitting
+seed = 100
 
-    path = Path(__file__).resolve().parent.parent / args.path
+if __name__ == "__main__":
+    # Declare the path to the dataset directory
+    path = Path(__file__).resolve().parent.parent / "data" / "ENST-drums-public"
 
     print("\033[96m", "Loading data into lists", "\033[0m", sep="")
 
@@ -142,19 +140,37 @@ if __name__ == "__main__":
     print("\033[96m", "Creating tensor datasets", "\033[0m", sep="")
     dataset = TensorDataset(data, labels)
 
-    # And store the dataset to the disk under the first path
-    print("\033[96m", "Storing dataset to disk", "\033[0m", sep="")
-    torch.save(dataset, path.with_suffix(".pt"))
+    # Split them into Train/Validation/Test sets
+    print("\033[96m", "Creating train/validation/test splits", "\033[0m", sep="")
+    torch.manual_seed(seed)
+    train_dataset, validation_dataset, test_dataset = random_split(dataset, [0.7, 0.15, 0.15])
 
-    print("\033[95m", "Finished!", "\033[0m", sep="")
+    # Verify split sizes
+    print("\033[96m", "Train size: ", "\033[0m", len(train_dataset.indices), "\033[0m", sep="")
+    print("\033[96m", "Validation size: ", "\033[0m", len(validation_dataset.indices), "\033[0m", sep="")
+    print("\033[96m", "Test size: ", "\033[0m", len(test_dataset.indices), "\033[0m", sep="")
+
+    # Verify indices don't overlap
+    train_collisions = len(set(train_dataset.indices).intersection(set(validation_dataset.indices))) + len(set(train_dataset.indices).intersection(set(test_dataset.indices)))
+    validation_collisions = len(set(validation_dataset.indices).intersection(set(test_dataset.indices)))
+    print("\033[96m", "Number of collisions: ", "\033[0m", train_collisions + validation_collisions, "\033[0m", sep="")
+
+    # Store every split
+    for name, dataset in [("train", train_dataset), ("validation", validation_dataset), ("test", test_dataset)]:
+        # And store the dataset to the disk under the first path
+        new_path = (path / f"ENST_{name}").with_suffix(".pt")
+        print("\033[96m", "     Storing ", "\033[0m", f"{new_path.name}", "\033[96m", " to disk", "\033[0m", sep="")
+        torch.save(dataset, new_path)
+
+        print("\033[95m", "     Finished!", "\033[0m", sep="")
     
-    # Load dataset and verify that everything is correct
-    dataset = torch.load(path.with_suffix(".pt"))
-    print("\033[92m", "Final dataset contains ", "\033[0m", len(dataset), "\033[92m", " entries", "\033[0m", sep="")
-    print("\033[92m", "Each entry has features of shape: ", "\033[0m", dataset[0][0].shape, "\033[92m", ", and labels of shape: ", "\033[0m", dataset[0][1].shape, sep="")
+        # Load dataset and verify that everything is correct
+        dataset = torch.load(new_path)
+        print("\033[92m", "     Final dataset contains ", "\033[0m", len(dataset), "\033[92m", " entries", "\033[0m", sep="")
+        print("\033[92m", "     Each entry has features of shape: ", "\033[0m", dataset[0][0].shape, "\033[92m", ", and labels of shape: ", "\033[0m", dataset[0][1].shape, sep="")
 
     # Verify that dataloaders work
-    dataloader = DataLoader(dataset, batch_size=16)
+    dataloader = DataLoader(train_dataset, batch_size=16)
     num_batches, mean, std = len(dataloader), torch.zeros(1), torch.zeros(1)
     for i, (features, labels) in enumerate(dataloader):
         if i == 0:
@@ -165,4 +181,4 @@ if __name__ == "__main__":
     # Compute mean and std of dataset
     mean /= num_batches
     std /= num_batches
-    print("\033[92m", "Dataset has mean of: ", "\033[0m", mean, "\033[92m", ", and std of: ", "\033[0m", std, sep="")
+    print("\033[92m", "Training dataset has mean of: ", "\033[0m", mean, "\033[92m", ", and std of: ", "\033[0m", std, sep="")
