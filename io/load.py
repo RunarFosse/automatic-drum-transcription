@@ -2,6 +2,7 @@ import torch
 import torchaudio
 import torch.nn.functional as F
 from torchaudio import transforms, functional
+import partitura
 
 from pathlib import Path
 from typing import Dict, Optional
@@ -122,6 +123,43 @@ def readAnnotations(path: Path, mapping: Dict[str, int], num_frames: int, num_la
             frame_indices.append(frame)
             label_indices.append(label)
     
+    # Turn into torch tensor
+    tensor = torch.sparse_coo_tensor(
+        torch.tensor([frame_indices, label_indices]),
+        torch.ones(len(frame_indices)),
+        (num_frames, num_labels)
+    ).to_dense()
+    return tensor
+
+def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: int) -> torch.Tensor:
+    """ Read a midi-annotation file into a torch tensor. """
+
+    # Load the midi into list of notes
+    notes = partitura.load_performance_midi(path)[0].note_array()
+
+    # Store label and frame indices in lists
+    frame_indices = []
+    label_indices = []
+            
+    # Iterate every note
+    for note in notes:
+        time, pitch, velocity = note[0], note[4], note[5]
+
+        # Ensure no note has 0 velocity
+        assert velocity > 0
+
+        # Turn into frames and labels
+        frame = int(round(float(time) / MS_PER_FRAME * 1000))
+
+        # Extract label from pitch
+        label = mapping[pitch]
+        if label is None:
+            # Skip if label is None
+            continue
+        
+        frame_indices.append(frame)
+        label_indices.append(label)
+
     # Turn into torch tensor
     tensor = torch.sparse_coo_tensor(
         torch.tensor([frame_indices, label_indices]),

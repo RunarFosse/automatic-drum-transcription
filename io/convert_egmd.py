@@ -1,10 +1,9 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 from torchvision.transforms import Normalize
-from load import readAudio, readAnnotations
+from load import readAudio, readAnnotations, readMidi
 from pathlib import Path
 import pandas as pd
-import mido
 
 """ Run this file to turn E-GMD into a stored PyTorch dataset """
 
@@ -38,16 +37,14 @@ EGMD_MAPPING = {
     56: 4, #'Cowbell',
     57: 4, #'Crash Cymbal 2',
     59: 4, #'Ride Cymbal 2',
+
+    22: None, #Unknown Mapping - Not Percussion
+    26: None, #Unknown Mapping - Not Percussion
 }
 
 if __name__ == "__main__":
-    # Declare an argument parser for this file
-    import argparse
-    parser = argparse.ArgumentParser("convert_enst.py")
-    parser.add_argument("path", help="The path to the E-GMD dataset", type=str)
-    args = parser.parse_args()
-
-    path = Path(__file__).resolve().parent.parent / args.path
+    # Declare the path to the dataset directory
+    path = Path(__file__).resolve().parent.parent / "data" / "e-gmd-v1.0.0"
 
     # Load the CSV
     csv = pd.read_csv(path / "e-gmd-v1.0.0.csv")
@@ -64,9 +61,10 @@ if __name__ == "__main__":
             audio_path = path / values["audio_filename"]
             midi_path = path / values["midi_filename"]
             
-            #midi = pretty_midi.PrettyMIDI(midi_path.as_posix(), initial_tempo=int(values["bpm"]))
-            midi = mido.MidiFile(midi_path)
-            
-            # Iterate the MIDI file
-            for msg in midi.tracks[1]:
-                pass
+            spectrogram = readAudio(audio_path, audio_path)
+            timesteps = spectrogram.shape[0]
+            label = readMidi(midi_path, EGMD_MAPPING, timesteps, 5)
+
+            print(audio_path.stem)
+            print(spectrogram.shape)
+            print(label.shape)
