@@ -65,6 +65,6 @@ if __name__ == "__main__":
             timesteps = spectrogram.shape[0]
             label = readMidi(midi_path, EGMD_MAPPING, timesteps, 5)
 
-            print(audio_path.stem)
-            print(spectrogram.shape)
-            print(label.shape)
+            print(split.capitalize() + ":", audio_path.stem)
+            print("      ", spectrogram.shape)
+            print("      ", label.shape)
