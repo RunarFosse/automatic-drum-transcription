@@ -19,7 +19,7 @@ class RNN(nn.Module):
         self.recurrent = RNNDecoder(input_size=84, num_layers=num_layers, hidden_size=hidden_size, use_gru=use_gru)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
+        latent = torch.flatten(x.permute(0, 2, 1, 3), start_dim=2)
         return self.recurrent(latent)
     
     hyperparameters = {
