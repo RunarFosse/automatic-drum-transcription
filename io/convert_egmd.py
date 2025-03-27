@@ -61,7 +61,7 @@ if __name__ == "__main__":
             audio_path = path / values["audio_filename"]
             midi_path = path / values["midi_filename"]
             
-            spectrogram = readAudio(audio_path, audio_path)
+            spectrogram = readAudio(audio_path)
             timesteps = spectrogram.shape[0]
             label = readMidi(midi_path, EGMD_MAPPING, timesteps, 5)
 
