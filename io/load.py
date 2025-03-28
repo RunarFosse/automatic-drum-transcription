@@ -143,7 +143,7 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
             
     # Iterate every note
     for note in notes:
-        time, pitch, velocity = note[0], note[4], note[5]
+        time, pitch = note[0], note[4]
 
         # Turn into frames and labels
         frame = int(round(float(time) / MS_PER_FRAME * 1000))
