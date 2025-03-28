@@ -51,7 +51,7 @@ def compute_log_filterbank(sr: int = 44100, n_fft: int = 2048, f_min: int = 20, 
     
     return filterbank
 
-def compute_log_filter_spectrogram(waveform: torch.Tensor, sr: int = 44100, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, f_min: int = 20, f_max: int = 20000, power: int = 1, norm: bool = True) -> torch.Tensor:
+def compute_log_filter_spectrogram(waveform: torch.Tensor, sr: int = 44100, n_fft: int = 2048, win_length: int = 2048, f_min: int = 20, f_max: int = 20000, power: int = 1, norm: bool = True) -> torch.Tensor:
     """ Given a waveform, compute a spectrogram with a logarithmic filterbank applied. """
 
     # If the waveform is stereo, turn it to mono
@@ -62,7 +62,7 @@ def compute_log_filter_spectrogram(waveform: torch.Tensor, sr: int = 44100, n_ff
     filterbank = compute_log_filterbank(sr=sr, n_fft=n_fft, f_min=f_min, f_max=f_max, norm=norm)
     
     # Then, compute STFT
-    spectrogram = torchaudio.transforms.Spectrogram(n_fft=n_fft, win_length=win_length, hop_length=hop_length, power=power)(waveform)
+    spectrogram = torchaudio.transforms.Spectrogram(n_fft=n_fft, win_length=win_length, hop_length=sr // 100, power=power)(waveform)
 
     # Apply logarithimic filters
     spectrogram = filterbank @ spectrogram
@@ -90,7 +90,7 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     waveform = F.pad(waveform, (0, int(padding)), mode="constant", value=0)
 
     # Turn it into a logarithmically filtered spectrogram
-    spectrogram = compute_log_filter_spectrogram(waveform)
+    spectrogram = compute_log_filter_spectrogram(waveform, sr=sr)
 
     # Return it on the shape (timesteps, bins), with a last filter dimension
     return spectrogram.T.unsqueeze(-1)
