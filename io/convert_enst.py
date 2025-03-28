@@ -140,7 +140,7 @@ if __name__ == "__main__":
     print("\033[96m", "Creating tensor datasets", "\033[0m", sep="")
     dataset = TensorDataset(data, labels)
 
-    # Split them into Train/Validation/Test sets
+    # Split them into Train/Validation/Test sets TODO! WIP: MAY HAVE DATALEAKAGE TODO!
     print("\033[96m", "Creating train/validation/test splits", "\033[0m", sep="")
     torch.manual_seed(seed)
     train_dataset, validation_dataset, test_dataset = random_split(dataset, [0.7, 0.15, 0.15])
@@ -156,9 +156,9 @@ if __name__ == "__main__":
     print("\033[96m", "Number of collisions: ", "\033[0m", train_collisions + validation_collisions, "\033[0m", sep="")
 
     # Store every split
-    for name, dataset in [("train", train_dataset), ("validation", validation_dataset), ("test", test_dataset)]:
+    for split, dataset in [("train", train_dataset), ("validation", validation_dataset), ("test", test_dataset)]:
         # And store the dataset to the disk under the first path
-        new_path = (path / f"ENST_{name}").with_suffix(".pt")
+        new_path = (path / f"enst_{split}").with_suffix(".pt")
         print("\033[96m", "     Storing ", "\033[0m", f"{new_path.name}", "\033[96m", " to disk", "\033[0m", sep="")
         torch.save(dataset, new_path)
 
