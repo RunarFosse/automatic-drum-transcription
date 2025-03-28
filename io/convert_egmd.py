@@ -1,7 +1,6 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-from torchvision.transforms import Normalize
-from load import readAudio, readAnnotations, readMidi
+from load import readAudio, readMidi
 from pathlib import Path
 import pandas as pd
 

@@ -1,6 +1,5 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader, random_split
-from torchvision.transforms import Normalize
 from load import readAudio, readAnnotations
 from pathlib import Path
 
