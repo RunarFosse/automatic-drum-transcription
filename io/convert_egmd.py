@@ -35,6 +35,7 @@ EGMD_MAPPING = {
     55: 4, #'Splash Cymbal',
     56: 4, #'Cowbell',
     57: 4, #'Crash Cymbal 2',
+    58: None, #'Vibraslap',
     59: 4, #'Ride Cymbal 2',
 
     22: None, #Unknown Mapping - Not Percussion
