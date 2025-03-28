@@ -43,6 +43,16 @@
     
     Methods should explain what I've done, not necessarily why or where stuff comes from.
     
+    - Talk more about how we have to label the data
+    - Mention why inaccurate labels are inevitable
+    - Mention the size of each of the data
+        - I.e. Waveform = (1, sr * seconds)
+               Spectrogram = (frequencies, sr * second / hop_length)
+               etc.
+    
+    - Cite LSTM
+    - Don't explain importance in first sentence.
+    - Change US ARMY.
 
     Sort in order of experiments after methods:
     Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Experiment 3? -> Conclusion
