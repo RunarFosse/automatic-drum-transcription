@@ -74,8 +74,6 @@ if __name__ == "__main__":
                 print("      ", spectrogram.shape)
                 print("      ", label.shape)
                 print(partitions)
-                print(spectrogram.tensor_split(partitions, dim=0))
-                print(label.tensor_split(partitions, dim=0))
                 for spec in spectrogram.tensor_split(partitions, dim=0):
                     print("spec: ", spec.shape)
                 for lab in label.tensor_split(partitions, dim=0):
