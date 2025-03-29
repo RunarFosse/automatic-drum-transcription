@@ -96,6 +96,7 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
         print(timesteps)
         print(padding)
         print(waveform.shape)
+        print(sr)
 
     # Return it on the shape (timesteps, bins), with a last filter dimension
     return spectrogram.T.unsqueeze(-1)
