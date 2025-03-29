@@ -87,11 +87,15 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     # Pad the waveform with zeroes, to be divisible with 4s intervals
     timesteps = torch.tensor(waveform.shape[0])
     padding = torch.ceil(timesteps / (4.0 * sr)) * (4.0 * sr) - timesteps - 1
-    print(padding)
     waveform = F.pad(waveform, (0, int(padding)), mode="constant", value=0)
 
     # Turn it into a logarithmically filtered spectrogram
     spectrogram = compute_log_filter_spectrogram(waveform, sr=sr)
+
+    if spectrogram.shape[0] % 400 != 0:
+        print(timesteps)
+        print(padding)
+        print(waveform.shape)
 
     # Return it on the shape (timesteps, bins), with a last filter dimension
     return spectrogram.T.unsqueeze(-1)
