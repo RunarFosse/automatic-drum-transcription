@@ -92,11 +92,6 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     # Turn it into a logarithmically filtered spectrogram
     spectrogram = compute_log_filter_spectrogram(waveform, sr=sr)
 
-    # Ensure spectrogram is divisible into 4s intervals
-    redundants = spectrogram.shape[1] % 400
-    if redundants:
-        spectrogram = spectrogram[:, :-redundants]
-
     # Return it on the shape (timesteps, bins), with a last filter dimension
     return spectrogram.T.unsqueeze(-1)
     
