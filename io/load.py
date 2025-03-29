@@ -92,7 +92,7 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
     # Turn it into a logarithmically filtered spectrogram
     spectrogram = compute_log_filter_spectrogram(waveform, sr=sr)
 
-    if spectrogram.shape[0] % 400 != 0:
+    if spectrogram.shape[1] % 400 != 0:
         print(timesteps)
         print(padding)
         print(waveform.shape)
