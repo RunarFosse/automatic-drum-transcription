@@ -84,11 +84,11 @@ def readAudio(path: Path, accompaniment: Optional[Path] = None) -> torch.Tensor:
         accompaniment, _ = torchaudio.load(accompaniment)
         waveform += accompaniment.mean(dim=0)
 
-    # Pad the waveform with zeroes, to be divisible with 4s intervals
-    timesteps = torch.tensor(waveform.shape[0])
-    print(timesteps / (sr // 100))
-    #padding = torch.ceil(timesteps / (4.0 * sr)) * (4.0 * sr) - timesteps - 1
-    #waveform = F.pad(waveform, (0, max(0, int(padding))), mode="constant", value=0)
+    # Pad the waveform with zeroes, to be divisible with 4s (400 timeframes) intervals
+    samples = torch.tensor(waveform.shape[0])
+    timeframes = 1 + torch.floor(samples / (sr // 100))
+    padding = (torch.ceil(timeframes / 400) * 400 - 1) * (sr // 100) - samples
+    waveform = F.pad(waveform, (0, int(padding)), mode="constant", value=0)
 
     # Turn it into a logarithmically filtered spectrogram
     spectrogram = compute_log_filter_spectrogram(waveform, sr=sr)
