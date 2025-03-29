@@ -69,9 +69,17 @@ if __name__ == "__main__":
             data += list(spectrogram.tensor_split(partitions, dim=0))
             labels += list(label.tensor_split(partitions, dim=0))
 
-            print(split.capitalize() + ":", audio_path.stem)
-            print("      ", spectrogram.shape)
-            print("      ", label.shape)
+            if spectrogram.shape[0] % 400 != 0:
+                print(split.capitalize() + ":", audio_path.stem)
+                print("      ", spectrogram.shape)
+                print("      ", label.shape)
+                print(partitions)
+                print(spectrogram.tensor_split(partitions, dim=0))
+                print(label.tensor_split(partitions, dim=0))
+                for spec in spectrogram.tensor_split(partitions, dim=0):
+                    print("spec: ", spec.shape)
+                for lab in label.tensor_split(partitions, dim=0):
+                    print("lab: ", lab.shape)
         
         data, labels = torch.stack(data), torch.stack(labels)
     
