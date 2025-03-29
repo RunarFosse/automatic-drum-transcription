@@ -68,6 +68,10 @@ if __name__ == "__main__":
             partitions = timesteps // 400
             data += list(spectrogram.tensor_split(partitions, dim=0))
             labels += list(label.tensor_split(partitions, dim=0))
+
+            print(split.capitalize() + ":", audio_path.stem)
+            print("      ", spectrogram.shape)
+            print("      ", label.shape)
         
         data, labels = torch.stack(data), torch.stack(labels)
     
