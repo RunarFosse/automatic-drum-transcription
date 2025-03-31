@@ -38,6 +38,7 @@ def train_model(config: tune.TuneConfig):
     loss_fn = nn.BCEWithLogitsLoss(reduction="none")
     optimizer = config["optimizer"](model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
     optimizer.zero_grad(set_to_none=True)
+    print("Number of parameters: ", sum(len(param) for param in model.parameters()))
 
     # Add a learning rate scheduler
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.2, patience=3)
