@@ -33,19 +33,22 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "RNN"
-dataset = "ADTOF-YT"
+experiment = "Vision Transformer"
+dataset = "E-GMD"
 
-Model = RNN
+Model = VisionTransformer
 
 num_samples = 1
 num_epochs = 100
 
 batch_size = 128
 
-train_path = data_dir / "adtof/adtof_yt_train.pt"
-val_path = data_dir / "adtof/adtof_yt_validation.pt"
-test_path = data_dir / "adtof/adtof_yt_test.pt"
+#train_path = data_dir / "adtof/adtof_yt_train.pt"
+#val_path = data_dir / "adtof/adtof_yt_validation.pt"
+#test_path = data_dir / "adtof/adtof_yt_test.pt"
+train_path = data_dir / "e-gmd-v1.0.0/egmd_train.pt"
+val_path = data_dir / "e-gmd-v1.0.0/egmd_validation.pt"
+test_path = data_dir / "e-gmd-v1.0.0/egmd_test.pt"
 
 feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size)
 
