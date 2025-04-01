@@ -54,6 +54,14 @@ The Fourier Transform is defined as an integral over continuous time. On compute
 
 To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works as the normal Fourier Transform, but ported to work on discrete-valued signals. It is given by the formula $$ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}} $$, where $k$ denotes the frequency and $N$ the number of discrete samples.
 
+\begin{figure}[H]
+    \centering
+    %\includegraphics[scale=2.0]{figures/signalaliasing.png}
+    \textcolor{red}{Add a example figure of FT vs DFT}
+    %\caption{Example of aliasing in an undersampled signal.}
+    %\label{AliasingFigure}
+\end{figure}
+
 \subsection{Nyquist frequency}
 
 When we discretize a signal, e.g. when going from continuous audio waves in the air to discrete audio signals on a computer, we could lose some information. T discrete representation of the signal is an \textit{approximation}, which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this also mean a less precise signal approxmation.
