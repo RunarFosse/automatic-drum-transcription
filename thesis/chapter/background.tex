@@ -48,11 +48,34 @@ By doing such a transform, we turn our temporal data into spectral data. This in
 
 The information obtained from the Fourier Transform is \textit{complex}. This means every value consists of a \textit{real} part and an \textit{imaginary} part. The real part consists of the amplitude of a certain frequency, where as the imaginary part consists of the phase.
 
-\textcolor{red}{Also mention something about the discrete fourier transform?}
+\subsection{Discrete Fourier Transform}
+
+The Fourier Transform is defined as an integral over continuous time. On computers, instead of storing signals continuously we store signals using a discrete number of samples. Each signal's \textit{sampling rate} describes how many samples a signal contains per second of audio, and is denoted in \textit{Hz}.
+
+To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works as the normal Fourier Transform, but ported to work on discrete-valued signals. It is given by the formula $$ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}} $$, where $k$ denotes the frequency and $N$ the number of discrete samples.
 
 \subsection{Nyquist frequency}
 
-\textcolor{red}{Mention and explain the nyquist frequency.}
+When we discretize a signal, e.g. when going from continuous audio waves in the air to discrete audio signals on a computer, we could lose some information. T discrete representation of the signal is an \textit{approximation}, which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this also mean a less precise signal approxmation.
+
+\textit{Aliasing} is the phenomena where new frequencies seem to emerge in undersampled signals. For a given discrete signal, the \textit{Nyquist frequency}, equal to half the sampling rate, is the maximum frequency a signal accurately can represent. Thus to prevent aliasing, one would need to store a signal with a sampling rate of at least double the maximum frequency.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=2.0]{figures/signalaliasing.png}
+    \caption{Example of aliasing in an undersampled signal.}
+    \label{AliasingFigure}
+\end{figure}
+
+Regarding the \gls{DFT}, it here directly follows that the maximum frequency we accurately could extract information about is proportional to the sampling rate of the signal.
+
+\subsection{Fast Fourier Transform}
+
+Keen-eyed computer scientists may have spotted that the \gls{DFT} runs in $\mathcal{O}(n^2)$ time as we, for every frequency in the range $[0, N]$ have to sum over $N$ different values. In other words, the \gls{DFT} algorithm scales quite poorly. Take into account that the standard sampling rate for audio is $44.1 \text{kHz}$, i.e. $44100 \text{Hz}$, then we can see that the \gls{DFT} could be inefficient.~\cite{pras2010sampling}
+
+The \gls{FFT} is an algorithm which solves this problem, and instead computes the \gls{DFT} of a signal within $\mathcal{O}(n\log{n})$ time. Described by Gilbert Strang as \textit{"the most important numerical algorithm of our lifetime"}~\cite{strang1993wavelettransformsversusfourier}, this practically solves our scaling problem, and allows us to efficiently extract spectral information from a signal regardless of sampling rate.
+
+There exist many different implementations of the \gls{FFT}. However the Cooley-Tukey algorithm is by far the most used \gls{FFT} and optimizes calculations through a \textit{divide and conquer} approach, utilizing previous calculations to compute others.~\cite{d3ea2d52-5ab2-3128-8b80-efb85267295d}
 
 \subsection{Short-time Fourier Transform}
 
