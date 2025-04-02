@@ -111,15 +111,29 @@ The \gls{STFT}, as the standard Fourier Transform, returns the data as complex v
     \label{SpectrogramFigure}
 \end{figure}
 
-\textcolor{red}{Mention something about how we are losing some, or all phase information.}
+One drawback about the spectrogram is that it contains no information about the phase of the signal it represents. That means it will not be possible to reverse the process and recreate the exact original signal. However, one could try to create an approximation like is done with the Griffin-Lim algorithm~\cite{1164317}.
 
 \subsection{Filters}
 
-\textcolor{red}{Explain about spectrogram filtering and filterbanks. Mention mel-filters, logarithmic-filters, and their usages in ADT.}
+Signal frequencies and human perception have a special relationship. We humans percieve logarithmic differences in frequencies as a linear difference in pitch, and we tend to be better at distinguishing differences in lower frequencies than higher. E.g., the notes $\text{A}_2$ and $\text{B}_2$ have the same perceptual pitch difference as $\text{D}_7$ and $\text{E}_7$, even though their difference in frequency, $\text{B}_2 - \text{A}_2 \approx 13.471 \text{Hz}$ and $\text{E}_7 - \text{D}_7 \approx 287.703 \text{Hz}$, are vastly different. As the frequency bins in a spectrogram are linearly spaced, this leads to the spectrogram not representing each frequency equally compared to our perception.
+
+To solve this, we can filter the spectrogram into different bins, more suited to represent our perception of sound. This filtering is done by matrix multiplying our spectrogram with a \textit{filterbank}; a matrix representation of different filters.
 
 \subsubsection{Mel Spectrograms}
 
+The mel scale, presented by Stevens, Volkmann, and Newmann in 1937, is a transformation from the frequency scale to the mel scale. These mels have the property such that a linear difference in mels are percieved as linear differences in pitch. Application of mel-filters result in the \textit{mel spectrogram}, and are widely used when dealing with audio in machine learning, and successful applications have been seen in \gls{AMT}.~\cite{wolfmonheim2024spectralrhythmfeaturesaudio, gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3multiinstrumentmusictranscription, 8350302, gong2021astaudiospectrogramtransformer, zehren2024analyzingreducingsynthetictorealtransfer}
+
 \subsubsection{Logarithmic Filters}
+
+The mel scale was created to mimic human perception of sound, however within \gls{ADT} there is a different trend. By instead using logarithmically spaced filters, centered on the note $\text{A}_4$, we get a \textit{logarithmically filtered spectrogram}. Intuitively one could assume this, instead of mimicing human perception, ports the spectrogram into a format preserving musical relationship and information. This seems to be a standard for \gls{ADT} and has been used extensively by the likes of Vogl et al.~\cite{8350302, vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV, signals4040042}
+
+\begin{figure}[H]
+    \centering
+    %\includegraphics[scale=2.0]{figures/signalaliasing.png}
+    \textcolor{red}{Add a example figure of Spectrogram vs Mel vs Logarithmic}
+    %\caption{Example of aliasing in an undersampled signal.}
+    %\label{AliasingFigure}
+\end{figure}
 
 \section{Transcription}
 
