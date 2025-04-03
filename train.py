@@ -63,6 +63,8 @@ def train_model(config: tune.TuneConfig):
             timestep_weights = torch.max(torch.tensor(1.0), timestep_weights)
 
             loss = (loss_fn(outputs, labels).sum(dim=2) * timestep_weights).mean()
+            print(timestep_weights)
+            print(loss)
             loss.backward()
 
             # Clip the gradients to prevent explosions
