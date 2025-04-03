@@ -1,12 +1,10 @@
-# Implement new model architectures
-
-# -> Implement groundbreaking transformer model
+# Make run.py able to run architectures and datasets from command line (via argparse, instead of editing file)
 
 # Find and include all datasets
     # These include:
-        - ENST and MDB 1.0+2.0, together as small dataset
+        - ENST and MDB DRUMS, together as small dataset
         - Slakh
-        - EGMD
+        - EGMD (already included)
         - ADTOF-YT (already included)
     
     # Parse them correctly, get same formatted output
