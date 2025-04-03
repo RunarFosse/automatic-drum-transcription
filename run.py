@@ -3,6 +3,7 @@ import torch
 from torch import optim
 from torch.utils.data import DataLoader
 from ray import init, tune, train
+from ray.tune.search.optuna import OptunaSearch
 from time import time
 from models import RNN, CNN, ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
 from preprocess import compute_normalization, create_transform
@@ -38,7 +39,7 @@ dataset = "E-GMD"
 
 Model = ADTOF_FrameRNN
 
-num_samples = 1
+num_samples = 15
 num_epochs = 100
 
 batch_size = 128
@@ -86,7 +87,10 @@ tuner = tune.Tuner(
     ),
     param_space=config,
     tune_config=tune.TuneConfig(
-        num_samples=num_samples
+        num_samples=num_samples,
+        metric="Micro F1",
+        mode="max",
+        search_alg=OptunaSearch()
     ),
     run_config=train.RunConfig(
         stop={"epochs_since_improvement": 10},
