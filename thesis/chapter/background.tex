@@ -31,11 +31,7 @@ For monophonic sound, this waveform is a one-dimensional representation. Even th
 
 The Fourier Transform is a mathematical transformation which, given a frequency, computes its significance, or intensity, in a given signal. As we've established, audio is represented as a signal, and we can therefore use this transform to turn this audio signal into frequency space. 
 
-The fourier transform is a complex transformation, but we can attempt an intuitive explanation. Trigonometric functions have the property that they are \textit{orthogonal} to eachother if they have different integer frequencies. In laymen's terms, the \textit{area under the curve} of the product between to sines (or cosines) are zero if they have a different frequency.
-
-$$ \int_{\infty}^{\infty} \text{sin}(ax) \text{sin}(bx) dx = 0, \ a \neq b \wedge (a, b) \in \mathbb{Z} $$
-
-\textcolor{red}{Continue explanation but maybe not as mathy? Define and explain the core Fourier transform equation.}
+The fourier transform is a complex transformation. Given a signal $f$, we can compute the integral $$ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} $$ for a frequency $\xi$, resulting in a \textit{complex} number. This number consists of a \textit{real} part and an \textit{imaginary} part. The real part consists of the amplitude of a certain frequency, where as the imaginary part consists of the phase. This information is what allows us to, for a given signal, figure out which frequencies it is made out of and how much each frequency contributes.
 
 By doing such a transform, we turn our temporal data into spectral data. This initively \textit{untangles} our signal into its respective base frequencies. Such an transformation could lessen the complexity of the task, making \textit{understanding} of audio easier.
 
@@ -46,7 +42,7 @@ By doing such a transform, we turn our temporal data into spectral data. This in
     \label{FTFigure}
 \end{figure}
 
-The information obtained from the Fourier Transform is \textit{complex}. This means every value consists of a \textit{real} part and an \textit{imaginary} part. The real part consists of the amplitude of a certain frequency, where as the imaginary part consists of the phase.
+Note that the Fourier Transform is invertible, meaning that, given information about each frequency, we can perform a similar integral and reconstruct the original signal. In signal processing, this property is exploited heavily.
 
 \subsection{Discrete Fourier Transform}
 
@@ -137,11 +133,39 @@ The mel scale was created to mimic human perception of sound, however within \gl
 
 \section{Transcription}
 
+Transcription refers to a process in which we convert information from an audible format, like music, to another medium. This medium then contains a \textit{description} of said audio. As we focus on a musical context, there are a few notable such mediums.
+
 \textcolor{red}{Explain what a transcription is, and what formats they usually are on. Explain what our model is predicting.}
 
 \subsection{Sheet Music}
 
+Sheet music is a written transcription using musical notation that, for a given instrument, contains the \textit{recipe} for a musician to play parts of the original recording. This is the standard when it comes to printing arrangements, and is extensively used by musicians.
+
+Sheet music is typically descriptively exhaustive, and could contain information about musical properties like instrument onsets, tempo, velocity, etc. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=1.0]{figures/drumsheet}
+    \caption{Example sheet music for a drumset}
+    \label{DrumsheetFigure}
+\end{figure}
+
 \subsection{MIDI Annotations}
+
+\gls{MIDI} is the industry standard for handling music digitally. It is a binary format, containing sequences of commands that allow digital interfaces to \textit{synthesize} music. As it is binary, it is unreadable to us humans without a parsing. \gls{MIDI} sequences are parsed at a constant speed, and plays different sounds through \textit{note on}/\textit{note off} events.
+
+Similar to sheet music, \gls{MIDI} is also very descriptive. One could say that, intuitively, \gls{MIDI} is to a computer what sheet music is to a musician.
+
+Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempted in \gls{DTM}, and has shown to be promising. Utilizing a sequence-to-sequence \gls{NLP} approach, Garner et al. presented MT3~\cite{gardner2022mt3multitaskmultitrackmusic}, a model inputting spectrograms and outputting \gls{MIDI} events autoregressively. This format was expanded on by Chang et al.'s YourMT3+~\cite{chang2024yourmt3multiinstrumentmusictranscription}, using a \gls{LLM} instead.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5, trim={0 0 13.8cm 0},clip]{figures/midi}
+    \caption{Example MIDI arrangement in a readable format}
+    \label{MIDIFigure}
+\end{figure}
+
+\textcolor{red}{Accuracy ...}
 
 \subsection{Activation Functions}
 
