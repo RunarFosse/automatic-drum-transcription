@@ -63,7 +63,6 @@ def train_model(config: tune.TuneConfig):
             timestep_weights = torch.max(torch.tensor(1.0), timestep_weights)
 
             loss = (loss_fn(outputs, labels).sum(dim=2) * timestep_weights).mean()
-            print(timestep_weights.sum(dim=1))
             print(loss)
             loss.backward()
 
@@ -76,6 +75,7 @@ def train_model(config: tune.TuneConfig):
             # And store training loss
             train_loss += loss.item()
             n_batches_train += 1
+        print(timestep_weights.sum(dim=1))
 
 
         # After a training epoch, compute validation performance
