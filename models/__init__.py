@@ -23,9 +23,9 @@ class RNN(nn.Module):
         return self.recurrent(latent)
     
     hyperparameters = {
-        "num_layers": tune.grid_search([2, 3, 4, 5, 6]),
-        "hidden_size": tune.grid_search([72, 144, 288]),
-        "use_gru": tune.grid_search([True, False])
+        "num_layers": tune.choice([2, 3, 4, 5, 6]),
+        "hidden_size": tune.choice([72, 144, 288]),
+        "use_gru": tune.choice([True, False])
     }
 
 class CNN(nn.Module):
@@ -45,8 +45,8 @@ class CNN(nn.Module):
         return self.fc(self.dense(latent))
     
     hyperparameters = {
-        "num_layers": tune.grid_search([1, 2, 3, 4]),
-        "hidden_size": tune.grid_search([72, 144, 288, 576])
+        "num_layers": tune.choice([1, 2, 3, 4]),
+        "hidden_size": tune.choice([72, 144, 288, 576])
     }
 
 class ADTOF_FrameRNN(nn.Module):
@@ -61,9 +61,9 @@ class ADTOF_FrameRNN(nn.Module):
         return self.decoder(latent)
     
     hyperparameters = {
-        "num_layers": tune.grid_search([2, 3, 4, 5]),
-        "hidden_size": tune.grid_search([72, 144, 288]),
-        "use_gru": tune.grid_search([True, False])
+        "num_layers": tune.choice([2, 3, 4, 5]),
+        "hidden_size": tune.choice([72, 144, 288]),
+        "use_gru": tune.choice([True, False])
     }
     
     
@@ -79,8 +79,8 @@ class ADTOF_FrameAttention(nn.Module):
         return self.decoder(latent)
 
     hyperparameters = {
-        "num_heads": tune.grid_search([2, 4, 6, 8]),
-        "num_layers": tune.grid_search([2, 4, 6, 8])
+        "num_heads": tune.choice([2, 4, 6, 8]),
+        "num_layers": tune.choice([2, 4, 6, 8])
     }
     
 class VisionTransformer(nn.Module):
@@ -94,7 +94,7 @@ class VisionTransformer(nn.Module):
         return self.decoder(latent)
     
     hyperparameters = {
-        "patch_size": tune.grid_search([(1, 7), (1, 14), (1, 21)]),
-        "num_heads": tune.grid_search([4, 6, 8]),
-        "num_layers": tune.grid_search([6, 8, 10])
+        "patch_size": tune.choice([(1, 7), (1, 14), (1, 21)]),
+        "num_heads": tune.choice([4, 6, 8]),
+        "num_layers": tune.choice([6, 8, 10])
     }
