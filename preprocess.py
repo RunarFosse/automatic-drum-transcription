@@ -13,15 +13,15 @@ def compute_normalization(train_path: Path, batch_size: int = 1, device: str = "
     """ Compute the normalization terms, (mean, std), of the training dataset. """
     # Insert the training dataset into a dataloader
     device = device if torch.cuda.is_available() else "cpu"
-    print(f"Normalization: Can use CUDA: {torch.cuda.is_available()}")
-    train_loader = DataLoader(torch.load(train_path), shuffle=False, batch_size=batch_size, num_workers=4).to(device)
+    train_loader = DataLoader(torch.load(train_path), shuffle=False, batch_size=batch_size, num_workers=4)
 
     # Compute number of batches
     num_batches = len(train_loader)
 
     # And compute values
-    mean, std = torch.zeros(1), torch.zeros(1)
+    mean, std = torch.zeros(1, device=device), torch.zeros(1, device=device)
     for features, _ in train_loader:
+        features = features.to(device)
         mean += torch.mean(features, dim=(0, 1, 2))
         std += torch.std(features, dim=(0, 1, 2))
 
