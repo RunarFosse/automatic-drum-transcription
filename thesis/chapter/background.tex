@@ -48,7 +48,7 @@ Note that the Fourier Transform is invertible, meaning that, given information a
 
 The Fourier Transform is defined as an integral over continuous time. On computers, instead of storing signals continuously we store signals using a discrete number of samples. Each signal's \textit{sampling rate} describes how many samples a signal contains per second of audio, and is denoted in \textit{Hz}.
 
-To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works as the normal Fourier Transform, but ported to work on discrete-valued signals. It is given by the formula $$ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}} $$, where $k$ denotes the frequency and $N$ the number of discrete samples.
+To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works as the normal Fourier Transform, but ported to work on discrete-valued signals. It is given by the formula $$ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}}, $$ where $k$ denotes the frequency and $N$ the number of discrete samples.
 
 \begin{figure}[H]
     \centering
@@ -169,10 +169,31 @@ Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempt
 
 \subsection{Activation Functions}
 
-\textcolor{red}{Not the usual "Activation Functions" talked about in Deep Learning, but rather the output of the models. The \textit{confidence} of a class' activation. "Probability of happening".}
+In machine learning, the task of detecting instrument onsets could be described as a multi-label sequence labeling task. This involves, for each timeframe in a sequence, predicting a probability, or rather confidence value, that a certain instrument onset happens. In the domain of \gls{MIR} and \gls{AMT}, it has become common place to describe these confidence distributions as \textit{activation functions}; not to be confused with the general deep learning term, activation functions like ReLU or sigmoid.~\cite{Southall2016AutomaticDT, vogl2018multiinstrumentdrumtranscription}
+
+Other than autoregressive approaches, this way of frame-level prediction is extensively used within onset detection in \gls{ADT}, and is the approach we will be taking in this thesis.
+
+By utilizing a \textit{peak-picking} algorithm, we can isolate and enhance peaks in these activation functions, and go from a continuous distribution to a collection of discrete events.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{figures/activations.png}
+    \caption{Example of \gls{ADT} activation function output}
+    \label{ActivationsFigure}
+\end{figure}
 
 \section{Performance Measure}
 
-\textcolor{red}{Mention the different performance measures we have, what they are good for, and which ones are suitable here.}
+Our machine learning models predict instrument onset events on a frame-level basis. In other words, are predictions are very granular, and we need some way to decide when a prediction is correct versus incorrect. In \gls{ADT}, a standard has become to allow a \textit{tolerance window} where event predictions are correct if they lie within a certain time window, often between $25\text{ms}$ and $50\text{ms}$. A side effect of this is that, by shifting our focus to predicted events, we lose information about \textit{not} predicting any events~\cite{inproceedings}.
 
-\textcolor{red}{Also mention what is deemed a "correct prediction", and why we can allow a certain timeframe of "correctness".}
+For classification tasks, a standard performance measure would be \textit{accuracy}: $$ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}.$$ Summing up correct predictions, \gls{TP} and \gls{TN}, and dividing by total number of predictions, sum of \gls{TP}, \gls{TN}, \gls{FP} and \gls{FN}, we find a model's probability of having a correct prediction.
+
+This performance measure falls short in that it is very susceptible to imbalanced datasets. In \gls{ADT}, most timeframes contain no onset, meaning a naïve predictor would get a high accuracy by never predicting any onsets. Another problem with accuracy is that, due to our tolerance window approach we do not have quantities for \gls{TN}, such that the standard accuracy computation is incomputable.
+
+These are some of the reasons why \textit{F1-score} has become the typical performance measure within \gls{ADT}. F1-score combines two and tries to maximize two different performance measures, namely \textit{precision}; $$ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, $$ and \textit{recall}; $$ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}. $$
+
+The precision of a model can tell us how good it is at \textit{hitting} predictions. \textit{Perfect precision} happens when a model has no \gls{FP}, i.e. never predicting an event where one doesn't happen. Recall is similar, but represents the other end of the stick. It tells us how good a model is at \textit{not missing} predictions. \textit{Perfect recall} happens when a model has no \gls{FN}, i.e. never \textit{not} predicting an event where one does happen.
+
+As mentioned, F1-score combines these two measures in an aggregate performance measure by computing their harmonic mean: $$ \text{F1-score} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}. $$ By maximizing F1, we simultaneously maximize both precision and recall as well, reaping all their benefits.
+
+\textcolor{red}{Mention the different performance measures we have, what they are good for, and which ones are suitable here.}
