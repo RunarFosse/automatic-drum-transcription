@@ -64,7 +64,6 @@ if __name__ == "__main__":
             spectrogram = readAudio(audio_path)
             timesteps = spectrogram.shape[0]
             label = readMidi(midi_path, EGMD_MAPPING, timesteps, 5)
-            print(torch.unique(label))
 
             partitions = timesteps // 400
             data += list(spectrogram.tensor_split(partitions, dim=0))
