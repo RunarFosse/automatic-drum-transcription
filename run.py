@@ -51,7 +51,7 @@ train_path = data_dir / "e-gmd-v1.0.0/egmd_train.pt"
 val_path = data_dir / "e-gmd-v1.0.0/egmd_validation.pt"
 test_path = data_dir / "e-gmd-v1.0.0/egmd_test.pt"
 
-feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size)
+feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size, device=device)
 
 print(f"Traning data has a mean of: {feature_mean}, and a std of: {feature_std}")
 
