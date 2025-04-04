@@ -24,6 +24,9 @@
 
     - When talking about datasets, how to differentiate existing with my? What goes under methods, what doesn't. Something in both? Either/or
 
+    
+    - Activation function output? Normal nomenclature?
+
 
 # Todos for thesis: 
 
