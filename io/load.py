@@ -172,6 +172,6 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
 
     # And perform target widening
     adjacents = F.max_pool1d(tensor.T, kernel_size=3, stride=1, padding=1).T - tensor
-    tensor += adjacents * 0.5
+    #tensor += adjacents * 0.5
 
     return tensor
