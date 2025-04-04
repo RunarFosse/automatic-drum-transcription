@@ -131,6 +131,9 @@ def readAnnotations(path: Path, mapping: Dict[str, int], num_frames: int, num_la
         (num_frames, num_labels)
     ).to_dense()
 
+    # If two events happen really close, combine them
+    tensor = torch.min(torch.tensor(1.0), tensor)
+
     # And perform target widening
     adjacents = F.max_pool1d(tensor.T, kernel_size=3, stride=1, padding=1).T - tensor
     tensor += adjacents * 0.5
@@ -170,8 +173,11 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
         (num_frames, num_labels)
     ).to_dense()
 
+    # If two events happen really close, combine them
+    tensor = torch.min(torch.tensor(1.0), tensor)
+
     # And perform target widening
     adjacents = F.max_pool1d(tensor.T, kernel_size=3, stride=1, padding=1).T - tensor
-    #tensor += adjacents * 0.5
+    tensor += adjacents * 0.5
 
     return tensor
