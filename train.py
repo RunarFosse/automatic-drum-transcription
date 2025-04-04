@@ -69,7 +69,7 @@ def train_model(config: tune.TuneConfig):
                 print(loss)
                 print(loss_fn(outputs, labels))
                 print("Negative losses by themselves:", torch.any(loss_fn(outputs, labels) < 0))
-                print("Negative losses by themselves:", torch.min(loss_fn(outputs, labels), dim=(0, 2)))
+                print("Negative losses aggregated:", torch.min(torch.min(loss_fn(outputs, labels), dim=1)[0], dim=0)[0])
                 print(timestep_weights.sum(dim=1))
 
             # Clip the gradients to prevent explosions
