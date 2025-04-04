@@ -65,13 +65,6 @@ def train_model(config: tune.TuneConfig):
             loss = (loss_fn(outputs, labels).sum(dim=2) * timestep_weights).mean()
             loss.backward()
 
-            if loss < 0:
-                print(loss)
-                print(loss_fn(outputs, labels))
-                print("Negative losses by themselves:", torch.any(loss_fn(outputs, labels) < 0))
-                print("Negative losses aggregated:", torch.min(torch.min(loss_fn(outputs, labels), dim=1)[0], dim=0)[0])
-                print("Uniques:", torch.unique(labels))
-
             # Clip the gradients to prevent explosions
             nn.utils.clip_grad_norm_(model.parameters(), 2.0)
 
