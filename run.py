@@ -25,7 +25,7 @@ data_dir = root_dir / "data"
 
 # Initialize a Ray instance
 temp_dir = Path.home().resolve() / ".ray_temp"
-init(num_gpus=1, num_cpus=16, _temp_dir=temp_dir.as_posix())
+init(num_gpus=1, num_cpus=5, _temp_dir=temp_dir.as_posix())
 
 # ----------------------------------------------------------------------------------------------------------------
 
