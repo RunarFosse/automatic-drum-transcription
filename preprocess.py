@@ -26,7 +26,7 @@ def compute_normalization(train_path: Path, batch_size: int = 1, device: str = "
         std += torch.std(features, dim=(0, 1, 2))
 
     # Return divided over number of batches
-    return mean / num_batches, std / num_batches
+    return mean.to("cpu") / num_batches, std / num_batches.to("cpu")
 
 def create_transform(mean: torch.Tensor, std: torch.Tensor, channels_last: bool) -> transforms.Compose:
     """ Create a preprocessing transforms pipeline. """
