@@ -88,12 +88,12 @@ tuner = tune.Tuner(
     param_space=config,
     tune_config=tune.TuneConfig(
         num_samples=num_samples,
-        metric="Micro F1",
+        metric="best_epoch/Micro F1",
         mode="max",
         search_alg=OptunaSearch()
     ),
     run_config=train.RunConfig(
-        stop={"epochs_since_improvement": 10},
+        stop={"epochs_since_improvement": 5},
         checkpoint_config=train.CheckpointConfig(num_to_keep=1),
         verbose=2
     )
