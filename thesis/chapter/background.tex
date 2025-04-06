@@ -60,7 +60,7 @@ To extract frequency values from these signals, we instead have to use the \gls{
 
 \subsection{Nyquist frequency}
 
-When we discretize a signal, e.g. when going from continuous audio waves in the air to discrete audio signals on a computer, we could lose some information. T discrete representation of the signal is an \textit{approximation}, which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this also mean a less precise signal approxmation.
+When we discretize a signal, e.g. when going from continuous audio waves in the air to discrete audio signals on a computer, we could lose some information. The discrete representation of the signal is an \textit{approximation} which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approxmation.
 
 \textit{Aliasing} is the phenomena where new frequencies seem to emerge in undersampled signals. For a given discrete signal, the \textit{Nyquist frequency}, equal to half the sampling rate, is the maximum frequency a signal accurately can represent. Thus to prevent aliasing, one would need to store a signal with a sampling rate of at least double the maximum frequency.
 
@@ -175,6 +175,8 @@ Other than autoregressive approaches, this way of frame-level prediction is exte
 
 By utilizing a \textit{peak-picking} algorithm, we can isolate and enhance peaks in these activation functions, and go from a continuous distribution to a collection of discrete events.
 
+\textcolor{red}{Talk about the peak picking algorithm in a separate subsection (or subsubsection).}
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{figures/activations.png}
@@ -196,4 +198,4 @@ The precision of a model can tell us how good it is at \textit{hitting} predicti
 
 As mentioned, F1-score combines these two measures in an aggregate performance measure by computing their harmonic mean: $$ \text{F1-score} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}. $$ By maximizing F1, we simultaneously maximize both precision and recall as well, reaping all their benefits.
 
-\textcolor{red}{Mention the different performance measures we have, what they are good for, and which ones are suitable here.}
+\textcolor{red}{Mention difference between Micro and Macro F1, and why we are focusing on maximizing Micro here.}
