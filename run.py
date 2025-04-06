@@ -67,7 +67,7 @@ config = {
         "std": feature_std
     },
 
-    "lr": tune.loguniform(1e-4, 1e-2),
+    "lr": tune.loguniform(1e-4, 5e-3),
     "weight_decay": tune.loguniform(1e-5, 1e-2),
     "amsgrad": tune.choice([True, False]),
     "optimizer": optim.AdamW,
