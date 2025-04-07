@@ -12,6 +12,17 @@ Deep learning has shown to be a promising method to solve such a task, and sever
 
 This reinforces the fact that there still exist many approaches to attempt, which could lead to a general improvement on \gls{ADT} models.
 
+\section{The Drumset}
+
+\textcolor{red}{Mention the different instruments (like in the figure below), mention how they all have different musical properties, like frequency, timbre, etc (show waveforms maybe?). Also mention the most fundemental ones, and how Bass, snare and hi-hat are more important than e.g. the mid-tom or something.}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5, trim={0 1cm 0 0},clip]{figures/drumset}
+    \caption{Example of the different instruments on the drumset.}
+    \label{DrumsetFigure}
+\end{figure}
+
 \section{Audio}
 
 Sound has be described as \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear."}~\cite{1953fundamentals}. In short, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
@@ -193,16 +204,30 @@ For appropriately trained deep learning models, Vogl et al.~\cite{vogl2018multii
 
 \section{Performance Measure}
 
+\subsection{Correct Predictions}
+
 Our machine learning models predict instrument onset events on a frame-level basis. In other words, are predictions are very granular, and we need some way to decide when a prediction is correct versus incorrect. In \gls{ADT}, a standard has become to allow a \textit{tolerance window} where event predictions are correct if they lie within a certain time window, often between $25\text{ms}$ and $50\text{ms}$. A side effect of this is that, by shifting our focus to predicted events, we lose information about \textit{not} predicting any events~\cite{inproceedings}.
+
+\subsection{Accuracy}
 
 For classification tasks, a standard performance measure would be \textit{accuracy}: $$ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}.$$ Summing up correct predictions, \gls{TP} and \gls{TN}, and dividing by total number of predictions, sum of \gls{TP}, \gls{TN}, \gls{FP} and \gls{FN}, we find a model's probability of having a correct prediction.
 
 This performance measure falls short in that it is very susceptible to imbalanced datasets. In \gls{ADT}, most timeframes contain no onset, meaning a naïve predictor would get a high accuracy by never predicting any onsets. Another problem with accuracy is that, due to our tolerance window approach we do not have quantities for \gls{TN}, such that the standard accuracy computation is incomputable.
 
-These are some of the reasons why \textit{F1-score} has become the typical performance measure within \gls{ADT}. F1-score combines two and tries to maximize two different performance measures, namely \textit{precision}; $$ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, $$ and \textit{recall}; $$ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}. $$
+\subsection{F1-score}
+
+Mentioned above are some of the reasons why \textit{F1-score} has become the typical performance measure within \gls{ADT}. F1-score combines and tries to maximize two different performance measures, namely \textit{precision}; $$ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, $$ and \textit{recall}; $$ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}. $$
 
 The precision of a model can tell us how good it is at \textit{hitting} predictions. \textit{Perfect precision} happens when a model has no \gls{FP}, i.e. never predicting an event where one doesn't happen. Recall is similar, but represents the other end of the stick. It tells us how good a model is at \textit{not missing} predictions. \textit{Perfect recall} happens when a model has no \gls{FN}, i.e. never \textit{not} predicting an event where one does happen.
 
 As mentioned, F1-score combines these two measures in an aggregate performance measure by computing their harmonic mean: $$ \text{F1-score} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}. $$ By maximizing F1, we simultaneously maximize both precision and recall as well, reaping all their benefits.
 
-\textcolor{red}{Mention difference between Micro and Macro F1, and why we are focusing on maximizing Micro here.}
+\subsection{Micro vs. Macro}
+
+There are different ways of computing and combining F1-score on multi-label data. Even though they might seem similar, they fundamentally represent different information, and thus the choice in which one to select is crucial.
+
+\textit{Macro F1-score} is computed through the arithmetic mean of the classwise computed F1-scores. Finding a model which maximizes this measure would be similar to finding the model which performes best on each of the separate classes, preventing a class from taking priority due to imbalanced datasets. Relating this to \gls{ADT}, it would mean focusing on transcribing each instrument equally well.
+
+\textit{Micro F1-score} is computed through finding the F1-score with global \gls{TP}, \gls{FP}, \gls{FN} values. Maximizing this would mean prioritizing classes that occur more frequently in the datasets. Such as in \gls{ADT}, this would mean focusing on transcribing instruments which appear often, like the snare or base drum, over rarer instruments like the toms \textcolor{red}{(Somewhere in this master thesis we need a quick introduction to the drums, and which piece of the drumset is which)}. 
+
+For \gls{ADT}, the trend has been to select Micro F1-score as the main performance measure, due to its ability to show a model's \textit{general} performance on musical pieces. We want our model to maximize their ability to transcribe music, not maximize their ability to transcribe each instrument in said music. \gls{ADT}, prioritizing frequent instruments is relevant. As mentioned previously, the more frequent instruments lay the ground work for the fundamentals, and could be said to be more important than scarcely occuring ones.
