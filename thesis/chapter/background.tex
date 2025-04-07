@@ -193,10 +193,10 @@ This way of frame-level prediction is extensively used within onset detection in
 
 When predicting activation functions, we need a separate post-processing step to turn these confidence distributions into onset events. By utilizing a standard \textit{peak-picking} algorithm, we can isolate and enhance peaks in these activation functions, and go from a continuous distribution to a collection of discrete events.
 
-The peak-picking algorithm, introduced in its current form by Böck et al.~\cite{Bck2012EvaluatingTO}, defines that a value at timeframe $n$ is a \textit{peak} if it fulfills the three conditions:
+The peak-picking algorithm, introduced in its current form by Böck et al.~\cite{Bck2012EvaluatingTO}, defines that a prediction $\hat{y}_n$ at timeframe $n$ is a \textit{peak} if it fulfills the three conditions:
 \begin{align*} 
-    y_n &= \text{max}(y_{n - m}, ..., y_n, ... y_{n + m}) \\ 
-    y_n &\ge \text{mean}(y_{n - a}, ..., y_n, ... y_{n + a}) + \delta \\
+    \hat{y}_n &= \text{max}(\hat{y}_{n - m}, ..., \hat{y}_n, ... \hat{y}_{n + m}) \\ 
+    \hat{y}_n &\ge \text{mean}(\hat{y}_{n - a}, ..., \hat{y}_n, ... \hat{y}_{n + a}) + \delta \\
     n &\ge n_\text{last onset} + w
 \end{align*}
 
