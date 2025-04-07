@@ -169,11 +169,7 @@ Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempt
 
 In machine learning, the task of detecting instrument onsets could be described as a multi-label sequence labeling task. This involves, for each timeframe in a sequence, predicting a probability, or rather confidence value, that a certain instrument onset happens. In the domain of \gls{MIR} and \gls{AMT}, it has become common place to describe these confidence distributions as \textit{activation functions}; not to be confused with the general deep learning term, activation functions like ReLU or sigmoid.~\cite{Southall2016AutomaticDT, vogl2018multiinstrumentdrumtranscription}
 
-Other than autoregressive approaches, this way of frame-level prediction is extensively used within onset detection in \gls{ADT}, and is the approach we will be taking in this thesis.
-
-By utilizing a \textit{peak-picking} algorithm, we can isolate and enhance peaks in these activation functions, and go from a continuous distribution to a collection of discrete events.
-
-\textcolor{red}{Talk about the peak picking algorithm in a separate subsection (or subsubsection).}
+This way of frame-level prediction is extensively used within onset detection in \gls{ADT} and is the approach we will be taking in this thesis.
 
 \begin{figure}[H]
     \centering
@@ -181,6 +177,19 @@ By utilizing a \textit{peak-picking} algorithm, we can isolate and enhance peaks
     \caption{Example of \gls{ADT} activation function output}
     \label{ActivationsFigure}
 \end{figure}
+
+\subsubsection{Peak-picking}
+
+When predicting activation functions, we need a separate post-processing step to turn these confidence distributions into onset events. By utilizing a standard \textit{peak-picking} algorithm, we can isolate and enhance peaks in these activation functions, and go from a continuous distribution to a collection of discrete events.
+
+The peak-picking algorithm, introduced in its current form by Böck et al.~\cite{Bck2012EvaluatingTO}, defines that a value at timeframe $n$ is a \textit{peak} if it fulfills the three conditions:
+\begin{align*} 
+    y_n &= \text{max}(y_{n - m}, ..., y_n, ... y_{n + m}) \\ 
+    y_n &\ge \text{mean}(y_{n - a}, ..., y_n, ... y_{n + a}) + \delta \\
+    n &\ge n_\text{last onset} + w
+\end{align*}
+
+For appropriately trained deep learning models, Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription} showed that the peak-picking parameters which gave the best results were $m = a = w = 2$ and $\delta = 0.1$.
 
 \section{Performance Measure}
 
