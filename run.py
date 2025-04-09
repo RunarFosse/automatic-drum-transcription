@@ -34,10 +34,10 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "RNN"
+experiment = "CNN"
 dataset = "E-GMD"
 
-Model = RNN
+Model = CNN
 
 num_samples = 15
 num_epochs = 100
