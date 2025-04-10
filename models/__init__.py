@@ -77,6 +77,7 @@ class ADTOF_FrameAttention(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
+        latent = self.projection(latent)
         return self.decoder(latent)
 
     hyperparameters = {
