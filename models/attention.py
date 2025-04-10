@@ -42,7 +42,7 @@ class PositionalEncoding(nn.Module):
 class AttentionLayer(nn.Module):
     def __init__(self, num_heads: int, embed_dim: int = 576):
         super().__init__()
-        self.attention = nn.MultiheadAttention(embed_dim=embed_dim, num_heads=num_heads, batch_first=True)
+        self.attention = nn.MultiheadAttention(embed_dim=embed_dim, num_heads=num_heads)
         self.dropout = nn.Dropout(p = 0.1)
         self.norm1 = nn.LayerNorm(embed_dim)
 
@@ -70,6 +70,6 @@ class AttentionDecoder(nn.Module):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.positional_encoding(x)
-        out = self.layers(out)
+        out = self.layers(out.transpose(0, 1))
 
-        return self.fc(out)
+        return self.fc(out.transpose(0, 1))
