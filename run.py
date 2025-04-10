@@ -34,10 +34,10 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "CNN"
+experiment = "Convolutional RNN"
 dataset = "E-GMD"
 
-Model = CNN
+Model = ADTOF_FrameRNN
 
 num_samples = 15
 num_epochs = 100
