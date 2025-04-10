@@ -40,15 +40,15 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
     
 class AttentionLayer(nn.Module):
-    def __init__(self, num_heads: int):
+    def __init__(self, num_heads: int, embed_dim: int = 576):
         super().__init__()
-        self.attention = nn.MultiheadAttention(embed_dim=576, num_heads=num_heads, batch_first=True)
+        self.attention = nn.MultiheadAttention(embed_dim=embed_dim, num_heads=num_heads, batch_first=True)
         self.dropout = nn.Dropout(p = 0.1)
-        self.norm1 = nn.LayerNorm(576)
+        self.norm1 = nn.LayerNorm(embed_dim)
 
-        self.fc1 = nn.Linear(576, 4 * 576)
-        self.fc2 = nn.Linear(4 * 576, 576)
-        self.norm2 = nn.LayerNorm(576)
+        self.fc1 = nn.Linear(embed_dim, 4 * embed_dim)
+        self.fc2 = nn.Linear(4 * embed_dim, embed_dim)
+        self.norm2 = nn.LayerNorm(embed_dim)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out1 = self.norm1(x)
@@ -62,11 +62,11 @@ class AttentionLayer(nn.Module):
         return out2
 
 class AttentionDecoder(nn.Module):
-    def __init__(self, num_heads: int = 6, num_layers: int = 5):
+    def __init__(self, num_heads: int = 6, num_layers: int = 5, embed_dim: int = 576):
         super().__init__()
-        self.positional_encoding = PositionalEncoding(d_model=576)
-        self.layers = nn.Sequential(*[AttentionLayer(num_heads=num_heads) for _ in range(num_layers)])
-        self.fc = nn.Linear(576, 5)
+        self.positional_encoding = PositionalEncoding(d_model=embed_dim)
+        self.layers = nn.Sequential(*[AttentionLayer(num_heads=num_heads, embed_dim=embed_dim) for _ in range(num_layers)])
+        self.fc = nn.Linear(embed_dim, 5)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = self.positional_encoding(x)

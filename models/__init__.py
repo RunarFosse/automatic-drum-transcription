@@ -68,10 +68,11 @@ class ADTOF_FrameRNN(nn.Module):
     
     
 class ADTOF_FrameAttention(nn.Module):
-    def __init__(self, num_heads: int = 6, num_layers: int = 5):
+    def __init__(self, num_heads: int = 6, num_layers: int = 5, embed_dim: int = 576):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
-        self.decoder = AttentionDecoder(num_heads=num_heads, num_layers=num_layers)
+        self.projection = nn.Linear(576, embed_dim)
+        self.decoder = AttentionDecoder(num_heads=num_heads, num_layers=num_layers, embed_dim=embed_dim)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.encoder(x)
@@ -80,14 +81,15 @@ class ADTOF_FrameAttention(nn.Module):
 
     hyperparameters = {
         "num_heads": tune.choice([2, 4, 6, 8]),
-        "num_layers": tune.choice([2, 4, 6, 8])
+        "num_layers": tune.choice([2, 4, 6, 8]),
+        "embed_dim": tune.choice([72, 144, 288])
     }
     
 class VisionTransformer(nn.Module):
-    def __init__(self, patch_size: Tuple[int, int] = (1, 21), num_heads: int = 6, num_layers: int = 5):
+    def __init__(self, patch_size: Tuple[int, int] = (1, 21), num_heads: int = 6, num_layers: int = 5, embed_dim: int = 576):
         super().__init__()
-        self.patch_embedding = PatchEmbedding(patch_size=patch_size)
-        self.decoder = AttentionDecoder(num_heads=num_heads, num_layers=num_layers)
+        self.patch_embedding = PatchEmbedding(patch_size=patch_size, embed_dim=embed_dim)
+        self.decoder = AttentionDecoder(num_heads=num_heads, num_layers=num_layers, embed_dim=embed_dim)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         latent = self.patch_embedding(x)
@@ -96,5 +98,6 @@ class VisionTransformer(nn.Module):
     hyperparameters = {
         "patch_size": tune.choice([(1, 7), (1, 14), (1, 21)]),
         "num_heads": tune.choice([4, 6, 8]),
-        "num_layers": tune.choice([6, 8, 10])
+        "num_layers": tune.choice([6, 8, 10]),
+        "embed_dim": tune.choice([72, 144, 288])
     }
