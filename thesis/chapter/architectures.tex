@@ -1,10 +1,10 @@
 \chapter{Architectures}
 
-\textcolor{red}{Mention the different architectures, figures of their components, hyperparameters we tune on them, and motivation.}
+Finding a suitable architecture is a vital step in creating a well-performant deep learning model. By leveraging different techniques, we balance introduction of inductive biases and possibility for complexity, which hopefully can help us end up with a generalizing model.
 
 \section{Recurrent Neural Network}
 
-The \gls{RNN} is a standard architecture when it comes prediction on temporal data. It has been tried and tested, showing promising results for audio tasks.
+The \gls{RNN} is a standard architecture when it comes prediction on sequence data. It has been tried and tested, showing promising results for audio tasks.
 
 The fundamental building block for \gls{RNN}s is the \textit{recurrent unit}. It iterates the whole input sequence, storing information from previous timesteps in a form of memory, through maintenance of a \textit{hidden state}. This can be extended to gaining information about future timesteps by using \textit{bidirectional} versions. In this way, prediction on current timesteps are affected by the information from surrounding timesteps. This is relevant in tasks such as \gls{ADT} as auditory information usually spreads over several timesteps, e.g. the timbre of an instrument event lingering after onset.
 
@@ -21,7 +21,7 @@ It has been shown that \gls{GRU}s and \gls{LSTM}s are capable of learning \gls{A
 
 \subsection{Implementation}
 
-Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the recurrent units, we train both a \gls{GRU} and an \gls{LSTM} model, in addition to hyperparameter search over $L \in \{2, 3, 4, 5, 6\}$ and $H \in \{72, 144, 288\}$, selecting the one with best performance.
+Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train both a \gls{GRU} and an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L \in \{2, 3, 4, 5, 6\}$ and hidden size $H \in \{72, 144, 288\}$, selecting the one with best performance.
 
 \begin{figure}[H]
     \centering

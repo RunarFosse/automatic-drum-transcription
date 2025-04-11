@@ -12,7 +12,6 @@
 % ------ Grid ------
 
 \draw[transform canvas={xscale=2}, step=0.25cm, ultra thin] (-2, 1) grid (2, 3);
-\draw[thick] (-4, 1) -- (4, 1) -- (4, 3) -- (-4, 3) -- cycle;
 \node[anchor=south] at (0, 3.25) {Timestep influence};
 \node[anchor=east] at (-4, 2) {$D_\text{STFT}\times$};
 \node[anchor=north] at (0, 0.75) {$T\times$};
@@ -103,6 +102,9 @@
 \fill[black!10] (2.5, 2.25) rectangle (3.0, 2.5);
 \fill[black!10] (3.0, 2.25) rectangle (3.5, 2.5);
 \fill[black!10] (3.5, 2.25) rectangle (4.0, 2.5);
+
+% ------ Outline ------
+\draw[thick] (-4, 1) -- (4, 1) -- (4, 3) -- (-4, 3) -- cycle;
 
 % ------ Influence ------
 
