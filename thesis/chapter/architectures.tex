@@ -10,7 +10,7 @@ The fundamental building block for \gls{RNN}s is the \textit{recurrent unit}. It
 
 \begin{figure}[H]
     \centering
-    \input{tikz/spectrogram}
+    \input{tikz/rnnspectrogram}
     \caption{Visualization of adjacent timestep's influence for a bidirectional RNN.}
     \label{RNNInfluenceFigure}
 \end{figure}
@@ -21,7 +21,7 @@ It has been shown that \gls{GRU}s and \gls{LSTM}s are capable of learning \gls{A
 
 \subsection{Implementation}
 
-Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train both a \gls{GRU} and an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L \in \{2, 3, 4, 5, 6\}$ and hidden size $H \in \{72, 144, 288\}$, selecting the one with best performance.
+Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train both a \gls{GRU} and an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L \in \{2, 3, 4, 5, 6\}$ and hidden size $H \in \{72, 144, 288\}$, selecting the one with best performance. At last, we have a linear layer, outputting onset probabilities for each of the drums.
 
 \begin{figure}[H]
     \centering
@@ -31,6 +31,28 @@ Our \gls{RNN} architecture consists of several bidirectional recurrent units, en
 \end{figure}
 
 \section{Convolutional Neural Network}
+
+We've mentioned that spectrograms can be treated as images. Therefore it would make sense to try an image focused approach, by utilizing \textit{convolutions}. By applying convolutional layers, each timestep gets access to information around itself, a \textit{context}. These convolutional layers make up the primary building blocks for the \gls{CNN}.
+
+\begin{figure}[H]
+    \centering
+    \input{tikz/cnnspectrogram}
+    \caption{Visualization of a timestep's contextual influence with CNNs.}
+    \label{CNNInfluenceFigure}
+\end{figure}
+
+\gls{CNN}s have been shown to give reasonable performance within \gls{ADT}. This could be due to contextual information being important for identifying instrument onsets, and making learning easier for our models~\cite{Vogl2017DrumTV}.
+
+\subsection{Implementation}
+
+Our \gls{CNN} architecure consists of an initial, fixed-size convolutional block, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. The convolutional layers have an increasing number of kernels $C = \{32, 32, 64, 64\}$, intuitively leading to an increase in complexity along with depth. Then we have a varying amount of fully connected layers $L \in \{1, 2, 3, 4\}$, projecting into a latent space sized $H \in \{72, 144, 288, 576\}$. And last, an output layer giving onset probabilities.
+
+\begin{figure}[H]
+    \centering
+    \input{tikz/cnn}
+    \caption{CNN architecture structure.}
+    \label{CNNFigure}
+\end{figure}
 
 \section{Convolutional Recurrent Neural Network}
 

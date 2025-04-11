@@ -122,10 +122,12 @@ This leads us to the \gls{STFT}. By instead of transforming the whole signal, we
 
 The \gls{STFT}, as the standard Fourier Transform, returns the data as complex values. To turn these into strictly real values without discarding data, we could compute the spectrogram. This is done by squaring the absolute value of each complex number. 
 
+This results in a 2-dimensional, real representation of our signal. A representation like this is equivalent to an \textit{image}. In this way, we've converted our audible information into visual information. Naturally, these spectrograms can be visualized using e.g. a heatmap.
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.35]{figures/spectrogram}
-    \caption{The spectrogram of an audio signal}
+    \caption{Heatmap of an audio spectrogram.}
     \label{SpectrogramFigure}
 \end{figure}
 
