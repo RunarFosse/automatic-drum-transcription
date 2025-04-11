@@ -6,16 +6,16 @@
 
 The \gls{RNN} is a standard architecture when it comes prediction on temporal data. It has been tried and tested, showing promising results for audio tasks.
 
-The fundamental building block for \gls{RNN}s is the \textit{recurrent unit}. It iterates the whole input sequence, storing information from previous timesteps in a form of memory, through maintenance of a \textit{hidden state}. This can be extended to gaining information about the following timesteps by using \textit{bidirectional} versions. In this way, prediction on current timesteps are affected by the information in surrounding timesteps. For tasks such as \gls{ADT} this could be relevant as the timbre from an instrument onset event often lingers over several timesteps.
+The fundamental building block for \gls{RNN}s is the \textit{recurrent unit}. It iterates the whole input sequence, storing information from previous timesteps in a form of memory, through maintenance of a \textit{hidden state}. This can be extended to gaining information about future timesteps by using \textit{bidirectional} versions. In this way, prediction on current timesteps are affected by the information from surrounding timesteps. This is relevant in tasks such as \gls{ADT} as auditory information usually spreads over several timesteps, e.g. the timbre of an instrument event lingering after onset.
 
 \begin{figure}[H]
     \centering
-    \textcolor{red}{Show visualization of a spectrogram, and neighbouring timesteps having an influence (but also falling of away from current timestep.)}
+    \input{tikz/spectrogram}
     \caption{Visualization of adjacent timestep's influence for a bidirectional RNN.}
     \label{RNNInfluenceFigure}
 \end{figure}
 
-However, traditional \gls{RNN}s suffer from the \textit{vanishing gradient problem} due to the a timesteps influence diminishing with distance, making \textit{long range dependencies} harder to learn. Different architectures have been developed to try to overcome these issues, such as the \gls{GRU} by Cho et al.~\cite{DBLP:conf/emnlp/ChoMGBBSB14}, and \gls{LSTM} by Hochreiter et al.~\cite{10.1162/neco.1997.9.8.1735}.
+However, traditional \gls{RNN}s suffer from the \textit{vanishing gradient problem} due to a timestep's influence diminishing with distance, making \textit{long range dependencies} harder to learn. Different architectures have been developed to try to overcome these issues, such as the \gls{GRU} by Cho et al.~\cite{DBLP:conf/emnlp/ChoMGBBSB14}, and \gls{LSTM} by Hochreiter et al.~\cite{10.1162/neco.1997.9.8.1735}.
 
 It has been shown that \gls{GRU}s and \gls{LSTM}s are capable of learning \gls{ADT} related tasks, and is therefore in interest to comparatively measure how their efficiency stands in regards to other architectures~\cite{Southall2016AutomaticDT, inproceedings, Vogl2017DrumTV, signals4040042}.
 
@@ -29,8 +29,6 @@ Our \gls{RNN} architecture consists of several bidirectional recurrent units, en
     \caption{RNN architecture structure.}
     \label{RNNFigure}
 \end{figure}
-
-\textcolor{red}{Show model architecture diagram like the one in ADTOF-YT paper}.
 
 \section{Convolutional Neural Network}
 
