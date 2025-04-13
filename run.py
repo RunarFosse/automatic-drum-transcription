@@ -34,10 +34,10 @@ device = args.device
 seed = int(time())
 
 study = "Architecture"
-experiment = "Convolutional Transformer"
+experiment = "Vision Transformer"
 dataset = "E-GMD"
 
-Model = ADTOF_FrameAttention
+Model = VisionTransformer
 
 num_samples = 15
 num_epochs = 100
