@@ -22,6 +22,7 @@ class RNN(nn.Module):
         latent = torch.flatten(x.permute(0, 2, 1, 3), start_dim=2)
         return self.recurrent(latent)
     
+    name = "RNN"
     hyperparameters = {
         "num_layers": tune.choice([2, 3, 4, 5, 6]),
         "hidden_size": tune.choice([72, 144, 288]),
@@ -44,6 +45,7 @@ class CNN(nn.Module):
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
         return self.fc(self.dense(latent))
     
+    name = "CNN"
     hyperparameters = {
         "num_layers": tune.choice([1, 2, 3, 4]),
         "hidden_size": tune.choice([72, 144, 288, 576])
@@ -60,6 +62,7 @@ class ADTOF_FrameRNN(nn.Module):
         latent = torch.flatten(latent.permute(0, 2, 1, 3), start_dim=2)
         return self.decoder(latent)
     
+    name = "Convolutional RNN"
     hyperparameters = {
         "num_layers": tune.choice([2, 3, 4, 5]),
         "hidden_size": tune.choice([72, 144, 288]),
@@ -80,6 +83,7 @@ class ADTOF_FrameAttention(nn.Module):
         latent = self.projection(latent)
         return self.decoder(latent)
 
+    name = "Convolutional Transformer"
     hyperparameters = {
         "num_heads": tune.choice([2, 4, 6, 8]),
         "num_layers": tune.choice([2, 4, 6, 8]),
@@ -96,6 +100,7 @@ class VisionTransformer(nn.Module):
         latent = self.patch_embedding(x)
         return self.decoder(latent)
     
+    name = "Vision Transformer"
     hyperparameters = {
         "patch_size": tune.choice([(1, 7), (1, 14), (1, 21)]),
         "num_heads": tune.choice([4, 6, 8]),
