@@ -41,7 +41,7 @@ def train_model(config: tune.TuneConfig):
     print("Number of parameters: ", sum(param.numel() for param in model.parameters()))
 
     # Add a learning rate scheduler
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.2, patience=3)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.2, patience=5)
 
     # Compute infrequent instrument weights from the training dataset
     infrequency_weights = compute_infrequency_weights(train_loader).to(device)
