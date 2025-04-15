@@ -33,11 +33,11 @@ print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 device = args.device
 seed = int(time())
 
-study = "Architecture"
-experiment = "Vision Transformer"
-dataset = "E-GMD"
-
 Model = VisionTransformer
+
+study = "Architecture"
+experiment = Model.name
+dataset = "E-GMD"
 
 num_samples = 15
 num_epochs = 100
