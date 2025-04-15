@@ -2,6 +2,9 @@
 data/
 */data/
 
+# Ignore model files
+*model.pt
+
 # Temporary folders
 .DS_Store
 .vscode
