@@ -36,7 +36,7 @@ def train_model(config: tune.TuneConfig):
     # Create the model, loss function and optimizer
     model = config["Model"](**config["parameters"]).to(device)
     loss_fn = nn.BCEWithLogitsLoss(reduction="none")
-    optimizer = config["optimizer"](model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"], amsgrad=config["amsgrad"])
+    optimizer = config["optimizer"](model.parameters(), lr=config["lr"], weight_decay=config["weight_decay"])
     optimizer.zero_grad(set_to_none=True)
     print("Number of parameters: ", sum(param.numel() for param in model.parameters()))
 
