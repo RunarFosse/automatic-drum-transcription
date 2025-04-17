@@ -16,7 +16,10 @@ assert __name__ == "__main__"
 
 # Declare an argument parser for this file
 parser = argparse.ArgumentParser("run.py")
-parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda", nargs="?")
+parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda:0", nargs="?")
+parser.add_argument("--model", choices=["rnn", "cnn", "crnn", "ct", "vit"], help="The model to train", required=True)
+parser.add_argument("--dataset", choices=["adtof", "egmd", "slakh"], help="The dataset to train on", required=True)
+parser.add_argument("--num_samples", type=int, help="Number of samples for Optuna RayTune", required=False, default=10)
 args = parser.parse_args()
 
 # Extract the absolute path of the data directory
@@ -33,26 +36,32 @@ print(f"Main: Can use CUDA: {torch.cuda.is_available()}")
 device = args.device
 seed = int(time())
 
-Model = VisionTransformer
+Model = {
+    "rnn": RNN, 
+    "cnn": CNN, 
+    "crnn": ADTOF_FrameRNN, 
+    "ct": ADTOF_FrameAttention, 
+    "vit": VisionTransformer,
+    }[args.model]
+
+dataset_path = {
+    "adtof": data_dir / "adtof",
+    "egmd": data_dir / "e-gmd-v1.0.0",
+    "slakh": data_dir / "slakh2100_flac_redux",
+    }[args.dataset]
 
 study = "Architecture"
 experiment = Model.name
 dataset = "Slakh"
 
-num_samples = 15
+num_samples = args.num_samples
 num_epochs = 100
 
 batch_size = 128
 
-#train_path = data_dir / "adtof/adtof_yt_train.pt"
-#val_path = data_dir / "adtof/adtof_yt_validation.pt"
-#test_path = data_dir / "adtof/adtof_yt_test.pt"
-#train_path = data_dir / "e-gmd-v1.0.0/egmd_train.pt"
-#val_path = data_dir / "e-gmd-v1.0.0/egmd_validation.pt"
-#test_path = data_dir / "e-gmd-v1.0.0/egmd_test.pt"
-train_path = data_dir / "slakh2100_flac_redux/slakh_train.pt"
-val_path = data_dir / "slakh2100_flac_redux/slakh_validation.pt"
-test_path = data_dir / "slakh2100_flac_redux/slakh_test.pt"
+train_path = dataset_path / (args.dataset + "_train.pt")
+val_path = dataset_path / (args.dataset + "_validation.pt")
+test_path = dataset_path / (args.dataset + "_test.pt")
 
 feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size, device=device)
 
