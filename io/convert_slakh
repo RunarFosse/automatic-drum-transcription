@@ -6,7 +6,7 @@ import yaml
 
 """ Run this file to turn Slakh2100-redux into a stored PyTorch dataset """
 
-# 5-drum mapping for MIDI, from "https://github.com/khiner/DrumClassification/blob/main/create_label_mapping.py" and "https://www.zendrum.com/resource-site/drumnotes.htm"
+# 5-drum mapping for MIDI, from "https://github.com/khiner/DrumClassification/blob/main/create_label_mapping.py" and "https://soundprogramming.net/file-formats/general-midi-drum-note-numbers/"
 MIDI_MAPPING = {
     35: 0, #'Acoustic Bass Drum',
     36: 0, #'Bass Drum',
@@ -38,6 +38,14 @@ MIDI_MAPPING = {
     58: None, #'Vibraslap',
     59: 4, #'Ride Cymbal 2',
 
+    27: None, #'High Q (GM2)',
+    28: None, #'Slap (GM2)',
+    29: None, #'Scratch Push (GM2)',
+    30: None, #'Scratch Pull (GM2)',
+    31: None, #'Sticks (GM2)',
+    32: None, #'Square Click (GM2)',
+    33: None, #'Metronome Click (GM2)',
+    34: None, #'Metronome Bell (GM2)',
     60: None, #'Hi Bongo',
     61: None, #'Low Bongo',
     62: None, #'Mute Hi Conga',
@@ -60,6 +68,12 @@ MIDI_MAPPING = {
     79: None, #'Open Cuica',
     80: None, #'Mute Triangle',
     81: None, #'Open Triangle',
+    82: None, #'Shaker (GM2)',
+    83: None, #'Jingle Bell (GM2)',
+    84: None, #'Belltree (GM2)',
+    85: None, #'Castanets (GM2)',
+    86: None, #'Mute Surdo (GM2)',
+    87: None, #'Open Surdo (GM2)',
 }
 
     
