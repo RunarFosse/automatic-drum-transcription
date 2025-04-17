@@ -13,3 +13,4 @@ ray[tune]==2.38.0
 optuna==4.1
 
 partitura==1.6.0
+PyYAML==6.0.2
