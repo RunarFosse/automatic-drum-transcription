@@ -149,6 +149,9 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
     # Store label and frame indices in lists
     frame_indices = []
     label_indices = []
+
+    # Only print invalid encouters once
+    seen_invalid_pitches = set()
             
     # Iterate every note
     for note in notes:
@@ -156,7 +159,9 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
 
         # Skip if pitch is invalid
         if pitch not in mapping:
-            print(f"Encountered invalid pitch {pitch}")
+            if pitch not in seen_invalid_pitches:
+                print(f"Encountered invalid pitch {pitch}")
+                seen_invalid_pitches.add(pitch)
             continue
 
         # Turn into frames and labels
