@@ -37,7 +37,7 @@ Model = VisionTransformer
 
 study = "Architecture"
 experiment = Model.name
-dataset = "E-GMD"
+dataset = "Slakh"
 
 num_samples = 15
 num_epochs = 100
@@ -47,9 +47,12 @@ batch_size = 128
 #train_path = data_dir / "adtof/adtof_yt_train.pt"
 #val_path = data_dir / "adtof/adtof_yt_validation.pt"
 #test_path = data_dir / "adtof/adtof_yt_test.pt"
-train_path = data_dir / "e-gmd-v1.0.0/egmd_train.pt"
-val_path = data_dir / "e-gmd-v1.0.0/egmd_validation.pt"
-test_path = data_dir / "e-gmd-v1.0.0/egmd_test.pt"
+#train_path = data_dir / "e-gmd-v1.0.0/egmd_train.pt"
+#val_path = data_dir / "e-gmd-v1.0.0/egmd_validation.pt"
+#test_path = data_dir / "e-gmd-v1.0.0/egmd_test.pt"
+train_path = data_dir / "slakh2100_flac_redux/slakh_train.pt"
+val_path = data_dir / "slakh2100_flac_redux/slakh_validation.pt"
+test_path = data_dir / "slakh2100_flac_redux/slakh_test.pt"
 
 feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size, device=device)
 
