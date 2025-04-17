@@ -1,9 +1,9 @@
-Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_train.pt'), 'val_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_validation.pt'), 'transforms': {'mean': tensor([0.7242]), 'std': tensor([0.5009])}, 'lr': 0.0002503478812228888, 'weight_decay': 0.00016848867712365508, 'amsgrad': True, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.ADTOF_FrameRNN'>, 'parameters': {'num_layers': 4, 'hidden_size': 90, 'use_gru': False}, 'device': 'cuda:0', 'seed': 1740397491}
-Best result final validation loss: 0.38517159315457955
-Best result final validation micro F1: 0.8985349535942078
-Best result final validation macro F1: 0.8647575378417969
-Best result final validation class F1: [0.9794938564300537, 0.9300608038902283, 0.8450407385826111, 0.7596895098686218, 0.8095026016235352]
+Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_train.pt'), 'val_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_validation.pt'), 'transforms': {'mean': tensor([0.7242]), 'std': tensor([0.5008])}, 'lr': 0.0006284785576597409, 'weight_decay': 0.007978566226484804, 'amsgrad': False, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.ADTOF_FrameRNN'>, 'parameters': {'num_layers': 5, 'hidden_size': 288, 'use_gru': False}, 'device': 'cuda:0', 'seed': 1742894919}
+Best result final validation loss: 0.3391902261631079
+Best result final validation micro F1: 0.9056498408317566
+Best result final validation macro F1: 0.8746097683906555
+Best result final validation class F1: [0.9795566201210022, 0.9356372952461243, 0.8552316427230835, 0.7730363607406616, 0.829586923122406]
  ---------- Evaluation of best perfoming model ---------- 
-Micro F1: 0.9051
-Macro F1: 0.8833
-Class F1: ['0.9746', '0.9378', '0.8663', '0.8025', '0.8353']
+Micro F1: 0.9455
+Macro F1: 0.9339
+Class F1: ['0.9807', '0.9533', '0.9176', '0.8971', '0.9206']
