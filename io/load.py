@@ -154,6 +154,11 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
     for note in notes:
         time, pitch = note[0], note[4]
 
+        # Skip if pitch is invalid
+        if pitch not in mapping:
+            print(f"Encountered invalid pitch {pitch}")
+            continue
+
         # Turn into frames and labels
         frame = int(round(float(time) / MS_PER_FRAME * 1000))
 
