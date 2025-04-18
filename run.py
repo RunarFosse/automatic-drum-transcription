@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser("run.py")
 parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda:0", nargs="?")
 parser.add_argument("--model", choices=["rnn", "cnn", "crnn", "ct", "vit"], help="The model to train", required=True)
 parser.add_argument("--dataset", choices=["adtof", "egmd", "slakh"], help="The dataset to train on", required=True)
-parser.add_argument("--num_samples", type=int, help="Number of samples for Optuna RayTune", required=False, default=10)
+parser.add_argument("--num_samples", type=int, help="Number of samples for Optuna RayTune", required=False, default=15)
 args = parser.parse_args()
 
 # Extract the absolute path of the data directory
