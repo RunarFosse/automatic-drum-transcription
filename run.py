@@ -101,7 +101,10 @@ tuner = tune.Tuner(
         num_samples=num_samples,
         metric="best_epoch/Micro F1",
         mode="max",
-        search_alg=OptunaSearch()
+        search_alg=OptunaSearch(
+            metric="best_epoch/Micro F1",
+            mode="max"
+        )
     ),
     run_config=train.RunConfig(
         stop={"epochs_since_improvement": 15},
