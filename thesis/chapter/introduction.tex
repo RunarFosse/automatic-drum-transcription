@@ -14,7 +14,9 @@ This leads us to two primary questions. Which deep learning architecture is the 
 
 For the former, we will train different model architectures on different, well-known \gls{ADT} datasets. Specifically, recurrent neural networks, convolutional neural networks, convolutional-recurrent neural networks, convolutional transformers and vision transformers. By comparing their performances we could be able to gauge the one best suited for an \gls{ADT} task.
 
-For the latter, we will select the best performing model architecture from the first question, and train it over several different combination of the \gls{ADT} datasets. By performing zero-shot evaluations, we could analyse and figure out what makes a good \gls{ADT} dataset and how it would supplement a suitable model architecture.
+For the latter, we will select the best performing model architecture from the first question, and train it over several different combination of the \gls{ADT} datasets. By performing zero-shot evaluations, we could analyse and figure out what makes a good \gls{ADT} dataset and how it would supplement a suitable model architecture. Here, I've also introduced a new, small \gls{ADT} dataset containing drum transcriptions of recent, contemporary musical compositions.
+
+\textcolor{red}{Maybe remove the paragraph below?}
 
 In addition to these, we will also analyse two standard approaches when it comes to \gls{ADT} and see how effective they really are, through ablation studies. These are, usage of log-filtered spectrograms, and frequency-based, dynamic timestep loss-weighting during training. 
 
