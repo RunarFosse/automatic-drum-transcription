@@ -16,7 +16,7 @@ class FrameSynchronousCNNEncoder(nn.Module):
 class ConvolutionalBlock(nn.Module):
     def __init__(self, i: int = 1):
         super().__init__()
-        self.conv1 = nn.Conv2d(1 if i == 1 else 32 * (i - 1), 32 * i, kernel_size=(3, 3), padding=1, bias=False)
+        self.conv1 = nn.Conv2d(max(1, 32 * (i - 1)), 32 * i, kernel_size=(3, 3), padding=1, bias=False)
         self.batchnorm1 = nn.BatchNorm2d(32 * i)
         self.conv2 = nn.Conv2d(32 * i, 32 * i, kernel_size=(3, 3), padding=1, bias=False)
         self.batchnorm2 = nn.BatchNorm2d(32 * i)
