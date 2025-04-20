@@ -30,9 +30,9 @@ class RNN(nn.Module):
     }
 
 class CNN(nn.Module):
-    def __init__(self, num_layers: int = 2, hidden_size: int = 288):
+    def __init__(self, num_convs=5, num_layers: int = 2, hidden_size: int = 288):
         super().__init__()
-        self.encoder = FrameSynchronousCNNEncoder()
+        self.encoder = FrameSynchronousCNNEncoder(num_convolutions=num_convs)
         self.dense = nn.Sequential(
             nn.Linear(576, hidden_size), 
             nn.ReLU(), 
@@ -47,6 +47,7 @@ class CNN(nn.Module):
     
     name = "CNN"
     hyperparameters = {
+        #"num_convs": tune.choice([1, 2, 3]), 
         "num_layers": tune.choice([1, 2, 3, 4]),
         "hidden_size": tune.choice([72, 144, 288, 576])
     }
