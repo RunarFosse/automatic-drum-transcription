@@ -45,7 +45,7 @@ We've mentioned that spectrograms can be treated as images. Therefore it would m
 
 \subsection{Implementation}
 
-Our \gls{CNN} architecure consists of an initial, fixed-size convolutional block, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. The convolutional layers have an increasing number of kernels $C = \{32, 32, 64, 64\}$, intuitively leading to an increase in complexity along with depth. Then we have a varying amount of fully connected layers $L \in \{1, 2, 3, 4\}$, projecting into a latent space sized $H \in \{72, 144, 288, 576\}$. And last, an output layer giving onset probabilities.
+Our \gls{CNN} architecure consists of $I \in \{1, 2, 3\}$ initial convolutional blocks. Inside this block, convolutional layers have an increasing number of kernels $C = \{32, 64, 96\}$, intuitively leading to an increase in complexity along with depth. Then we have a varying amount of fully connected layers $L \in \{1, 2, 3, 4\}$, projecting into a latent space sized $H \in \{72, 144, 288, 576\}$. And last, an output layer giving onset probabilities.
 
 \begin{figure}[H]
     \centering
@@ -69,7 +69,7 @@ Intuitively, the \gls{CNN}s ability to process images like the spectrogram, toge
 
 \subsection{Implementation}
 
-Similar to the \gls{CNN}, it first consists of a fixed-size, input convolutional block with increasing number of kernels $C = \{32, 32, 64, 64\}$. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$.
+We begin with a fixed-size convolutional block with $I = 2$, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. Following the \gls{CNN} it has an increasing number of kernels $C = \{32, 64\}$. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$.
 
 \begin{figure}[H]
     \centering
