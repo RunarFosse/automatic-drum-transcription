@@ -21,7 +21,7 @@ It has been shown that \gls{GRU}s and \gls{LSTM}s are capable of learning \gls{A
 
 \subsection{Implementation}
 
-Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train both a \gls{GRU} and an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L \in \{2, 3, 4, 5, 6\}$ and hidden size $H \in \{72, 144, 288\}$, selecting the one with best performance. At last, we have a linear layer, outputting onset probabilities for each of the drums.
+Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train both a \gls{GRU} and an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L \in \{2, 3, 4, 5, 6\}$ and hidden size $H \in \{72, 144, 288\}$, selecting the one with best performance. At last, we have a linear layer, outputting onset probabilities for each of the drums per timeframe.
 
 \begin{figure}[H]
     \centering
@@ -45,7 +45,7 @@ We've mentioned that spectrograms can be treated as images. Therefore it would m
 
 \subsection{Implementation}
 
-Our \gls{CNN} architecure consists of $I \in \{1, 2, 3\}$ initial convolutional blocks. Inside this block, convolutional layers have an increasing number of kernels $C = \{32, 64, 96\}$, intuitively leading to an increase in complexity along with depth. Then we have a varying amount of fully connected layers $L \in \{1, 2, 3, 4\}$, projecting into a latent space sized $H \in \{72, 144, 288, 576\}$. And last, an output layer giving onset probabilities.
+Our \gls{CNN} architecure consists of $I \in \{1, 2, 3\}$ initial convolutional blocks. Inside this block, convolutional layers have an increasing number of kernels $C = \{32, 64, 96\}$, intuitively leading to an increase in complexity along with depth. Then we have a varying amount of fully connected layers $L \in \{1, 2, 3, 4\}$, projecting into a latent space sized $H \in \{72, 144, 288, 576\}$. Both the convolutional and fully connected layers are followed by a \gls{ReLU} activation function. Lastly, an output layer computed each instrument's onset probabilities.
 
 \begin{figure}[H]
     \centering
@@ -69,7 +69,7 @@ Intuitively, the \gls{CNN}s ability to process images like the spectrogram, toge
 
 \subsection{Implementation}
 
-We begin with a fixed-size convolutional block with $I = 2$, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. Following the \gls{CNN} it has an increasing number of kernels $C = \{32, 64\}$. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$.
+We begin with a fixed-size convolutional block with $I = 2$, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. Following the \gls{CNN} it has an increasing number of kernels $C = \{32, 64\}$. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$. Output probabilities are then computed through the final linear layer.
 
 \begin{figure}[H]
     \centering
@@ -92,15 +92,15 @@ Simply replacing the recurrent layers with attention blocks could allow our mode
 
 \subsection{Implementation}
 
-Similar to the \gls{CRNN}, an initial fixed-size convolutional block with $I = 2$ is used, with an increasing number of kernels $C = \{32, 64\}$. Then, we project the resulting latent space into a separate embedding dimension $D_e \in \{72, 144, 288\}$, before combining it with a sinusoidal positional encoding. 
+Similar to the \gls{CRNN}, an initial fixed-size convolutional block with $I = 2$ is used, with an increasing number of kernels $C = \{32, 64\}$. Then, we project the resulting latent space into a separate, lower dimensional embedding space with dimension $D_e \in \{72, 144, 288\}$, before combining it with a sinusoidal positional encoding. 
 
-Following this, the model contains $L \in \{2, 4, 6, 8\}$ standard pre-layer normalization attention block, as these recently have been shown to be more stable during learning than the post-layer versions~\cite{pmlr-v119-xiong20b}. These attention blocks contain multihead self-attention layers with $H \in \{2, 4, 6, 8\}$ number of heads.
+Following this, the model contains $L \in \{2, 4, 6, 8\}$ standard pre-layer normalization attention block, as these recently have been shown to be more stable during learning than the post-layer versions~\cite{pmlr-v119-xiong20b}. These attention blocks contain multi-head self-attention layers with $H \in \{2, 4, 6, 8\}$ number of heads. Note that the feed-forward layer inside these attention blocks uses the \gls{GELU} activation function due to it being the standard within transformers and for its possible performance improvements over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. Lastly, the linear layer outputs onset probabilities.
 
 \begin{figure}[H]
     \centering
-    \input{tikz/crnn}
-    \caption{Convolutional RNN architecture structure.}
-    \label{CRNNFigure}
+    \input{tikz/ct}
+    \caption{Convolutional Transformer architecture structure.}
+    \label{CTFigure}
 \end{figure}
 
 \section{Vision Transformer}
