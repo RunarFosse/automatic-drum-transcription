@@ -29,8 +29,10 @@ class ConvolutionalBlock(nn.Module):
         out = F.relu(self.conv1(x))
         out = self.batchnorm1(out)
         out = F.relu(self.conv2(out))
-        out = self.batchnorm(out)
-        out = self.dropout(self.pool1(out))
+        out = self.batchnorm2(out)
+        
+        out = self.pool(out)
+        out = self.dropout(out)
 
         print(self.i, torch.flatten(out.permute(0, 2, 1, 3), start_dim=2).shape)
 
