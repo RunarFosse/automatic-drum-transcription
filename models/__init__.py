@@ -30,11 +30,13 @@ class RNN(nn.Module):
     }
 
 class CNN(nn.Module):
-    def __init__(self, num_convs=5, num_layers: int = 2, hidden_size: int = 288):
+    def __init__(self, num_convs: int = 2, num_layers: int = 2, hidden_size: int = 288):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder(num_convolutions=num_convs)
+
+        latent_size = 84 // (torch.pow(torch.tensor(3), num_convs)) * (32 * num_convs)
         self.dense = nn.Sequential(
-            nn.Linear(576, hidden_size), 
+            nn.Linear(latent_size, hidden_size), 
             nn.ReLU(), 
             *[layer for _ in range(num_layers - 1) for layer in [nn.Linear(hidden_size, hidden_size), nn.ReLU()]]
         )
@@ -47,7 +49,7 @@ class CNN(nn.Module):
     
     name = "CNN"
     hyperparameters = {
-        #"num_convs": tune.choice([1, 2, 3]), 
+        "num_convs": tune.choice([1, 2, 3]), 
         "num_layers": tune.choice([1, 2, 3, 4]),
         "hidden_size": tune.choice([72, 144, 288, 576])
     }

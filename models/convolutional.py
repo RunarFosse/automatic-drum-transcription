@@ -23,7 +23,6 @@ class ConvolutionalBlock(nn.Module):
 
         self.pool = nn.MaxPool2d(kernel_size=(1, 3))
         self.dropout = nn.Dropout2d(p=0.3)
-        self.i = i
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = F.relu(self.conv1(x))
@@ -33,7 +32,5 @@ class ConvolutionalBlock(nn.Module):
 
         out = self.pool(out)
         out = self.dropout(out)
-
-        print(self.i, torch.flatten(out.permute(0, 2, 1, 3), start_dim=2).shape)
-
+        
         return out
