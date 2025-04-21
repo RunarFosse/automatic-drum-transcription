@@ -74,6 +74,10 @@ MIDI_MAPPING = {
     85: None, #'Castanets (GM2)',
     86: None, #'Mute Surdo (GM2)',
     87: None, #'Open Surdo (GM2)',
+
+    # Manually retrieved from Roland TD-11
+    22: 3, #'Unknown Hi Hat',
+    26: 3, #'Unknown Hi Hat',
 }
 
     
