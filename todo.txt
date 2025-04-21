@@ -50,9 +50,6 @@
         - I.e. Waveform = (1, sr * seconds)
                Spectrogram = (frequencies, sr * second / hop_length)
                etc.
-    
-    - Cite LSTM
-    - Don't explain importance in first sentence.
 
     Sort in order of experiments after methods:
     Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Experiment 3? -> Conclusion
