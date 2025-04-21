@@ -83,7 +83,7 @@ minimum width=4cm
     fit=(a) (b)] (ab) {};
 \end{scope};
 
-\draw (d) -- (0, -7) node[rectangle,
+\draw[arrow] (d) -- (0, -6.25) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -92,7 +92,7 @@ minimum height=0.75cm,
 minimum width=4cm
 ] (g) {Projection: $D_e$};
 
-\draw[arrow] (g) -- (0, -8.5) node[circle, 
+\draw[arrow] (g) -- (0, -7.5) node[circle, 
 draw, 
 anchor=north,
 minimum size=1em, 
@@ -109,7 +109,7 @@ label={[align=left]east:Positional\\Encoding},
 
 \draw (pe) -- (h);
 
-\draw (h) -- (0, -10) node[rectangle,
+\draw (h) -- (0, -8.5) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -118,7 +118,7 @@ minimum height=0.75cm,
 minimum width=4cm
 ] (i) {Layer normalization};
 
-\draw[arrow] (i) -- (0, -12.5) node [rectangle,
+\draw[arrow] (i) -- (0, -10) node [rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -127,7 +127,10 @@ minimum height=1cm,
 minimum width=4cm
 ] (j) {Multi-Head Attention: $H$};
 
-\draw (j) -- (0, -13.75) node[rectangle,
+\draw[arrow] (j.north)++(0, 0.4) -| ($(j.north) + (1.2,0)$);
+\draw[arrow] (j.north)++(0, 0.4) -| ($(j.north) + (-1.2,0)$);
+
+\draw (j) -- (0, -11.25) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -136,7 +139,7 @@ minimum height=0.75cm,
 minimum width=4cm
 ] (k) {Dropout: $p = 0.1$};
 
-\draw (k) -- (0, -15) node[rectangle,
+\draw (k) -- (0, -12.125) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -145,25 +148,31 @@ minimum height=0.75cm,
 minimum width=4cm
 ] (l) {Add \& Norm};
 
-\draw (l) -- (0, -17) node[rectangle,
+\coordinate (larrow) at ($(l.east) + (0.75, 0)$);
+\draw[arrow] (j.north)++(0, 0.525) -| (larrow) |- (l.east);
+
+\node[rectangle,
 rounded corners,
 draw,
 anchor=north,
 fill=cyan!20,
 minimum height=0.75cm,
 minimum width=4cm
-] (m) {Feed Forward (GELU): $4 \times D_e$};
+] at (0, -14) (m) {Linear (GELU): $4 \times D_e$};
 
-\draw (m) -- (0, -18) node[rectangle,
+\coordinate (m1) at ($(m.north) + (0, 0.5)$);
+\draw[arrow] (l) -- ($(m1.north) + (0, 0.1)$);
+
+\draw (m) -- (0, -15) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
 fill=cyan!20,
 minimum height=0.75cm,
 minimum width=4cm
-] (n) {Feed Forward: $D_e$};
+] (n) {Linear: $D_e$};
 
-\draw (n) -- (0, -19) node[rectangle,
+\draw (n) -- (0, -16.25) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -172,7 +181,7 @@ minimum height=0.75cm,
 minimum width=4cm
 ] (o) {Dropout: $p = 0.1$};
 
-\draw (o) -- (0, -20) node[rectangle,
+\draw (o) -- (0, -17.25) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -181,7 +190,34 @@ minimum height=0.75cm,
 minimum width=4cm
 ] (p) {Add};
 
-\draw[arrow] (p) -- (0, -22) node[rectangle, 
+\draw[arrow] (m.north)++(0, 0.925) -| ($(p.east) + (0.75, 0)$) |- (p.east);
+
+\begin{scope}[on background layer]
+
+    \node[rectangle,
+    fill=gray!20,
+    rounded corners=3mm,
+    label={[name=mnlabel, yshift=-0.625cm]north:Feedforward},
+    draw,
+    very thick,
+    fit=(m) (m1) (n)] (mn) {};
+    \node[rectangle,
+    fill=gray!10,
+    rounded corners=5mm,
+    label=west:$L\times$,
+    draw,
+    very thick,
+    fit= (i) (mn) (p) (larrow)] {};
+    \node[rectangle,
+    fill=gray!20,
+    rounded corners=3mm,
+    label={[name=mnlabel, yshift=-0.625cm]north:Feedforward},
+    draw,
+    very thick,
+    fit=(m) (m1) (n)] (mn) {};
+\end{scope};
+
+\draw[arrow] (p) -- (0, -19) node[rectangle, 
 rounded corners, 
 draw, 
 anchor=north, 
@@ -190,8 +226,8 @@ minimum height=1cm,
 minimum width=4cm
 ] (u) {Linear (Sigmoid): $5$};
 
-\draw[arrow] (u) -- (0, -24);
+\draw[arrow] (u) -- (0, -21);
 
-\node[anchor=north, label=below:{Output Probabilities}] at (0, -24){\footnotesize{($T \times 5$)}};
+\node[anchor=north, label=below:{Output Probabilities}] at (0, -21){\footnotesize{($T \times 5$)}};
 
 \end{tikzpicture}
