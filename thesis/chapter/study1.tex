@@ -1,0 +1,27 @@
+\chapter{Architecture Study}
+
+\section{Results}
+
+\textcolor{red}{Display a table of results, class-wise and micro-F1:
+Best architecture per dataset is bolded.}
+
+\begin{center}
+    \begin{tabular}{|l|c|c|c|c|}
+    \hline
+                   & ENST+MDB & E-GMD & Slakh & ADTOF-YT \\
+    \hline
+    Recurrent &       & 0.8892          & 0.8502          & 0.9498          \\
+    Convolutional &       & 0.8657          & 0.8305          & 0.8290          \\
+    Convolutional Recurrent &       & \textbf{0.8911}          & \textbf{0.8914}          & 0.9455          \\
+    Convolutional Transformer &        & 0.8852          & 0.8828          & 0.9533          \\
+    Vision Transformer &       & 0.8818          & 0.8755          & \textbf{0.9560}         \\   
+    \hline
+
+    \end{tabular}
+\end{center}		
+
+\textcolor{red}{Display the results in a barplot, to easily capture well-performing models.}
+
+\section{Discussion}
+
+As we can see...

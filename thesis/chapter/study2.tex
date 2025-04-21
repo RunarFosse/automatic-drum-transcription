@@ -1,0 +1,25 @@
+\chapter{Dataset Study}
+
+\section{Results}
+
+\textcolor{red}{Display a table of results, micro-F1 (or maybe just micro-F1):
+Non zero-shot tests are grayed out, best zero-shot test are bolded.}
+
+\begin{center}
+    \begin{tabular}{|l|cccc|}
+    \hline
+                     & Dataset 1 & Dataset 2 & Dataset 3 & Dataset 4 \\
+    \hline
+    Dataset 1        & 0.5       & 0.3          &           &           \\
+    Dataset 2        & \cellcolor{blue!10}0.4       & 0.8          &           &           \\
+    Dataset 1+2      & 0.8       & 0.7          &           &           \\
+    Dataset 3        & \cellcolor{blue!10}\textbf{0.9}       & \cellcolor{blue!10}{0.6}          &           &           \\
+    Dataset 1+2+3    & 0.95      & 0.8          &           &           \\   
+    Dataset 1+4      & 0.95      & \cellcolor{blue!10}\textbf{0.75}          &           &           \\   
+    Dataset 1+2+3+4  & 0.95      & 0.82          &           &           \\   
+    \hline
+
+    \end{tabular}
+\end{center}
+
+\section{Discussion}

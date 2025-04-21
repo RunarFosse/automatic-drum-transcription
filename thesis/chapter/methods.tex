@@ -1,18 +1,12 @@
-\chapter{Methods}
+\chapter{Methodology}
 
 \section{Task}
 
-\textcolor{red}{Precisely explain the task we are solving. Explain what the input data is, what the labels are.
-Give intuition into what exactly we want our model to predict.}
+The specific task we are trying to solve is one of drum instrument onset detection. For each timestep of an input spectrogram, we want to predict the probability of a drum onset happening.
 
-\textcolor{red}{Here we also explain the input and output, i.e. the data and the labels.
-What do they look like in their un-preprocessed form and predictions?}
-
-\textcolor{red}{Here we can also give a figure into the pipeline itself, for better intuition.}
+\textcolor{red}{Move this piece to background and expand ADT information there?}
 
 \section{Pipeline}
-
-\textcolor{red}{Talk about the general \gls{ADT} pipeline.}
 
 \subsection{Preprocessing}
 
@@ -31,13 +25,6 @@ What do they look like in their un-preprocessed form and predictions?}
 \textcolor{red}{Mention how model outputs a "confidence in event happening" distribution, which we want to discretize into events.
 I.e. explain Vogl's peak picking algorithm~\cite{vogl2018multiinstrumentdrumtranscription}.}
 
-\subsection{Performance Measures}
-
-\textcolor{red}{Mention that we use F-measure (F1-score) is the most used and why. Compare this to accuracy, balanced accuracy. Mention precision, recall and their meaning.}
-
-\textcolor{red}{Mention the difference in class-wise, micro- and macro-F1, and why we choose to focus on class-wise and micro in this thesis.
-Also mention how these are all computed.}
-
 \section{Experiments}
 
 \textcolor{red}{Here we mention the setups for each of the experiments.}
@@ -50,37 +37,3 @@ Mention the learning rate scheduler, where we reduce the learning rate by a fact
 \textcolor{red}{Mention that we perform early stopping on the validation loss (and why, like the smooth nature, overfitting prevention, etc.), where as we store the best performing model based on the validation F1-score (due to this representing overall prediction performance).}
 
 \textcolor{red}{Mention that every experiment is model selected using hold-out validation, and best model is chosen based on micro F1-score.}
-
-
-\subsection{Architecture experiment}
-\todo{Every subsection below should be a separate chapter.}
-
-Shortly mention what we do, what the goal is, what we want to figure out.
-
-\subsubsection{Architectures}
-Mention the different architectures trained, and at what hyperparameters they were trained over.
-
-\subsubsection{Datasets}
-Mention the different datasets used, and tested over.
-
-
-\subsection{Dataset generalization experiment}
-
-Shortly mention why, what, like in the previous experiment.
-
-\subsubsection{Architectures}
-
-Mention which architectures we now use, and why we chose them. (And hyperparameters)
-
-\subsubsection{Datasets}
-
-Now mention which datasets / combination of datasets we use. Mention how we now use zero-shot testing (and maybe why).
-
-
-\subsection{Ablation experiments?}
-
-\subsubsection{Technique 1}
-
-\subsubsection{Technique 2}
-
-\subsubsection{Technique 3}
