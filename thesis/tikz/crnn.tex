@@ -7,9 +7,9 @@
     },
     ]
 
-\node[anchor=south, label=above:{Input Spectrogram}] at (0, 0){\footnotesize{($T \times D_\text{STFT}$)}};
+\node[anchor=south, label=above:{Input Spectrogram}] at (0, -0.5){\footnotesize{($T \times D_\text{STFT}$)}};
 
-\draw[arrow] (0, 0) -- (0, -1.5) node [rectangle,
+\draw[arrow] (0, -0.5) -- (0, -1.5) node [rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -69,7 +69,7 @@ minimum width=4cm
     fit=(a) (b)] (ab) {};
 \end{scope}
 
-\draw[arrow] (d) -- (0, -7) node[rectangle, 
+\draw[arrow] (d) -- (0, -6.25) node[rectangle, 
 rounded corners, 
 draw, 
 anchor=north, 
@@ -79,7 +79,7 @@ minimum height=1cm,
 minimum width=4cm
 ] (g) {BiRU: $H$};
 
-\draw[arrow] (g) -- (0, -8.5) node[rectangle, 
+\draw[arrow] (g) -- (0, -7.75) node[rectangle, 
 rounded corners, 
 draw, 
 anchor=north, 
@@ -88,8 +88,8 @@ minimum height=1cm,
 minimum width=4cm
 ] (h) {Linear (Sigmoid): $5$};
 
-\draw[arrow] (h) -- (0, -11.5);
+\draw[arrow] (h) -- (0, -9.75);
 
-\node[anchor=north, label=below:{Output Probabilities}] at (0, -11.5){\footnotesize{($T \times 5$)}};
+\node[anchor=north, label=below:{Output Probabilities}] at (0, -9.75){\footnotesize{($T \times 5$)}};
 
 \end{tikzpicture}

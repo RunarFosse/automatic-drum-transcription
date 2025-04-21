@@ -63,7 +63,7 @@ Intuitively, the \gls{CNN}s ability to process images like the spectrogram, toge
 \begin{figure}[H]
     \centering
     \input{tikz/crnnspectrogram}
-    \caption{Visualization of a timestep's contextual and cross-timestep influence with CRNNs.}
+    \caption{Visualization of a timestep's contextual and cross-timestep influence with Convolutional RNNs.}
     \label{CRNNInfluenceFigure}
 \end{figure}
 
@@ -84,7 +84,13 @@ Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243} made headway in re
 
 As mentioned, the \gls{RNN} displays difficulty in sustaining long range dependencies through its hidden state, and information further away tends to become attenuated. The attention layer solves this by allowing each element to individually attend to each other element in the sequence separately. Intuitively, it allows each element to \textit{"intelligently"} pick and choose where it wants to look, and what elements it wants to be influenced by. This stands in contrast to the recurrent units, where each element has to learn and predict what information about itself other elements could find useful, and \textit{"remembering"} that, adding it to the hidden state.
 
-\textcolor{red}{Visualization of attention.}
+\begin{figure}[H]
+    \centering
+    \input{tikz/ctspectrogram}
+    \caption{Visualization of a timestep's attention to each other timestep in an attention model.}
+    \label{CTInfluenceFigure}
+\end{figure}
+
 
 Recently, the attention layers have shown great success in \gls{AMT} and \gls{ADT} tasks, in some cases proving superior to the \gls{RNN}~\cite{gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3multiinstrumentmusictranscription, zehren2024analyzingreducingsynthetictorealtransfer}.
 
