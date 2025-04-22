@@ -89,7 +89,7 @@ class ADTOF_FrameAttention(nn.Module):
     name = "Convolutional Transformer"
     hyperparameters = {
         "num_heads": tune.choice([2, 4, 6, 8]),
-        "num_layers": tune.choice([2, 4, 6, 8]),
+        "num_layers": tune.choice([2, 4, 6, 8, 10]),
         "embed_dim": tune.choice([72, 144, 288, 576])
     }
     
