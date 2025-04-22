@@ -108,7 +108,11 @@ def readAnnotations(path: Path, mapping: Dict[str, int], num_frames: int, num_la
     with open(path, "r") as f:
         for line in f.readlines():
             # Parse line
-            [time, event] = line.strip().split(" ")
+            elements = line.strip().split(" ")
+            if len(elements) == 1:
+                elements = elements[0].split("\t")
+
+            time, event = elements[0], elements[-1]
 
             # If the event ends in a "-" or a digit, remove it
             if event[-1] in ["-"] or event[-1].isnumeric():

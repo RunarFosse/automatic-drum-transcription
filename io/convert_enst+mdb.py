@@ -79,35 +79,35 @@ ENST_SPLITS = [
         "162_MIDI-minus-one_fusion-125_sticks",
     ],
 ]
-MDB_SPLITS_MIX = [
+MDB_SPLITS = [
     [
-        "MusicDelta_Punk_MIX",
-        "MusicDelta_CoolJazz_MIX",
-        "MusicDelta_Disco_MIX",
-        "MusicDelta_SwingJazz_MIX",
-        "MusicDelta_Rockabilly_MIX",
-        "MusicDelta_Gospel_MIX",
-        "MusicDelta_BebopJazz_MIX",
+        "MusicDelta_Punk",
+        "MusicDelta_CoolJazz",
+        "MusicDelta_Disco",
+        "MusicDelta_SwingJazz",
+        "MusicDelta_Rockabilly",
+        "MusicDelta_Gospel",
+        "MusicDelta_BebopJazz",
     ],
     [
-        "MusicDelta_FunkJazz_MIX",
-        "MusicDelta_FreeJazz_MIX",
-        "MusicDelta_Reggae_MIX",
-        "MusicDelta_LatinJazz_MIX",
-        "MusicDelta_Britpop_MIX",
-        "MusicDelta_FusionJazz_MIX",
-        "MusicDelta_Shadows_MIX",
-        "MusicDelta_80sRock_MIX",
+        "MusicDelta_FunkJazz",
+        "MusicDelta_FreeJazz",
+        "MusicDelta_Reggae",
+        "MusicDelta_LatinJazz",
+        "MusicDelta_Britpop",
+        "MusicDelta_FusionJazz",
+        "MusicDelta_Shadows",
+        "MusicDelta_80sRock",
     ],
     [
-        "MusicDelta_Beatles_MIX",
-        "MusicDelta_Grunge_MIX",
-        "MusicDelta_Zeppelin_MIX",
-        "MusicDelta_ModalJazz_MIX",
-        "MusicDelta_Country1_MIX",
-        "MusicDelta_SpeedMetal_MIX",
-        "MusicDelta_Rock_MIX",
-        "MusicDelta_Hendrix_MIX",
+        "MusicDelta_Beatles",
+        "MusicDelta_Grunge",
+        "MusicDelta_Zeppelin",
+        "MusicDelta_ModalJazz",
+        "MusicDelta_Country1",
+        "MusicDelta_SpeedMetal",
+        "MusicDelta_Rock",
+        "MusicDelta_Hendrix",
     ],
 ]
 
@@ -173,20 +173,31 @@ seed = 100
 
 if __name__ == "__main__":
     # Declare the path to the dataset directory
-    path = Path(__file__).resolve().parent.parent / "data" / "ENST-drums-public"
+    path = Path(__file__).resolve().parent.parent / "data" / "ENST+MDB"
 
     print("\033[96m", "Loading data into lists", "\033[0m", sep="")
 
     data, labels = [], []
     for drummer in range(3):
         for piece in ENST_SPLITS[drummer]:
-            audio_path = (path / f"drummer_{drummer+1}" / "audio" / "wet_mix" / piece).with_suffix(".wav")
-            accompaniment_path = (path / f"drummer_{drummer+1}" / "audio" / "accompaniment" / piece).with_suffix(".wav")
-            annotation_path = (path / f"drummer_{drummer+1}" / "annotation" / piece).with_suffix(".txt")
+            audio_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "audio" / "wet_mix" / piece).with_suffix(".wav")
+            accompaniment_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "audio" / "accompaniment" / piece).with_suffix(".wav")
+            annotation_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "annotation" / piece).with_suffix(".txt")
 
             spectrogram = readAudio(audio_path, accompaniment_path)
             timesteps = spectrogram.shape[0]
             label = readAnnotations(annotation_path, ENST_MAPPING, timesteps, 5)
+
+            partitions = timesteps // 400
+            data += list(spectrogram.tensor_split(partitions, dim=0))
+            labels += list(label.tensor_split(partitions, dim=0))
+        for piece in MDB_SPLITS[drummer]:
+            audio_path = (path / "MDBDrums-master" / "MDB Drums" / "audio" / "full_mix" / f"{piece}_MIX").with_suffix(".wav")
+            annotation_path = (path / "MDBDrums-master" / "MDB Drums" / "annotations" / "subclass" / f"{piece}_subclass").with_suffix(".txt")
+            
+            spectrogram = readAudio(audio_path)
+            timesteps = spectrogram.shape[0]
+            label = readAnnotations(annotation_path, MDB_MAPPING, timesteps, 5)
 
             partitions = timesteps // 400
             data += list(spectrogram.tensor_split(partitions, dim=0))
@@ -198,7 +209,7 @@ if __name__ == "__main__":
     print("\033[96m", "Creating tensor datasets", "\033[0m", sep="")
     dataset = TensorDataset(data, labels)
 
-    # Split them into Train/Validation/Test sets TODO! WIP: MAY HAVE DATALEAKAGE TODO!
+    # Split them into Train/Validation/Test sets TODO! WIP: MAY HAVE DATALEAKAGE (same song might appear in several splits) TODO!
     print("\033[96m", "Creating train/validation/test splits", "\033[0m", sep="")
     torch.manual_seed(seed)
     train_dataset, validation_dataset, test_dataset = random_split(dataset, [0.7, 0.15, 0.15])
@@ -216,7 +227,7 @@ if __name__ == "__main__":
     # Store every split
     for split, dataset in [("train", train_dataset), ("validation", validation_dataset), ("test", test_dataset)]:
         # And store the dataset to the disk under the first path
-        new_path = (path / f"enst_{split}").with_suffix(".pt")
+        new_path = (path / f"enst+mdb_{split}").with_suffix(".pt")
         print("\033[96m", "     Storing ", "\033[0m", f"{new_path.name}", "\033[96m", " to disk", "\033[0m", sep="")
         torch.save(dataset, new_path)
 
