@@ -79,8 +79,39 @@ ENST_SPLITS = [
         "162_MIDI-minus-one_fusion-125_sticks",
     ],
 ]
+MDB_SPLITS_MIX = [
+    [
+        "MusicDelta_Punk_MIX",
+        "MusicDelta_CoolJazz_MIX",
+        "MusicDelta_Disco_MIX",
+        "MusicDelta_SwingJazz_MIX",
+        "MusicDelta_Rockabilly_MIX",
+        "MusicDelta_Gospel_MIX",
+        "MusicDelta_BebopJazz_MIX",
+    ],
+    [
+        "MusicDelta_FunkJazz_MIX",
+        "MusicDelta_FreeJazz_MIX",
+        "MusicDelta_Reggae_MIX",
+        "MusicDelta_LatinJazz_MIX",
+        "MusicDelta_Britpop_MIX",
+        "MusicDelta_FusionJazz_MIX",
+        "MusicDelta_Shadows_MIX",
+        "MusicDelta_80sRock_MIX",
+    ],
+    [
+        "MusicDelta_Beatles_MIX",
+        "MusicDelta_Grunge_MIX",
+        "MusicDelta_Zeppelin_MIX",
+        "MusicDelta_ModalJazz_MIX",
+        "MusicDelta_Country1_MIX",
+        "MusicDelta_SpeedMetal_MIX",
+        "MusicDelta_Rock_MIX",
+        "MusicDelta_Hendrix_MIX",
+    ],
+]
 
-# 5-drum mapping for ENST, from ADTOF
+# 5-drum mapping for ENST and MDB, from ADTOF
 ENST_MAPPING = {
     "bd": 0,
 
@@ -107,6 +138,34 @@ ENST_MAPPING = {
     "rc": 4,
     "c": 4,
     "cb": 4,
+}
+
+MDB_MAPPING = {
+    "KD": 0, #'kick drum'
+
+    "SD": 1, #'snare drum',
+    "SDB": 1, #'snare drum: brush',
+    "SDD": 1, #'snare drum: drag',
+    "SDF": 1, #'snare drum: flam',
+    "SDG": 1, #'snare drum: ghost note',
+    "SDNS": 1, #'snare drum: no snare',
+    "SST": 1, #'side stick',
+
+    "HIT": 2, #'high tom',
+    "MHT": 2, #'high-mid tom',
+    "HFT": 2, #'high floor tom',
+    "LFT": 2, #'low floor tom',
+
+    "CHH": 3, #'hi-hat: closed',
+    "OHH": 3, #'hi-hat: open',
+    "PHH": 3, #'hi-hat: pedal',
+    "TMB": 3, #'tambourine',
+
+    "RDC": 4, #'ride cymbal',
+    "RDB": 4, #'ride cymbal: bell',
+    "CRC": 4, #'crash cymbal',
+    "CHC": 4, #'china cymbal',
+    "SPC": 4, #'splash cymbal',
 }
 
 # Set a seed for predictable splitting
