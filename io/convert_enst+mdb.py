@@ -177,9 +177,11 @@ if __name__ == "__main__":
 
     print("\033[96m", "Loading data into lists", "\033[0m", sep="")
 
-    data, labels = [], []
+    train_data, train_labels = [], []
+    validation_data, validation_labels = [], []
+    test_data, test_labels = [], []
     for drummer in range(3):
-        for piece in ENST_SPLITS[drummer]:
+        for i, piece in enumerate(ENST_SPLITS[drummer]):
             audio_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "audio" / "wet_mix" / piece).with_suffix(".wav")
             accompaniment_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "audio" / "accompaniment" / piece).with_suffix(".wav")
             annotation_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "annotation" / piece).with_suffix(".txt")
@@ -189,9 +191,17 @@ if __name__ == "__main__":
             label = readAnnotations(annotation_path, ENST_MAPPING, timesteps, 5)
 
             partitions = timesteps // 400
-            data += list(spectrogram.tensor_split(partitions, dim=0))
-            labels += list(label.tensor_split(partitions, dim=0))
-        for piece in MDB_SPLITS[drummer]:
+            if drummer < 2:
+                train_data += list(spectrogram.tensor_split(partitions, dim=0))
+                train_labels += list(label.tensor_split(partitions, dim=0))
+            elif i < len(ENST_SPLITS[drummer]) // 2:
+                validation_data += list(spectrogram.tensor_split(partitions, dim=0))
+                validation_labels += list(label.tensor_split(partitions, dim=0))
+            else:
+                test_data += list(spectrogram.tensor_split(partitions, dim=0))
+                test_labels += list(label.tensor_split(partitions, dim=0))
+
+        for i, piece in enumerate(MDB_SPLITS[drummer]):
             audio_path = (path / "MDBDrums-master" / "MDB Drums" / "audio" / "full_mix" / f"{piece}_MIX").with_suffix(".wav")
             annotation_path = (path / "MDBDrums-master" / "MDB Drums" / "annotations" / "subclass" / f"{piece}_subclass").with_suffix(".txt")
             
@@ -200,29 +210,30 @@ if __name__ == "__main__":
             label = readAnnotations(annotation_path, MDB_MAPPING, timesteps, 5)
 
             partitions = timesteps // 400
-            data += list(spectrogram.tensor_split(partitions, dim=0))
-            labels += list(label.tensor_split(partitions, dim=0))
+            if drummer < 2:
+                train_data += list(spectrogram.tensor_split(partitions, dim=0))
+                train_labels += list(label.tensor_split(partitions, dim=0))
+            elif i < len(MDB_SPLITS[drummer]) // 2:
+                validation_data += list(spectrogram.tensor_split(partitions, dim=0))
+                validation_labels += list(label.tensor_split(partitions, dim=0))
+            else:
+                test_data += list(spectrogram.tensor_split(partitions, dim=0))
+                test_labels += list(label.tensor_split(partitions, dim=0))
 
-    data, labels = torch.stack(data), torch.stack(labels)
+    train_data, train_labels = torch.stack(train_data), torch.stack(train_labels)
+    validation_data, validation_labels = torch.stack(validation_data), torch.stack(validation_labels)
+    test_data, test_labels = torch.stack(test_data), torch.stack(test_labels)
     
     # Turn them into a Pytorch tensor dataset
     print("\033[96m", "Creating tensor datasets", "\033[0m", sep="")
-    dataset = TensorDataset(data, labels)
-
-    # Split them into Train/Validation/Test sets TODO! WIP: MAY HAVE DATALEAKAGE (same song might appear in several splits) TODO!
-    print("\033[96m", "Creating train/validation/test splits", "\033[0m", sep="")
-    torch.manual_seed(seed)
-    train_dataset, validation_dataset, test_dataset = random_split(dataset, [0.7, 0.15, 0.15])
+    train_dataset = TensorDataset(train_data, train_labels)
+    validation_dataset = TensorDataset(validation_data, validation_labels)
+    test_dataset = TensorDataset(test_data, test_labels)
 
     # Verify split sizes
-    print("\033[96m", "Train size: ", "\033[0m", len(train_dataset.indices), "\033[0m", sep="")
-    print("\033[96m", "Validation size: ", "\033[0m", len(validation_dataset.indices), "\033[0m", sep="")
-    print("\033[96m", "Test size: ", "\033[0m", len(test_dataset.indices), "\033[0m", sep="")
-
-    # Verify indices don't overlap
-    train_collisions = len(set(train_dataset.indices).intersection(set(validation_dataset.indices))) + len(set(train_dataset.indices).intersection(set(test_dataset.indices)))
-    validation_collisions = len(set(validation_dataset.indices).intersection(set(test_dataset.indices)))
-    print("\033[96m", "Number of collisions: ", "\033[0m", train_collisions + validation_collisions, "\033[0m", sep="")
+    print("\033[96m", "Train size: ", "\033[0m", len(train_dataset), "\033[0m", sep="")
+    print("\033[96m", "Validation size: ", "\033[0m", len(validation_dataset), "\033[0m", sep="")
+    print("\033[96m", "Test size: ", "\033[0m", len(test_dataset), "\033[0m", sep="")
 
     # Store every split
     for split, dataset in [("train", train_dataset), ("validation", validation_dataset), ("test", test_dataset)]:
