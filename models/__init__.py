@@ -25,7 +25,7 @@ class RNN(nn.Module):
     name = "RNN"
     hyperparameters = {
         "num_layers": tune.choice([2, 3, 4, 5, 6]),
-        "hidden_size": tune.choice([72, 144, 288]),
+        "hidden_size": tune.choice([72, 144, 288, 576]),
         "use_gru": tune.choice([True, False])
     }
 
@@ -68,7 +68,7 @@ class ADTOF_FrameRNN(nn.Module):
     name = "Convolutional RNN"
     hyperparameters = {
         "num_layers": tune.choice([2, 3, 4, 5]),
-        "hidden_size": tune.choice([72, 144, 288]),
+        "hidden_size": tune.choice([72, 144, 288, 576]),
         "use_gru": tune.choice([True, False])
     }
     
@@ -90,7 +90,7 @@ class ADTOF_FrameAttention(nn.Module):
     hyperparameters = {
         "num_heads": tune.choice([2, 4, 6, 8]),
         "num_layers": tune.choice([2, 4, 6, 8]),
-        "embed_dim": tune.choice([72, 144, 288])
+        "embed_dim": tune.choice([72, 144, 288, 576])
     }
     
 class VisionTransformer(nn.Module):
@@ -106,7 +106,7 @@ class VisionTransformer(nn.Module):
     name = "Vision Transformer"
     hyperparameters = {
         "patch_size": tune.choice([(1, 7), (1, 14), (1, 21)]),
-        "num_heads": tune.choice([4, 6, 8]),
-        "num_layers": tune.choice([6, 8, 10]),
-        "embed_dim": tune.choice([72, 144, 288])
+        "num_heads": tune.choice([2, 4, 6, 8]),
+        "num_layers": tune.choice([2, 4, 6, 8, 10]),
+        "embed_dim": tune.choice([72, 144, 288, 576])
     }
