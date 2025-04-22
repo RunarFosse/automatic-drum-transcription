@@ -20,6 +20,7 @@ parser.add_argument("device", help="The device to run experiments on", type=str,
 parser.add_argument("--model", choices=["rnn", "cnn", "crnn", "ct", "vit"], help="The model to train", required=True)
 parser.add_argument("--dataset", choices=["enst+mdb", "egmd", "slakh", "adtof"], help="The dataset to train on", required=True)
 parser.add_argument("--num_samples", type=int, help="Number of samples for Optuna RayTune", required=False, default=15)
+parser.add_argument("--early_stop", type=int, help="Number of epochs with stagnating validation loss before early stopping", required=False, default=15)
 args = parser.parse_args()
 
 # Extract the absolute path of the data directory
@@ -107,7 +108,7 @@ tuner = tune.Tuner(
         )
     ),
     run_config=train.RunConfig(
-        stop={"epochs_since_improvement": 15},
+        stop={"epochs_since_improvement": args.early_stop},
         checkpoint_config=train.CheckpointConfig(num_to_keep=1),
         verbose=2
     )
