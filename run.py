@@ -49,7 +49,7 @@ dataset_path = {
     "enst+mdb": data_dir / "ENST+MDB",
     "egmd": data_dir / "e-gmd-v1.0.0",
     "slakh": data_dir / "slakh2100_flac_redux",
-    "adtof": data_dir / "adtof",
+    "adtof": data_dir / "adtof_yt",
     }[args.dataset]
 
 study = "Architecture"
