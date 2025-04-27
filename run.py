@@ -18,7 +18,7 @@ assert __name__ == "__main__"
 parser = argparse.ArgumentParser("run.py")
 parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda:0", nargs="?")
 parser.add_argument("--model", choices=["rnn", "cnn", "crnn", "ct", "vit"], help="The model to train", required=True)
-parser.add_argument("--dataset", choices=["enst+mdb", "egmd", "slakh", "adtof"], help="The dataset to train on", required=True)
+parser.add_argument("--dataset", choices=["enst+mdb", "egmd", "slakh", "adtof_yt"], help="The dataset to train on", required=True)
 parser.add_argument("--num_samples", type=int, help="Number of samples for Optuna RayTune", required=False, default=15)
 parser.add_argument("--early_stop", type=int, help="Number of epochs with stagnating validation loss before early stopping", required=False, default=15)
 args = parser.parse_args()
@@ -49,7 +49,7 @@ dataset_path = {
     "enst+mdb": data_dir / "ENST+MDB",
     "egmd": data_dir / "e-gmd-v1.0.0",
     "slakh": data_dir / "slakh2100_flac_redux",
-    "adtof": data_dir / "adtof_yt",
+    "adtof": data_dir / "adtof",
     }[args.dataset]
 
 study = "Architecture"
@@ -128,7 +128,7 @@ best_checkpoint = best_result.get_best_checkpoint("Micro F1", mode="max")
 state_dict = torch.load(Path(best_checkpoint.path) / "model.pt")
 
 # Store the best performing model, config and its metrics to study/experiment path
-study_path = (root_dir / "study" / study / experiment / args.dataset.upper())
+study_path = (root_dir / "study" / study / experiment / args.dataset.upper().replace("_", "-"))
 study_path.mkdir(parents=True, exist_ok=True)
 torch.save(state_dict, study_path / "model.pt")
 torch.save(best_result.config, study_path / "config.pt")
