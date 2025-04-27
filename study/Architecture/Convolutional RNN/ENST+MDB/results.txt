@@ -1,0 +1,9 @@
+Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/ENST+MDB/enst+mdb_train.pt'), 'val_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/ENST+MDB/enst+mdb_validation.pt'), 'transforms': {'mean': tensor([0.4206]), 'std': tensor([0.4561])}, 'lr': 0.0012589069752661742, 'weight_decay': 3.518188955433774e-05, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.ADTOF_FrameRNN'>, 'parameters': {'num_layers': 4, 'hidden_size': 288, 'use_gru': True}, 'device': 'cuda:0', 'seed': 1745321148}
+Best result final validation loss: 0.37472960352897644
+Best result final validation micro F1: 0.7890993356704712
+Best result final validation macro F1: 0.7167946100234985
+Best result final validation class F1: [0.9121496081352234, 0.7137278318405151, 0.430379718542099, 0.8390526175498962, 0.6886633038520813]
+ ---------- Evaluation of best perfoming model ---------- 
+Micro F1: 0.8013
+Macro F1: 0.6523
+Class F1: ['0.9415', '0.7319', '0.2642', '0.8540', '0.4700']
