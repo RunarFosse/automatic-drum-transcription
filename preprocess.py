@@ -1,9 +1,9 @@
 import torch
 import torchaudio
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms, ops
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, List
 import sys
 sys.path.append("io/")
 from load import compute_log_filterbank
@@ -100,3 +100,27 @@ def invert_mel_spectrogram(spectrogram: torch.Tensor, n_fft: int = 2048, win_len
     pseudo_waveform = grifflim_transform(inverse_waveform)
 
     return pseudo_waveform
+
+
+
+class CompositeDataset(Dataset):
+    """ 
+    Custom datset consisting of several sub-datasets. 
+    Datapoints are randomly sampled with a weighted probability equal to relative dataset size. 
+    """
+    def __init__(self, paths: List[Path]):
+        self.datasets = [torch.load(path) for path in paths]
+        self.sizes = [len(dataset) for dataset in self.datasets]
+    
+    def __len__(self):
+        return sum(self.sizes)
+
+    def __getitem__(self, index: int):
+        # Number of datasets are small, so brute-force loop is trivial
+        dataset_index, prefix = 0, 0
+        while self.sizes[dataset_index] < index:
+            prefix += self.sizes[dataset_index]
+            dataset_index += 1
+        
+        return self.datasets[dataset_index][index - prefix]
+
