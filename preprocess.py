@@ -9,11 +9,11 @@ sys.path.append("io/")
 from load import compute_log_filterbank
 
 
-def compute_normalization(train_path: Path, batch_size: int = 1, device: str = "cpu") -> Tuple[torch.Tensor]:
+def compute_normalization(train_paths: List[Path], batch_size: int = 1, device: str = "cpu") -> Tuple[torch.Tensor]:
     """ Compute the normalization terms, (mean, std), of the training dataset. """
     # Insert the training dataset into a dataloader
     device = device if torch.cuda.is_available() else "cpu"
-    train_loader = DataLoader(torch.load(train_path), shuffle=False, batch_size=batch_size, num_workers=4)
+    train_loader = DataLoader(CompositeDataset(train_paths), shuffle=False, batch_size=batch_size, num_workers=4)
 
     # Compute number of batches
     num_batches = len(train_loader)

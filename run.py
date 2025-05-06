@@ -6,7 +6,7 @@ from ray import init, tune, train
 from ray.tune.search.optuna import OptunaSearch
 from time import time
 from models import RNN, CNN, ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
-from preprocess import compute_normalization, create_transform
+from preprocess import compute_normalization, create_transform, CompositeDataset
 from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
@@ -18,7 +18,7 @@ assert __name__ == "__main__"
 parser = argparse.ArgumentParser("run.py")
 parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda:0", nargs="?")
 parser.add_argument("--model", choices=["rnn", "cnn", "crnn", "ct", "vit"], help="The model to train", required=True)
-parser.add_argument("--dataset", choices=["enst+mdb", "egmd", "slakh", "adtof_yt"], help="The dataset to train on", required=True)
+parser.add_argument("--dataset", choices=["enst+mdb", "egmd", "slakh", "adtof_yt"], help="The dataset to train on", nargs="+", required=True)
 parser.add_argument("--num_samples", type=int, help="Number of samples for Optuna RayTune", required=False, default=15)
 parser.add_argument("--early_stop", type=int, help="Number of epochs with stagnating validation loss before early stopping", required=False, default=15)
 args = parser.parse_args()
@@ -45,12 +45,12 @@ Model = {
     "vit": VisionTransformer,
     }[args.model]
 
-dataset_path = {
+dataset_paths = [{
     "enst+mdb": data_dir / "ENST+MDB",
     "egmd": data_dir / "e-gmd-v1.0.0",
     "slakh": data_dir / "slakh2100_flac_redux",
     "adtof_yt": data_dir / "adtof",
-    }[args.dataset]
+}[dataset] for dataset in args.dataset]
 
 study = "Architecture"
 experiment = Model.name
@@ -60,11 +60,11 @@ num_epochs = 100
 
 batch_size = 128
 
-train_path = dataset_path / (args.dataset + "_train.pt")
-val_path = dataset_path / (args.dataset + "_validation.pt")
-test_path = dataset_path / (args.dataset + "_test.pt")
+train_paths = [dataset_path / (args.dataset + "_train.pt") for dataset_path in dataset_paths]
+val_paths = [dataset_path / (args.dataset + "_validation.pt") for dataset_path in dataset_paths]
+test_paths = [dataset_path / (args.dataset + "_test.pt") for dataset_path in dataset_paths]
 
-feature_mean, feature_std = compute_normalization(train_path, batch_size=batch_size, device=device)
+feature_mean, feature_std = compute_normalization(train_paths, batch_size=batch_size, device=device)
 
 print(f"Traning data has a mean of: {feature_mean}, and a std of: {feature_std}")
 
@@ -72,8 +72,8 @@ config = {
     "num_epochs": num_epochs,
     "batch_size": batch_size,
 
-    "train_path": train_path,
-    "val_path": val_path,
+    "train_path": train_paths,
+    "val_path": val_paths,
 
     "transforms": {
         "mean": feature_mean,
@@ -128,7 +128,7 @@ best_checkpoint = best_result.get_best_checkpoint("Micro F1", mode="max")
 state_dict = torch.load(Path(best_checkpoint.path) / "model.pt")
 
 # Store the best performing model, config and its metrics to study/experiment path
-study_path = (root_dir / "study" / study / experiment / args.dataset.upper().replace("_", "-"))
+study_path = (root_dir / "study" / study / experiment / "+".join(args.dataset).upper().replace("_", "-"))
 study_path.mkdir(parents=True, exist_ok=True)
 torch.save(state_dict, study_path / "model.pt")
 torch.save(best_result.config, study_path / "config.pt")
@@ -139,7 +139,7 @@ model = Model(**best_result.config["parameters"])
 model.load_state_dict(state_dict)
 
 # Create a test dataloader and preprocessing transforms
-test_loader = DataLoader(torch.load(test_path), batch_size=batch_size, num_workers=4, pin_memory=True)
+test_loader = DataLoader(CompositeDataset(test_paths), batch_size=batch_size, num_workers=4, pin_memory=True)
 transforms = create_transform(mean=feature_mean, std=feature_std, channels_last=True)
 
 # And evaluate it
