@@ -60,9 +60,9 @@ num_epochs = 100
 
 batch_size = 128
 
-train_paths = [dataset_path / (args.dataset + "_train.pt") for dataset_path in dataset_paths]
-val_paths = [dataset_path / (args.dataset + "_validation.pt") for dataset_path in dataset_paths]
-test_paths = [dataset_path / (args.dataset + "_test.pt") for dataset_path in dataset_paths]
+train_paths = [dataset_path / (dataset + "_train.pt") for dataset_path, dataset in zip(dataset_paths, args.dataset)]
+val_paths = [dataset_path / (dataset + "_validation.pt") for dataset_path, dataset in zip(dataset_paths, args.dataset)]
+test_paths = [dataset_path / (dataset + "_test.pt") for dataset_path, dataset in zip(dataset_paths, args.dataset)]
 
 feature_mean, feature_std = compute_normalization(train_paths, batch_size=batch_size, device=device)
 
@@ -72,8 +72,8 @@ config = {
     "num_epochs": num_epochs,
     "batch_size": batch_size,
 
-    "train_path": train_paths,
-    "val_path": val_paths,
+    "train_paths": train_paths,
+    "val_paths": val_paths,
 
     "transforms": {
         "mean": feature_mean,
