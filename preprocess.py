@@ -115,10 +115,10 @@ class CompositeDataset(Dataset):
     def __len__(self):
         return sum(self.sizes)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int):
         # Number of datasets are small, so brute-force loop is trivial
         dataset_index, prefix = 0, 0
-        while prefix + self.sizes[dataset_index] < index:
+        while prefix + self.sizes[dataset_index] <= index:
             prefix += self.sizes[dataset_index]
             dataset_index += 1
         
