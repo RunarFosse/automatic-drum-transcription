@@ -52,7 +52,7 @@ dataset_paths = [{
     "adtof_yt": data_dir / "adtof",
 }[dataset] for dataset in args.dataset]
 
-study = "Architecture"
+study = "Architecture" if len(args.dataset) == 1 else "Dataset"
 experiment = Model.name
 
 num_samples = args.num_samples
