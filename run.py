@@ -1,12 +1,12 @@
 import argparse
 import torch
 from torch import optim
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, ConcatDataset
 from ray import init, tune, train
 from ray.tune.search.optuna import OptunaSearch
 from time import time
 from models import RNN, CNN, ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
-from preprocess import compute_normalization, create_transform, CompositeDataset
+from preprocess import compute_normalization, create_transform
 from evaluate import evaluate_model
 from train import train_model
 from pathlib import Path
@@ -139,7 +139,7 @@ model = Model(**best_result.config["parameters"])
 model.load_state_dict(state_dict)
 
 # Create a test dataloader and preprocessing transforms
-test_loader = DataLoader(CompositeDataset(test_paths), batch_size=batch_size, num_workers=4, pin_memory=True)
+test_loader = DataLoader(ConcatDataset(map(torch.load, test_paths)), batch_size=batch_size, num_workers=4, pin_memory=True)
 transforms = create_transform(mean=feature_mean, std=feature_std, channels_last=True)
 
 # And evaluate it

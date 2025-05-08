@@ -1,6 +1,6 @@
 import torch
 import torchaudio
-from torch.utils.data import DataLoader, Dataset, ConcatDataset
+from torch.utils.data import DataLoader, ConcatDataset
 from torchvision import transforms, ops
 from pathlib import Path
 from typing import Tuple, List
@@ -18,7 +18,7 @@ def compute_normalization(train_paths: List[Path]) -> Tuple[torch.Tensor]:
     stack = torch.stack([img for img, _ in train_dataset])
 
     # And compute and return values
-    mean, std = stack.mean((0, 2, 3)), stack.std((0, 2, 3))
+    mean, std = stack.mean(dim=(0, 1, 2)), stack.std(dim=(0, 1, 2))
     return mean, std
 
 def create_transform(mean: torch.Tensor, std: torch.Tensor, channels_last: bool) -> transforms.Compose:
@@ -93,27 +93,3 @@ def invert_mel_spectrogram(spectrogram: torch.Tensor, n_fft: int = 2048, win_len
     pseudo_waveform = grifflim_transform(inverse_waveform)
 
     return pseudo_waveform
-
-
-
-class CompositeDataset(Dataset):
-    """ 
-    Custom datset consisting of several sub-datasets. 
-    Datapoints are randomly sampled with a weighted probability equal to relative dataset size. 
-    """
-    def __init__(self, paths: List[Path]):
-        self.datasets = [torch.load(path) for path in paths]
-        self.sizes = [len(dataset) for dataset in self.datasets]
-    
-    def __len__(self):
-        return sum(self.sizes)
-
-    def __getitem__(self, index: int):
-        # Number of datasets are small, so brute-force loop is trivial
-        dataset_index, prefix = 0, 0
-        while prefix + self.sizes[dataset_index] <= index:
-            prefix += self.sizes[dataset_index]
-            dataset_index += 1
-        
-        return self.datasets[dataset_index][index - prefix]
-
