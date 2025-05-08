@@ -1,6 +1,6 @@
 import torch
 import torchaudio
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, ConcatDataset
 from torchvision import transforms, ops
 from pathlib import Path
 from typing import Tuple, List
@@ -9,24 +9,17 @@ sys.path.append("io/")
 from load import compute_log_filterbank
 
 
-def compute_normalization(train_paths: List[Path], batch_size: int = 1, device: str = "cpu") -> Tuple[torch.Tensor]:
+def compute_normalization(train_paths: List[Path]) -> Tuple[torch.Tensor]:
     """ Compute the normalization terms, (mean, std), of the training dataset. """
     # Insert the training dataset into a dataloader
-    device = device if torch.cuda.is_available() else "cpu"
-    train_loader = DataLoader(CompositeDataset(train_paths), shuffle=False, batch_size=batch_size, num_workers=4)
+    train_dataset = ConcatDataset(map(torch.load, train_paths))
 
-    # Compute number of batches
-    num_batches = len(train_loader)
+    # Enter all datapoints into a stack
+    stack = torch.stack([img for img, _ in train_dataset])
 
-    # And compute values
-    mean, std = torch.zeros(1, device=device), torch.zeros(1, device=device)
-    for features, _ in train_loader:
-        features = features.to(device)
-        mean += torch.mean(features, dim=(0, 1, 2))
-        std += torch.std(features, dim=(0, 1, 2))
-
-    # Return divided over number of batches
-    return mean.to("cpu") / num_batches, std.to("cpu") / num_batches
+    # And compute and return values
+    mean, std = stack.mean((0, 2, 3)), stack.std((0, 2, 3))
+    return mean, std
 
 def create_transform(mean: torch.Tensor, std: torch.Tensor, channels_last: bool) -> transforms.Compose:
     """ Create a preprocessing transforms pipeline. """
