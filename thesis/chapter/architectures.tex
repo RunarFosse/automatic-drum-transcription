@@ -112,3 +112,17 @@ Following this, the model contains $L \in \{2, 4, 6, 8\}$ standard pre-layer nor
 \section{Vision Transformer}
 
 Introducing the Transformer raises a question. Would it be possible for an architecture to be comprised of solely attention layers, removing convolutions and breaking this need for a mixed convolutional-transformer architecture. This question was answered by Google's "An Image Is Worth 16x16 Words"~\cite{dosovitskiy2021imageworth16x16words}, introducing the Vision Transformer.
+
+The Vision Transformer was created to tackle image recognition tasks, though it has been applied to audio classification, displaying great performance on both~\cite{dosovitskiy2021imageworth16x16words, gong2021astaudiospectrogramtransformer}. However, application of the Vision Transformer on an \gls{ADT} task is a novel approach.
+
+\subsection{Patch Embedding}
+
+A key component of the Vision Transformer is the creation of a patch embedding. First, we split the input image into different non-overlapping patches, and flatten them. These patches are linearly projected into a latent space, and a positional encoding is added to retain positional information. This resulting sequence of patches is what is referred to as a patch embedding.
+
+\begin{figure}[H]
+    \centering
+    %\input{tikz/patchembedding}
+    \textcolor{red}{Insert Patch Embedding visualization.}
+    \caption{Creation of a patch embedding.}
+    \label{PatchEmbeddingFigure}
+\end{figure}
