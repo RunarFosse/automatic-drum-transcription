@@ -17,7 +17,7 @@ assert __name__ == "__main__"
 # Declare an argument parser for this file
 parser = argparse.ArgumentParser("run.py")
 parser.add_argument("device", help="The device to run experiments on", type=str, default="cuda:0", nargs="?")
-parser.add_argument("--path", choices=["rnn", "cnn", "crnn", "ct", "vit"], help="The path to the model to test, relative to the root directory", required=True)
+parser.add_argument("--path", help="The path to the model to test, relative to the root directory", required=True)
 args = parser.parse_args()
 
 # Extract the absolute path of the directories
