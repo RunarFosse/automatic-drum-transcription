@@ -57,13 +57,13 @@ with open(model_dir / "tests.txt", "w") as output:
         test_loader = DataLoader(torch.load(dataset_path[dataset] / (dataset + "_test.pt")), batch_size=batch_size, num_workers=4, pin_memory=True)
         test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, transforms=transforms, seed=seed, device=device)
 
-        print(f" ---------- Evaluation on {dataset} ---------- ")
+        print(f" ---------- Evaluation on {dataset.upper()} ---------- ")
         print(f"Micro F1: {test_f1_micro.item():.4f}")
         print(f"Macro F1: {test_f1_macro.item():.4f}")
         print(f"Class F1: {[f'{test_f1.item():.4f}' for test_f1 in test_f1_class]}")
 
         # Also, write the results to an output file
-        print(f" ---------- Evaluation on {dataset} ---------- ", file=output)
+        print(f" ---------- Evaluation on {dataset.upper()} ---------- ", file=output)
         print(f"Micro F1: {test_f1_micro.item():.4f}", file=output)
         print(f"Macro F1: {test_f1_macro.item():.4f}", file=output)
         print(f"Class F1: {[f'{test_f1.item():.4f}' for test_f1 in test_f1_class]}", file=output)
