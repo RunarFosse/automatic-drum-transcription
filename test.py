@@ -1,14 +1,9 @@
 import argparse
 import torch
-from torch import optim
-from torch.utils.data import DataLoader, ConcatDataset
-from ray import init, tune, train
-from ray.tune.search.optuna import OptunaSearch
+from torch.utils.data import DataLoader
 from time import time
-from models import RNN, CNN, ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
-from preprocess import compute_normalization, create_transform
+from preprocess import create_transform
 from evaluate import evaluate_model
-from train import train_model
 from pathlib import Path
 
 # Only run this file directly
