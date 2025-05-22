@@ -38,7 +38,7 @@ batch_size = 128
 # Load the model we want to test on
 config = torch.load(model_dir / "config.pt")
 state_dict = torch.load(model_dir / "model.pt")
-model = config["Model"](config["parameters"])
+model = config["Model"](**config["parameters"])
 model.load_state_dict(state_dict)
 
 # Create the transforms
