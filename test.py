@@ -48,7 +48,7 @@ dataset_path = {
     "sadtp": data_dir/ "SADTP"
 }
 with open(model_dir / "tests.txt", "w") as output:
-    for dataset in ["enst+mdb", "egmd", "slakh", "adtof_yt, sadtp"]:
+    for dataset in ["enst+mdb", "egmd", "slakh", "adtof_yt", "sadtp"]:
         # Test and evaluate predictions
         test_loader = DataLoader(torch.load(dataset_path[dataset] / (dataset + "_test.pt")), batch_size=batch_size, num_workers=4, pin_memory=True)
         test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, transforms=transforms, seed=seed, device=device)
