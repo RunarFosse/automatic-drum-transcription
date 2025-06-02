@@ -139,9 +139,9 @@ def f_measure(predictions: torch.Tensor):
     micro_f1 = 2.0 * (micro_precision * micro_recall) / (micro_precision + micro_recall)
     class_f1 = 2.0 * (class_precision * class_recall) / (class_precision + class_recall)
 
-    # Replace any NaN resulting from zero-division, with zeros
-    micro_f1 = micro_f1.nan_to_num(nan=0.0)
-    class_f1 = class_f1.nan_to_num(nan=0.0)
+    # Replace any NaN resulting from zero-division, with ones, as this is a perfect prediction of absent classes
+    micro_f1 = micro_f1.nan_to_num(nan=1.0)
+    class_f1 = class_f1.nan_to_num(nan=1.0)
 
     # Compute the macro F1 as the arithemic mean of class F1s
     macro_f1 = torch.mean(class_f1)
