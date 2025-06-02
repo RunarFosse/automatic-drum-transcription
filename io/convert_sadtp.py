@@ -2,19 +2,6 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 from load import readAudio, readMidi
 from pathlib import Path
-import sys
-sys.path.append("../master-thesis")
-from preprocess import create_transform
-from evaluate import evaluate_model
-
-model_dir = Path(__file__).resolve().parent.parent / "study" / "Dataset" / "Convolutional RNN" / "ENST+MDB+EGMD+SLAKH+ADTOF-YT"
-config = torch.load(model_dir / "config.pt")
-state_dict = torch.load(model_dir / "model.pt")
-model = config["Model"](**config["parameters"])
-model.load_state_dict(state_dict)
-
-# Create the transforms
-transforms = create_transform(mean=config["transforms"]["mean"], std=config["transforms"]["std"], channels_last=True)
 
 """ Run this file to turn SADTP into a stored PyTorch dataset """
 
@@ -116,14 +103,6 @@ if __name__ == "__main__":
         partitions = timesteps // 400
         data += list(spectrogram.tensor_split(partitions, dim=0))
         labels += list(label.tensor_split(partitions, dim=0))
-
-        # Temporary test
-        test_loader = DataLoader(TensorDataset(torch.stack(list(spectrogram.tensor_split(partitions, dim=0))), torch.stack(list(label.tensor_split(partitions, dim=0)))), batch_size=16, num_workers=4, pin_memory=True)
-        test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, transforms=transforms, seed=123, device="cuda:0")
-        print("\n", track.name)
-        print(f"Micro F1: {test_f1_micro.item():.4f}")
-        print(f"Macro F1: {test_f1_macro.item():.4f}")
-        print(f"Class F1: {[f'{test_f1.item():.4f}' for test_f1 in test_f1_class]}")
 
     data, labels = torch.stack(data), torch.stack(labels)
 
