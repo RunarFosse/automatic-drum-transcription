@@ -7,7 +7,7 @@ sys.path.append("../master-thesis")
 from preprocess import create_transform
 from evaluate import evaluate_model
 
-model_dir = Path(__file__).resolve().parent.parent / "study" / "Dataset" / "Convolutional RNN" / "ENST+MDB+EGMD+SLAKH+ADTOF"
+model_dir = Path(__file__).resolve().parent.parent / "study" / "Dataset" / "Convolutional RNN" / "ENST+MDB+EGMD+SLAKH+ADTOF-YT"
 config = torch.load(model_dir / "config.pt")
 state_dict = torch.load(model_dir / "model.pt")
 model = config["Model"](**config["parameters"])
