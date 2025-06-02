@@ -118,7 +118,7 @@ if __name__ == "__main__":
         labels += list(label.tensor_split(partitions, dim=0))
 
         # Temporary test
-        test_loader = DataLoader(TensorDataset(list(spectrogram.tensor_split(partitions, dim=0)), list(label.tensor_split(partitions, dim=0))), batch_size=16, num_workers=4, pin_memory=True)
+        test_loader = DataLoader(TensorDataset(torch.tensor(list(spectrogram.tensor_split(partitions, dim=0))), torch.tensor(list(label.tensor_split(partitions, dim=0)))), batch_size=16, num_workers=4, pin_memory=True)
         test_f1_micro, test_f1_macro, test_f1_class = evaluate_model(model, test_loader=test_loader, transforms=transforms, seed=123, device="cuda:0")
         print("\n", track.name)
         print(f"Micro F1: {test_f1_micro.item():.4f}")
