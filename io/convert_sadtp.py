@@ -3,7 +3,7 @@ from torch.utils.data import TensorDataset, DataLoader
 from load import readAudio, readMidi
 from pathlib import Path
 import sys
-sys.path.append("../")
+sys.path.append("../master-thesis")
 from preprocess import create_transform
 from evaluate import evaluate_model
 
