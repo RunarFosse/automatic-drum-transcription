@@ -2,8 +2,10 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 from load import readAudio, readMidi
 from pathlib import Path
-from ..preprocess import create_transform
-from ..evaluate import evaluate_model
+import sys
+sys.path.append("..")
+from preprocess import create_transform
+from evaluate import evaluate_model
 
 model_dir = Path(__file__).resolve().parent.parent / "study" / "Dataset" / "Convolutional RNN" / "ENST+MDB+EGMD+SLAKH+ADTOF"
 config = torch.load(model_dir / "config.pt")
