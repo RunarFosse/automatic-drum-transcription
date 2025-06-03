@@ -5,6 +5,10 @@
 
 # Todos for thesis: 
 
+    # For all Architecture figures:
+
+        - Add a flatten indication between convolutional/patch embedding and the remaining layers? !! Important
+
     ---
     Remember to distinguish what has been done before.
     Be clear when saying "I've combined these techniques which have been done before".
