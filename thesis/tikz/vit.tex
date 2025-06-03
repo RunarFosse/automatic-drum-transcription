@@ -30,69 +30,10 @@ anchor=north,
 fill=magenta!20,
 minimum height=1cm,
 minimum width=4cm
-] (a) {Convolution (ReLU): $C_i$  $3 \times 3$};
+] (a) {Patch Embedding: $P_i$};
 
-\draw (a) -- (0, -2.75) node[rectangle,
-rounded corners,
-draw,
-anchor=north,
-fill=yellow!20,
-minimum height=0.75cm,
-minimum width=4cm
-] (b) {Batch normalization};
 
-\draw (b) -- (0, -3.825) node[rectangle,
-rounded corners,
-draw,
-anchor=north,
-fill=yellow!20,
-minimum height=0.75cm,
-minimum width=4cm
-] (c) {Max pooling: $1 \times 3$};
-
-\draw (c) -- (0, -4.825) node[rectangle,
-rounded corners,
-draw,
-anchor=north,
-fill=yellow!20,
-minimum height=0.75cm,
-minimum width=4cm
-] (d) {Dropout: $p = 0.3$};
-
-\begin{scope}[on background layer]
-    \node[rectangle,
-    fill=gray!20,
-    rounded corners=3mm,
-    label={[name=ablabel]west:$2\times$},
-    draw,
-    very thick,
-    fit=(a) (b)] (ab) {};
-    \node[rectangle,
-    fill=gray!10,
-    rounded corners=5mm,
-    label=west:$2\times$,
-    draw,
-    very thick,
-    fit= (ab) (ablabel) (d)] {};
-    \node[rectangle,
-    fill=gray!20,
-    rounded corners=3mm,
-    label={[name=ablabel]west:$2\times$},
-    draw,
-    very thick,
-    fit=(a) (b)] (ab) {};
-\end{scope};
-
-\draw[arrow] (d) -- (0, -6.25) node[rectangle,
-rounded corners,
-draw,
-anchor=north,
-fill=cyan!20,
-minimum height=0.75cm,
-minimum width=4cm
-] (g) {Projection: $D_e$};
-
-\draw[arrow] (g) -- (0, -7.5) node[circle, 
+\draw[arrow] (a) -- (0, -3) node[circle, 
 draw, 
 anchor=north,
 minimum size=1em, 
@@ -109,7 +50,7 @@ label={[align=left]east:Positional\\Encoding}
 
 \draw (pe) -- (h);
 
-\draw[arrow] (h) -- (0, -8.75) node[rectangle,
+\draw[arrow] (h) -- (0, -5) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
@@ -121,7 +62,7 @@ minimum width=4cm,
 label={west:$L\times$}
 ] (v) {Attention Block};
 
-\draw[arrow] (v) -- (0, -10.25) node[rectangle, 
+\draw[arrow] (v) -- (0, -6.5) node[rectangle, 
 rounded corners, 
 draw, 
 anchor=north, 
@@ -130,9 +71,9 @@ minimum height=1cm,
 minimum width=4cm
 ] (w) {Linear (Sigmoid): $5$};
 
-\draw[arrow] (w) -- (0, -11.75);
+\draw[arrow] (w) -- (0, -8.0);
 
-\node[anchor=north, label=below:{Output Probabilities}] at (0, -11.75){\footnotesize{($T \times 5$)}};
+\node[anchor=north, label=below:{Output Probabilities}] at (0, -8.0){\footnotesize{($T \times 5$)}};
 
 
 % ---- Attention Block ----
@@ -255,6 +196,6 @@ minimum width=4cm
 \end{scope};
 
 \draw[arrow] (7.5, -3.25) node[anchor=south] {\footnotesize{($T \times D_e$)}} -- (i |- imnp.north);
-\draw[arrow] (p |- imnp.south) -- (7.5, -15) node[anchor=north] {\footnotesize{($T \times D_e$)}};
+\draw[arrow] (p |- imnp.south) -- (7.5, -14.75) node[anchor=north] {\footnotesize{($T \times D_e$)}};
 
 \end{tikzpicture}
