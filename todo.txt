@@ -1,32 +1,7 @@
-# Make run.py able to run architectures and datasets from command line (via argparse, instead of editing file)
-
-# Find and include all datasets
-    # These include:
-        - ENST and MDB DRUMS, together as small dataset
-        - Slakh
-        - EGMD (already included)
-        - ADTOF-YT (already included)
-    
-    # Parse them correctly, get same formatted output
-
-# Perform training and testing over several datasets
-
 # Create analysis notebooks for model performance and plotting
 
-
-# Questions:
-
-    - When doing architecture performance comparisons, compare using test scores? Yes
-
-    - When doing cross-dataset prediction, use normalization constants from training dataset (trained on)? Yes
-
-    - Preprocessing, like the spectrograms and fft? Should be mentioned in background or methods? Hard to answer, but possibly either/or
-
-    - When talking about datasets, how to differentiate existing with my? What goes under methods, what doesn't. Something in both? Either/or
-
-    
-    - Activation function output? Normal nomenclature?
-
+# 100% Complete SADTP, by ensuring beats are not offset.
+# - After this, finish zero-shot testing of all models.
 
 # Todos for thesis: 
 
@@ -52,4 +27,4 @@
                etc.
 
     Sort in order of experiments after methods:
-    Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Experiment 3? -> Conclusion
+    Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Conclusion
