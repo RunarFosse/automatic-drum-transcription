@@ -140,11 +140,28 @@ This can be solved by treating a group of patches from the patch embedding toget
 
 \subsection{Implementation}
 
-Initally, we transform the input spectrogram into a ($T \times D_e$) patch embedding, before combining it with a sinusoidal positional encoding. Afterwards, we apply $L \in \{2, 4, 6, 8, 10\}$ attention blocks, equal to those used in the Convolutional Transformer. Lastly, the linear layer outputs onset probabilities.
+Initally, we transform the input spectrogram into a ($T \times D_e$) patch embedding. The Convolutional layer splits the spectrogram into ($T \times D_e / P \times P$) different patches. Added to these are a ($D_e / P \times P$) learnable positional embedding, providing positional information to each patch. These are then permuted and flattened, transforming them into our final patch embedding.
+
+Afterwards, we combine it with a sinusoidal positional encoding, and successively apply $L$ attention blocks with number of heads $H$, identical in structure with those used in the Convolutional Transformer. Lastly, the linear layer outputs onset probabilities.
 
 \begin{figure}[H]
+    \hspace*{-0.5cm}
     \centering
     \input{tikz/vit}
     \caption{Vision Transformer architecture structure.}
     \label{ViTFigure}
 \end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lr|c}
+        \multicolumn{2}{c|}{Hyperparameter} & Values       \\
+        \hline
+        $P$ & Patch height      & \{7, 14, 21\} \\
+        $H$ & Number of heads     & \{2, 4, 6, 8\} \\
+        $L$ & Number of layers      & \{2, 4, 6, 8, 10\} \\
+        $D_e$ & Embedding dimension      & \{72, 144, 288, 576\} \\
+    \end{tabular}
+    \caption{The different hyperparameters tuned to train the Vision Transformer.}
+    \label{ViTHyperparams}
+\end{table}
