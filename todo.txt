@@ -9,6 +9,8 @@
 
         - Add a flatten indication between convolutional/patch embedding and the remaining layers? !! Important
 
+        - Figure out wether to explain hyperparameter values in-text, or as a separate table.
+
     ---
     Remember to distinguish what has been done before.
     Be clear when saying "I've combined these techniques which have been done before".
