@@ -2,11 +2,25 @@
 
 \section{ENST+MDB}
 
-The ENST-Drums dataset by Gillet et al.~\cite{gillet_2006_7432188} has been one of the most commonly used \gls{ADT} datasets~\cite{8350302}. It is comprised of drum kit recordings, with a thorough ground-truth annotation.  \textcolor{red}{etc. etc. etc.}
+The ENST-Drums dataset by Gillet et al.~\cite{gillet_2006_7432188} has been one of the most commonly used \gls{ADT} datasets~\cite{8350302}. It features thorougly annotated drum samples by three drummers over different musical genres. Most of the tracks contain drum-only recordings, except the \textit{minus-one} subset, which is played together with a music accompaniement. As this thesis attends to \gls{DTM} tasks, we isolate our focus to this subset of tracks.
 
-The same can be said for the MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB dataset~\cite{rachel_bittner_2014_1438309}, but re-annotated and specialized for \gls{ADT} related tasks.
+As this dataset contains separate audio files for performance and accompaniement, we additively combine them to create a singular respective mixture track.
 
-Due to the small size of these two datasets, they are in this thesis combined into one. \textcolor{red}{etc. etc. etc.}
+\textcolor{red}{Explain how many samples + total duration of this dataset.}
+
+Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB dataset~\cite{rachel_bittner_2014_1438309}, but re-annotated and specialized for \gls{ADT} related tasks.
+
+\textcolor{red}{Explain how many samples + total duration of this dataset too.}
+
+Both of these datasets distributes their audio in waveform files, and their annotations in text files. Annotations are formatted by onset time and instrument label. They are also relatively small, and contain thorough, real, annotated data.Due to these similarities, in this thesis they are combined together into a slightly larger ENST+MDB dataset.
+
+\subsection{Splits}
+
+\textcolor{red}{Explain how this dataset gets train/val/test split.}
+
+\subsection{Mapping}
+
+\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping.}
 
 \section{EMG-D}
 
