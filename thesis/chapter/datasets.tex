@@ -4,19 +4,37 @@
 
 The ENST-Drums dataset by Gillet et al.~\cite{gillet_2006_7432188} has been one of the most commonly used \gls{ADT} datasets~\cite{8350302}. It features thorougly annotated drum samples by three drummers over different musical genres. Most of the tracks contain drum-only recordings, except the \textit{minus-one} subset, which is played together with a music accompaniement. As this thesis attends to \gls{DTM} tasks, we isolate our focus to this subset of tracks.
 
-As this dataset contains separate audio files for performance and accompaniement, we additively combine them to create a singular respective mixture track.
+As this dataset contains separate audio files for performance and accompaniement, we additively combine them to create a singular respective mixture track. There exist many recordings from differently placed microphones of a single performance, however in this thesis, we solely selected the \textit{"wet mix"} due to it being a combined recording of all other microphone recordings, and its \textit{mix} showing resembelance of a polished performance track.
 
 \textcolor{red}{Explain how many samples + total duration of this dataset.}
 
-Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB dataset~\cite{rachel_bittner_2014_1438309}, but re-annotated and specialized for \gls{ADT} related tasks.
+Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB dataset~\cite{rachel_bittner_2014_1438309}, but re-annotated and specialized for \gls{ADT} related tasks. This dataset is, similar to ENST-Drums, also split into different stem tracks, such as isolated drum recordings and accompaniement. However, they also contain already-mixed \textit{full mix} tracks, which are the ones we use in this thesis.
 
 \textcolor{red}{Explain how many samples + total duration of this dataset too.}
 
-Both of these datasets distributes their audio in waveform files, and their annotations in text files. Annotations are formatted by onset time and instrument label. They are also relatively small, and contain thorough, real, annotated data.Due to these similarities, in this thesis they are combined together into a slightly larger ENST+MDB dataset.
+Both of these datasets distributes their audio in waveform files, and their annotations in text files. Annotations are formatted by onset time and instrument label. They are also relatively small, and contain thorough, real, annotated data. Due to these similarities, in this thesis they are combined together into a slightly larger ENST+MDB dataset.
 
 \subsection{Splits}
 
-\textcolor{red}{Explain how this dataset gets train/val/test split.}
+These two datasets do not have predefined train/validation/test splits, such that we decided to construct our own splits. From ENST-Drums, \textit{drummer1} and \textit{drummer2} make our training split. The remaining drummer, \textit{drummer3} is split in half, each for validation and test respectively. From MDB-Drums we do not have different explicit drummers, but instead split on specific genres. The explicit splits are given below, in table 4.1.
+
+\textcolor{red}{Explain how this dataset gets train/val/test split. Give explicit titles for split as well. Here we've only given a text/explained split, however not the actual information. Probably do this in an appenix!}
+
+\textcolor{red}{\textbf{ALSO VERIFY THAT SPLITS ARE AS WRITTEN. JUST TO BE SURE!}}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|lr}
+        Split & ENST-Drums & MDB-Drums \\
+        \hline
+        Train & \textbf{"107\_minus-one\_salsa\_sticks"}      & \textbf{"MusicDelta\_Punk"} \\
+        Validation & Number of heads     & \{2, 4, 6, 8\} \\
+        Test & Number of layers      & \{2, 4, 6, 8, 10\} \\
+    \end{tabular}
+    \caption{The different tracks used for each respective train/validation/test split for this thesis.}
+    \label{ENST+MDBSplits}
+\end{table}
 
 \subsection{Mapping}
 
