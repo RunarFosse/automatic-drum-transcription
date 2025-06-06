@@ -8,7 +8,7 @@ As this dataset contains separate audio files for performance and accompaniement
 
 \textcolor{red}{Explain how many samples + total duration of this dataset.}
 
-Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB dataset~\cite{rachel_bittner_2014_1438309}, but re-annotated and specialized for \gls{ADT} related tasks. This dataset is, similar to ENST-Drums, also split into different stem tracks, such as isolated drum recordings and accompaniement. However, they also contain already-mixed \textit{full mix} tracks, which are the ones we use in this thesis.
+Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB (MDB) dataset~\cite{rachel_bittner_2014_1438309}, but re-annotated and specialized for \gls{ADT} related tasks. This dataset is, similar to ENST-Drums, also split into different stem tracks, such as isolated drum recordings and accompaniement. However, they also contain already-mixed \textit{full mix} tracks, which are the ones we use in this thesis.
 
 \textcolor{red}{Explain how many samples + total duration of this dataset too.}
 
@@ -38,11 +38,33 @@ These two datasets do not have predefined train/validation/test splits, such tha
 
 \subsection{Mapping}
 
-\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping.}
+\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
 
-\section{EMG-D}
+\section{E-GMD}
+
+The Expanded Groove MIDI Dataset (E-GMD) from Callender et al.~\cite{callender2020improving} is a large \gls{ADT} dataset consisting of audio recordings from human drum performances annotated in MIDI. It is an expansion of Gillick et al.'s Groove MIDI Dataset (GMD)~\cite{pmlr-v97-gillick19a}.
+
+GMD was created through recording human performances in MIDI format through a Roland TD-11 electronic drumkit. This dataset does not contain audio recordings, only MIDI files, such that it is not applicable for \gls{ADT}. To expand this dataset to be used with \gls{ADT}, Callender et al. re-recorded the MIDI sequences on a Roland TD-17 electronic drumkit. These re-recordings were done over a large amount of differing soundfonts (confusingly also called \textit{drumkits} on electronic drumkits), synthesizing several differently sounding audio recordings from a single MIDI performance~\cite{pmlr-v97-gillick19a, callender2020improving}.
+
+In contrast to the other dataset's utilized in this thesis, this dataset is not created for a \gls{DTM} task, but rather a \gls{DTD} task. This is due to all recordings containing solo, drum-only performances.
+
+This dataset contains 444.5 hours of audio recordings, from 1,059 unique drum performances resampled to 45,537 MIDI sequences.
+
+\subsection{Mapping}
+
+\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
 
 \section{Slakh}
+
+The Synthesized Lakh (Slakh) Dataset from Manilow et al.~\cite{8937170} is a synthesized version of a subset of the Lakh Dataset from Raffel~\cite{raffel2016learning}, that subset being a limited amount of randomly selected tracks from Lakh where the MIDI files contain at least a piano, bass, guitar, and drums. These MIDI files are rendered and mixed into combined audio files, stored together with their respective original MIDI performances.
+
+As mentioned, this dataset contains more instruments than just the drumset, such that it is originally meant for a \gls{AMT} task. However, due to each track being guaranteed to contain a drum performance, converting it to an \gls{ADT} task is trivial, and is done by selectively only utilizing the MIDI files corresponding to the drumset.
+
+This dataset contains 145 hours of audio recordings over 2100 different songs.
+
+\subsection{Mapping}
+
+\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
 
 \section{ADTOF-YT}
 

@@ -1,10 +1,21 @@
-@inproceedings{manilow2019cutting,
-  title={Cutting Music Source Separation Some {Slakh}: A Dataset to Study the Impact of Training Data Quality and Quantity},
+@INPROCEEDINGS{8937170,
   author={Manilow, Ethan and Wichern, Gordon and Seetharaman, Prem and Le Roux, Jonathan},
-  booktitle={Proc. IEEE Workshop on Applications of Signal Processing to Audio and Acoustics (WASPAA)},
+  booktitle={2019 IEEE Workshop on Applications of Signal Processing to Audio and Acoustics (WASPAA)}, 
+  title={Cutting Music Source Separation Some Slakh: A Dataset to Study the Impact of Training Data Quality and Quantity}, 
   year={2019},
-  organization={IEEE}
+  volume={},
+  number={},
+  pages={45-49},
+  keywords={Training;Source separation;Instruments;Training data;Music;Tools;Multiple signal classification;music source separation;sample-based virtual instruments;synthesis;MIDI},
+  doi={10.1109/WASPAA.2019.8937170}}
+
+@book{raffel2016learning,
+  title={Learning-based methods for comparing sequences, with applications to audio-to-midi alignment and matching},
+  author={Raffel, Colin},
+  year={2016},
+  publisher={Columbia University}
 }
+
 
 @misc{callender2020improving,
     title={Improving Perceptual Quality of Drum Transcription with the Expanded Groove MIDI Dataset},
@@ -385,4 +396,21 @@ numpages = {46}
       archivePrefix={arXiv},
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2010.11929}, 
+}
+
+
+@InProceedings{pmlr-v97-gillick19a,
+  title = 	 {Learning to Groove with Inverse Sequence Transformations},
+  author =       {Gillick, Jon and Roberts, Adam and Engel, Jesse and Eck, Douglas and Bamman, David},
+  booktitle = 	 {Proceedings of the 36th International Conference on Machine Learning},
+  pages = 	 {2269--2279},
+  year = 	 {2019},
+  editor = 	 {Chaudhuri, Kamalika and Salakhutdinov, Ruslan},
+  volume = 	 {97},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {09--15 Jun},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v97/gillick19a/gillick19a.pdf},
+  url = 	 {https://proceedings.mlr.press/v97/gillick19a.html},
+  abstract = 	 {We explore models for translating abstract musical ideas (scores, rhythms) into expressive performances using seq2seq and recurrent variational information bottleneck (VIB) models. Though seq2seq models usually require painstakingly aligned corpora, we show that it is possible to adapt an approach from the Generative Adversarial Network (GAN) literature (e.g. Pix2Pix, Vid2Vid) to sequences, creating large volumes of paired data by performing simple transformations and training generative models to plausibly invert these transformations. Music, and drumming in particular, provides a strong test case for this approach because many common transformations (quantization, removing voices) have clear semantics, and learning to invert them has real-world applications. Focusing on the case of drum set players, we create and release a new dataset for this purpose, containing over 13 hours of recordings by professional drummers aligned with fine-grained timing and dynamics information. We also explore some of the creative potential of these models, demonstrating improvements on state-of-the-art methods for Humanization (instantiating a performance from a musical score).}
 }
