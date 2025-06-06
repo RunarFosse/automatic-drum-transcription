@@ -11,6 +11,8 @@
 
         - Figure out wether to explain hyperparameter values in-text, or as a separate table.
 
+    # Correctively distinguish the usage of "WE" and "I". !! Important
+
     ---
     Remember to distinguish what has been done before.
     Be clear when saying "I've combined these techniques which have been done before".
