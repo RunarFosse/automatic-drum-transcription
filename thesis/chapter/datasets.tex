@@ -75,7 +75,7 @@ This dataset contains 115 hours of audio recordings over 1709 different songs.
 
 The Automatic Drums Transcription On Fire YouTube (ADTOF-YT) dataset from Zehren et al.~\cite{signals4040042} is a large \gls{ADT} dataset containing crowdsourced data, hence the YouTube suffix. Due to the crowdsourced nature of this dataset, it is possible to utilize large amounts of non-synthetic, human data, but with the tradeoff in which we can not guarantee its quality.
 
-Contrary to the other datasets, this one is distributed in prepackaged TensorFlow datasets for each split, with datapoints as logarithmically filtered log-spectograms and activation function sequence pairs. This dataset also comes with a vocabulary of 5, and is thus the least diverse dataset in this thesis.
+Contrary to the other datasets, this one is distributed in prepackaged TensorFlow datasets for each split, with datapoints as pairs of logarithmically filtered log-spectograms and sequence of instrument onset probabilities. This dataset also comes with a vocabulary of 5, and is thus the least diverse dataset in this thesis.
 
 \textbf{Note that their sourcecode and dataset distributor informs us that the dataset contain mel-scale spectrograms, and not logarithmically filtered ones as we previousy proposed. However, through thorough code investigation and approximate reconstruction of original waveforms we hypothesize and conclude that this is a mistake.}
 \textcolor{red}{Is this enough justification? Should I provide more information? If so, what exactly?}
