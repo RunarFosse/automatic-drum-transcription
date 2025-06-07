@@ -6,13 +6,15 @@ The ENST-Drums dataset by Gillet et al.~\cite{gillet_2006_7432188} has been one 
 
 As this dataset contains separate audio files for performance and accompaniement, we additively combine them to create a singular respective mixture track. There exist many recordings from differently placed microphones of a single performance, however in this thesis, we solely selected the \textit{"wet mix"} due to it being a combined recording of all other microphone recordings, and its \textit{mix} showing resembelance of a polished performance track.
 
-\textcolor{red}{Explain how many samples + total duration of this dataset.}
+ENST-Drums contains 1.02 hours of music over 64 tracks.
 
 Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB (MDB) dataset~\cite{rachel_bittner_2014_1438309}, but re-annotated and specialized for \gls{ADT} related tasks. This dataset is, similar to ENST-Drums, also split into different stem tracks, such as isolated drum recordings and accompaniement. However, they also contain already-mixed \textit{full mix} tracks, which are the ones we use in this thesis.
 
-\textcolor{red}{Explain how many samples + total duration of this dataset too.}
+MDB-Drums contains 0.35 hours of music over 23 tracks.
 
 Both of these datasets distributes their audio in waveform files, and their annotations in text files. Annotations are formatted by onset time and instrument label. They are also relatively small, and contain thorough, real, annotated data. Due to these similarities, in this thesis they are combined together into a slightly larger ENST+MDB dataset.
+
+In total, this dataset contains 1.37 hours of music over 87 tracks.
 
 \subsection{Splits}
 
@@ -44,9 +46,9 @@ These two datasets do not have predefined train/validation/test splits, such tha
 
 The Expanded Groove MIDI Dataset (E-GMD) from Callender et al.~\cite{callender2020improving} is a large \gls{ADT} dataset consisting of audio recordings from human drum performances annotated in MIDI. It is an expansion of Gillick et al.'s Groove MIDI Dataset (GMD)~\cite{pmlr-v97-gillick19a}.
 
-GMD was created through recording human performances in MIDI format through a Roland TD-11 electronic drumkit. This dataset does not contain audio recordings, only MIDI files, such that it is not applicable for \gls{ADT}. To expand this dataset to be used with \gls{ADT}, Callender et al. re-recorded the MIDI sequences on a Roland TD-17 electronic drumkit. These re-recordings were done over a large amount of differing soundfonts (confusingly also called \textit{drumkits} on electronic drumkits), synthesizing several differently sounding audio recordings from a single MIDI performance~\cite{pmlr-v97-gillick19a, callender2020improving}.
+GMD was created through recording human performances in MIDI format through a Roland TD-11 electronic drumkit. This dataset does not contain audio recordings, only MIDI files, such that it is not applicable for \gls{ADT}. To expand this dataset to be used with \gls{ADT}, Callender et al. re-recorded the MIDI sequences on a Roland TD-17 electronic drumkit in real-time on a \gls{DAW}. These re-recordings were done over a large amount of differing soundfonts (confusingly also called \textit{drumkits} on electronic drumkits), synthesizing several differently sounding audio recordings from a single MIDI performance~\cite{pmlr-v97-gillick19a, callender2020improving}.
 
-In contrast to the other dataset's utilized in this thesis, this dataset is not created for a \gls{DTM} task, but rather a \gls{DTD} task. This is due to all recordings containing solo, drum-only performances.
+In contrast to the other dataset's utilized in this thesis, this dataset is not created for a \gls{DTM} task, but rather a \gls{DTD} task. This is due to all recordings containing solo, drum-only performances. In addition, as this data is recorded from human performances in a semi-manual nature, there exist some errors from the recording process \textit{"that resulted in unusable tracks."}~\cite{callender2020improving}. The magnitude of these errors are not stated, however other authors propose that it might be as high as 20.5\% of the tracks with varying amounts of discrepancies~\cite{holz2021automatic}.
 
 This dataset contains 444.5 hours of audio recordings, from 1,059 unique drum performances resampled to 45,537 MIDI sequences.
 
@@ -56,11 +58,14 @@ This dataset contains 444.5 hours of audio recordings, from 1,059 unique drum pe
 
 \section{Slakh}
 
-The Synthesized Lakh (Slakh) Dataset from Manilow et al.~\cite{8937170} is a synthesized version of a subset of the Lakh Dataset from Raffel~\cite{raffel2016learning}, that subset being a limited amount of randomly selected tracks from Lakh where the MIDI files contain at least a piano, bass, guitar, and drums. These MIDI files are rendered and mixed into combined audio files, stored together with their respective original MIDI performances.
+The Synthesized Lakh 2100 (Slakh) Dataset from Manilow et al.~\cite{8937170} is a synthesized version of a subset of the Lakh Dataset from Raffel~\cite{raffel2016learning}, that subset being a 2100 randomly selected tracks from Lakh where the MIDI files contain at least a piano, bass, guitar, and drums. These MIDI files are rendered and mixed into combined audio files, stored together with their respective original MIDI performances.
 
-As mentioned, this dataset contains more instruments than just the drumset, such that it is originally meant for a \gls{AMT} task. However, due to each track being guaranteed to contain a drum performance, converting it to an \gls{ADT} task is trivial, and is done by selectively only utilizing the MIDI files corresponding to the drumset.
+As mentioned, this dataset contains more instruments than just the drumset, such that it is originally meant for a \gls{AMT} task. However, due to each track being guaranteed to contain a drum performance, converting it to an \gls{ADT} task is trivial, and is done by selectively only utilizing the MIDI files corresponding to the drumset as our labels.
 
-This dataset contains 145 hours of audio recordings over 2100 different songs.
+The original Slakh dataset was found to have data leakage between the different splits, and it is therefore recommended for transcription tasks to use a smaller subset, Slakh2100-redux, where this issue has been solved. Therefore, this is the dataset used for this thesis.
+\textcolor{red}{Needs citation, other than the github and zenodo? \\ \url{https://github.com/ethman/slakh-utils}, \url{https://zenodo.org/records/4599666}}
+
+This dataset contains 115 hours of audio recordings over 1709 different songs.
 
 \subsection{Mapping}
 
@@ -68,8 +73,33 @@ This dataset contains 145 hours of audio recordings over 2100 different songs.
 
 \section{ADTOF-YT}
 
+The Automatic Drums Transcription On Fire YouTube (ADTOF-YT) dataset from Zehren et al.~\cite{signals4040042} is a large \gls{ADT} dataset containing crowdsourced data, hence the YouTube suffix. Due to the crowdsourced nature of this dataset, it is possible to utilize large amounts of non-synthetic, human data, but with the tradeoff in which we can not guarantee its quality.
+
+Contrary to the other datasets, this one is distributed in prepackaged TensorFlow datasets for each split, with datapoints as logarithmically filtered log-spectograms and activation function sequence pairs. This dataset also comes with a vocabulary of 5, and is thus the least diverse dataset in this thesis.
+
+\textbf{Note that their sourcecode and dataset distributor informs us that the dataset contain mel-scale spectrograms, and not logarithmically filtered ones as we previousy proposed. However, through thorough code investigation and approximate reconstruction of original waveforms we hypothesize and conclude that this is a mistake.}
+\textcolor{red}{Is this enough justification? Should I provide more information? If so, what exactly?}
+
+The dataset contains 245 hours of music over 2924 tracks.
+
+\subsection{Mapping}
+
+Due to this dataset being distributed in a preprocessed nature, no re-mapping has been done, and the dataset is used "as is".
+
 \section{SADTP}
 
-The SADTP (Small Automatic Drum Transcription Performance) dataset is a novel dataset introduced in this thesis. It is a small dataset comprised of 16 songs with corresponding MIDI transcriptions. The \textit{performance} name alludes to the transcription being recorded live while listening to the songs on playback, with only minor post-processing. The transcriptions were recorded on a Roland TD-11 electric drumset, recording the MIDI perfomance to Apple's Garageband, and extracting them to separate MIDI files.
+The SADTP (Small Automatic Drum Transcription Performance) dataset is a novel dataset introduced in this thesis. It is a small dataset comprised of 16 songs with corresponding MIDI transcriptions. 
+
+The \textit{performance} name alludes to the transcription being recorded live while listening to the songs on playback, with only minor post-processing. The transcriptions were recorded on a Roland TD-11 electric drumset, recording the MIDI perfomance to Apple's Garageband \gls{DAW}, and extracting them to separate MIDI files. This comes with a similarly to E-GMD, as this dataset also was recorded in a semi-manual nature, which opens the possibility for slight, human induced errors. The magnitude of such errors are however not known, but we speculate that it is small but not insignificant.
+
+This dataset stands out, as it is the only one in this thesis not used for training. Its sole purpose is for zero-shot evaluation, and to provide information on the generalization ability for models trained on data from other sources.
 
 The dataset contains 1.08 hours of music, which can be split into 977 non-overlapping 4 second datapoints (includes zero padding certain pieces for even partitioning).
+
+\subsection{Mapping}
+
+\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
+
+\section{Differences}
+
+\textcolor{red}{Provide a table with information neatly gathered in a table. Such information should be size (total duration), vocabulary, real or synthetic data (human/non human), number of tracks. Should be like e.g. \cite{signals4040042,callender2020improving} or others.}
