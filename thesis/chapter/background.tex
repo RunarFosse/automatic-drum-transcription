@@ -57,7 +57,7 @@ For monophonic sound, this waveform is a one-dimensional representation. Even th
 
 The Fourier Transform is a mathematical transformation which, given a frequency, computes its significance, or intensity, in a given signal. As we've established, audio is represented as a signal, and we can therefore use this transform to turn this audio signal into frequency space. 
 
-The fourier transform is a complex transformation. Given a signal $f$, we can compute the integral $$ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} $$ for a frequency $\xi$, resulting in a \textit{complex} number. This number consists of a \textit{real} part and an \textit{imaginary} part. The real part consists of the amplitude of a certain frequency, where as the imaginary part consists of the phase. This information is what allows us to, for a given signal, figure out which frequencies it is made out of and how much each frequency contributes.
+The fourier transform is a complex transformation. Given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi$, resulting in a \textit{complex} number. This number consists of a \textit{real} part and an \textit{imaginary} part. The real part consists of the amplitude of a certain frequency, where as the imaginary part consists of the phase. This information is what allows us to, for a given signal, figure out which frequencies it is made out of and how much each frequency contributes.
 
 By doing such a transform, we turn our temporal data into spectral data. This initively \textit{untangles} our signal into its respective base frequencies. Such an transformation could lessen the complexity of the task, making \textit{understanding} of audio easier.
 
@@ -74,7 +74,7 @@ Note that the Fourier Transform is invertible, meaning that, given information a
 
 The Fourier Transform is defined as an integral over continuous time. On computers, instead of storing signals continuously we store signals using a discrete number of samples. Each signal's \textit{sampling rate} describes how many samples a signal contains per second of audio, and is denoted in \textit{Hz}.
 
-To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works as the normal Fourier Transform, but ported to work on discrete-valued signals. It is given by the formula $$ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}}, $$ where $k$ denotes the frequency and $N$ the number of discrete samples.
+To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works as the normal Fourier Transform, but ported to work on discrete-valued signals. It is given by the formula \[ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}}, \] where $k$ denotes the frequency and $N$ the number of discrete samples.
 
 \begin{figure}[H]
     \centering
@@ -227,13 +227,13 @@ Our machine learning models predict instrument onset events on a frame-level bas
 
 \subsection{Accuracy}
 
-For classification tasks, a standard performance measure would be \textit{accuracy}: $$ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}.$$ Summing up correct predictions, \gls{TP} and \gls{TN}, and dividing by total number of predictions, sum of \gls{TP}, \gls{TN}, \gls{FP} and \gls{FN}, we find a model's probability of having a correct prediction.
+For classification tasks, a standard performance measure would be \textit{accuracy}: \[ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}.\] Summing up correct predictions, \gls{TP} and \gls{TN}, and dividing by total number of predictions, sum of \gls{TP}, \gls{TN}, \gls{FP} and \gls{FN}, we find a model's probability of having a correct prediction.
 
 This performance measure falls short in that it is very susceptible to imbalanced datasets. In \gls{ADT}, most timeframes contain no onset, meaning a naïve predictor would get a high accuracy by never predicting any onsets. Another problem with accuracy is that, due to our tolerance window approach we do not have quantities for \gls{TN}, such that the standard accuracy computation is incomputable.
 
 \subsection{F1-score}
 
-Mentioned above are some of the reasons why \textit{F1-score} has become the typical performance measure within \gls{ADT}. F1-score combines and tries to maximize two different performance measures, namely \textit{precision}; $$ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, $$ and \textit{recall}; $$ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}. $$
+Mentioned above are some of the reasons why \textit{F1-score} has become the typical performance measure within \gls{ADT}. F1-score combines and tries to maximize two different performance measures, namely \textit{precision}; \[ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \] and \textit{recall}; \[ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}. \]
 
 The precision of a model can tell us how good it is at \textit{hitting} predictions. \textit{Perfect precision} happens when a model has no \gls{FP}, i.e. never predicting an event where one doesn't happen. Recall is similar, but represents the other end of the stick. It tells us how good a model is at \textit{not missing} predictions. \textit{Perfect recall} happens when a model has no \gls{FN}, i.e. never \textit{not} predicting an event where one does happen.
 
