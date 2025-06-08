@@ -6,7 +6,7 @@
 
 As mentioned, the different datasets are distributed in differening formats. A few transformations are done to unify them all as PyTorch datasets.
 
-Due to the pre-processed nature of the ADTOF-YT dataset, the unification is trivial and simply denotes a transformation from a stored TensorFlow dataset to a PyTorch dataset. Otherwise it is kept "as is".
+Due to the preprocessed nature of the ADTOF-YT dataset, the unification is trivial and simply denotes a transformation from a stored TensorFlow dataset to a PyTorch dataset. Otherwise it is kept "as is".
 
 \subsubsection{Audio Files}
 
@@ -14,7 +14,7 @@ The others are however distributed in the Waveform Audio File Format (with the s
 
 After each track is loaded into a waveform, a zero-padding is added to the end of each sequence allowing for even partitioning into 4 second partitions. Then we turn the track into a spectrogram with 2048 fft's, and a window length of 2048. By keeping the hop length equal to the sampling rate divided by 100, the resulting spectrogram's timesteps represent a 10ms window of the original waveform.
 
-After this, a filterbank is computed by generating 12 normalized logarithmically spaced filters, centered at 440Hz, and bounded over the interval [20Hz, 20,000Hz]. Applying this filterbank as a simple matrix multiplication over the spectrogram results in a logarithmically filtered spectrogram with $D_\text{STFT} = 84$ number of frequency bins. Lastly, we turn it into a log-spectrogram by applying a $\text{log}_{10}$ operation to each cell, following an addition of 1 (preventing $\lim_{x \to 0}\text{log}_{10}(x) = -\infty$ situations).
+After this, a filterbank is computed by generating 12 normalized logarithmically spaced filters, centered at 440Hz, and bounded over the interval [20Hz, 20,000Hz]. Applying this filterbank as a simple matrix multiplication over the spectrogram results in a logarithmically filtered spectrogram with $D_\text{STFT} = 84$ number of frequency bins. Lastly, we turn it into a log-spectrogram by applying a $\log_{10}$ operation to each cell, following an addition of 1 (preventing $\lim_{x \to 0}\log_{10}(x) = -\infty$ situations).
 
 \subsubsection{Annotations}
 
@@ -24,7 +24,7 @@ The datasets declaring onsets in text files (ENST-Drums and MDB-Drums) follow a 
 
 The data given in MIDI format, the annotations are parsed using the library \texttt{Partitura}, and loads the information into an array of MIDI events called \textit{notes}. These \textit{notes} contain information for each event, importantly time, pitch, and velocity. These events are very thorough, but strict instrument onsets can be isolated by restricting our view to notes with a non-zero velocity. Instruments are denoted by the event's pitch, and a mapping is done from each pitch to a respective class. The time is converted identically to the loading of the text annotations, turning them into timeframe indices. At last, we also here set each specific registered onset (timeframe, class) cell to 1.
 
-In addition to this, we apply a \textit{target widening} step, setting values in timeframes adjacent to an instrument onset with a lower weight, equal to 0.5. This has shown to be benifical in countering sparsity in our labels.~\cite{9747048, signals4040042}
+In addition to this, we apply a \textit{target widening} step, setting values in timeframes adjacent to an instrument onset with a lower weight, equal to 0.5. This has shown to be benifical in countering sparsity in our labels following multiple works on beat transcription.~\cite{9747048, signals4040042}
 
 \subsubsection{Splitting and Storing}
 
@@ -32,7 +32,15 @@ These spectrogram/onset sequence pairs are stored together in PyTorch's TensorDa
 
 \subsection{Preprocessing}
 
-\textcolor{red}{Now explain what we do to the data before prediction. Explain the preprocessing steps we do afterwards (normalization, etc).}
+Most of the preprocessing is done during the data preparation step, however there are some remaining. Most importantly, a given model computes the mean and standard deviation of its training dataset, and uses these parameters to standardize its input data before prediction during runtime. 
+
+Data normalization like this has been shown to increase the speed and stability of convergence during training and, in summary, producing models which better generalize to unseen data. Although the specific benefits depend on the normalization technique used, the general consensus is that normalization in itself is beneficial in machine learning, hence their ubiquitous use in state-of-the-art models~\cite{10056354}.
+
+Another preprocessing step motivated by \gls{ADT} specific methods is the use of infrequency weights, which framewise weighs the loss based on the instrument onsets that are present at each frame. These weights are precomputed from the training dataset, and are, for each instrument, computed by what Cartwright and Bello call \textit{"the inverse estimated entropy of their event activity distribution"}~\cite{cartwright2018increasing}. Although they apply this to account for sparsity in data along different tasks, Zehren et al.~\cite{signals4040042} applied it to give more weight to infrequent instruments. 
+
+These weights are computed by calculating the probability of an instrument $i$ appearing $p_i = \frac{n_i}{T}$ as the total number of onsets $n_\text{i}$ divided by the total number of timesteps $T$. With this probability we compute its inverse entropy, giving us our final weights $w_i = (-p_i\log{p_i} - (1 - p_i)\log{1 - p_i})^{-1}$. Note that our probability computation differs from the work of Cartwright and Bello, as we do not divide by the number of instruments~\cite{cartwright2018increasing}. 
+
+\textcolor{red}{Should I mention anything on how the entropy is symmetric over 0.5? Such that a probability over 0.5 would lower our weights again, but how that is not a problem in ADT due to instrument onset inherently being sparse?}
 
 \subsection{Training}
 
