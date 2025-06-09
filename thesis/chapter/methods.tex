@@ -44,16 +44,35 @@ These weights are computed by calculating the probability of an instrument $i$ a
 
 \subsection{Training}
 
+As mentioned, the \gls{ADT} task could be thought of as a sequence labeling task, where we each timeframe could have several instrument onsets present, taking the form of a 0 if an instrument is not present, and a 1 if it is. A natural loss function for this, where each value is handled as a separate independent probability distribution is the binary cross-entropy loss. Due to the numerical instability which can appear by applying a sigmoid activation function to our logits before computing the loss, we instead output our logits directly and utilize PyTorch's \texttt{BCEWithLogitsLoss} loss function, as recommended in their documentation \textcolor{red}{Do I need to cite this?}. It increases the numerical stability by taking advantage of the log-sum-exp trick, increasing numerical precision by avoiding underflow or overflow problems followed by significantly small or large input values.
+
+With the choice by what to use, Adam was considered. This is an optimizer so ubiquitously used within the field of deep learning that when questioned with what optimizer to generally use authors like Sebastian Ruder state that \textit{".., Adam might be the best overall choice}~\cite{ruder2017overviewgradientdescentoptimization}. However contrary to this, the Adam optimizer has been shown to contain some issues, like its coupling of the weight decay term inside its gradient-based updates. Due to this, the choice instead fell on AdamW, a modified Adam implementation decoupling weight decay in whole from the gradient-based updates, and displaying a better ability to generalize.~\cite{kingma2017adammethodstochasticoptimization, bock2018improvementconvergenceproofadamoptimizer, loshchilov2019decoupledweightdecayregularization}
+
+It was observed during training that the magnitude of the loss values could vary greatly and often displayed a tendancy to explode. To counteract this observation, we clip the gradients with a maximum norm set to 2. This addition significantly lowered the observed chance of exploding gradients occuring. 
+
+Another addition which is frequenct in other \gls{ADT} works is the use of a learning rate scheduler. A learning rate scheduler keeps track of recent validation loss values, and if the minimum loss achieved plateaus (meaning it stop decreasing) for a certain number of epochs, the learning rate gets reducing by a given factor. In this thesis we reduce the learning rate by a factor of 5 if we observe 5 epochs of plateauing, with no improvement to our minimal validation loss~\cite{chang2024yourmt3multiinstrumentmusictranscription, signals4040042}. We also keep track of the general count of epochs since validation loss last improvement and perform an early stop if we ever observe 15 epochs without improvement (this is hightened to 25 epochs for the smallest dataset, ENST+MDB).
+
+\subsection{Evaluation}
+
+\subsubsection{Postprocessing}
+
+As mentioned, the model outputs a sequence of activation values, a 2 dimensional matrix with values on the interval $(0, 1)$ interpreted as the model's confidence in an instrument onset being present per frame. This can be utilized directly when computing our loss during training, however it is a difficult format to work with when talking about general performance, due to it rather representing a continuous confidence rather than discrete predictions. To suit this purpose, additional postprocessing is performed on the output.
+
+First, we apply the aforementioned peak picking algorithm to isolate peaks in the model's onset confidence, intuitively being frames where the model is most confident in an instrument onset happening ~\cite{Bck2012EvaluatingTO, vogl2018multiinstrumentdrumtranscription}. Afterwards, we count a predicted onset if the given peak has a value larger or equal to 0.5. From this, it is trivial to compare predicted onsets with actual onsets, by greedily iterating our output sequence from the beginning, counting a prediction as a true positive if it happens within a 5 frame (50 ms) interval of a true onset, false positive if it happens outside such an interval, or false negative if a true onset happens with no prediction within said interval.
+
+\begin{figure}[H]
+    \centering
+    %\includegraphics[scale=2.0]{figures/signalaliasing.png}
+    \textcolor{red}{Could be useful showing transformation from output, to peak picked, to correct vs incorrect prediction.}
+    %\caption{Example of aliasing in an undersampled signal.}
+    %\label{AliasingFigure}
+\end{figure}
+
+These \gls{TP}, \gls{FP}, \gls{FN} predictions are then added together and used to compute the previously mentioned micro F1-score. For additional analysis, we also compute and store instrumentwise F1-scores.
+
 \textcolor{red}{Mention the loss function used, and why we use this (BCEWithLogitsLoss).}
 
 \textcolor{red}{Mention the computation of infrequency weights, i.e. how they are computed, why they are computed, the intuition into how they will help us...}
-
-\subsection{Postprocessing}
-
-\textcolor{red}{Mention how model outputs a "confidence in event happening" distribution, which we want to discretize into events.
-I.e. explain Vogl's peak picking algorithm~\cite{vogl2018multiinstrumentdrumtranscription}.}
-
-\subsection{Evaluation}
 
 \textcolor{red}{Also write how we evaluate our models. E.g count up TP, FP, FN, and compute micro F1-score after finishing the whole split.}
 
