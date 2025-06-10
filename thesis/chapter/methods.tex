@@ -1,14 +1,12 @@
 \chapter{Methodology}
 
-\section{Pipeline}
-
-\subsection{Data Preparation}
+\section{Data Preparation}
 
 As mentioned, the different datasets are distributed in differening formats. A few transformations are done to unify them all as PyTorch datasets.
 
 Due to the preprocessed nature of the ADTOF-YT dataset, the unification is trivial and simply denotes a transformation from a stored TensorFlow dataset to a PyTorch dataset. Otherwise it is kept "as is".
 
-\subsubsection{Audio Files}
+\subsection{Audio Files}
 
 The others are however distributed in the Waveform Audio File Format (with the suffix \textit{.wav}) or using the Free Lossless Audio Codec (with the suffix \textit{.flac}). Both of these formats are loaded using the PyTorch library \texttt{Torchaudio} and converted to monophonic format through meaning over each side's waveform. If any datasets contain distinct drum and accompaniement audio (like e.g. ENST-Drums), these are additively mixed together.
 
@@ -16,7 +14,7 @@ After each track is loaded into a waveform, a zero-padding is added to the end o
 
 After this, a filterbank is computed by generating 12 normalized logarithmically spaced filters, centered at 440Hz, and bounded over the interval [20Hz, 20,000Hz]. Applying this filterbank as a simple matrix multiplication over the spectrogram results in a logarithmically filtered spectrogram with $D_\text{STFT} = 84$ number of frequency bins. Lastly, we turn it into a log-spectrogram by applying a $\log_{10}$ operation to each cell, following an addition of 1 (preventing $\lim_{x \to 0}\log_{10}(x) = -\infty$ situations).
 
-\subsubsection{Annotations}
+\subsection{Annotations}
 
 The annotations are either distributed in specific formats as text files (with the suffix \textit{.txt}), or in MIDI files (with the suffix \textit{.mid} or \textit{.midi}), each one having a different transformation into a sequence of instrument onset probabilities.
 
@@ -26,11 +24,11 @@ The data given in MIDI format, the annotations are parsed using the library \tex
 
 In addition to this, we apply a \textit{target widening} step, setting values in timeframes adjacent to an instrument onset with a lower weight, equal to 0.5. This has shown to be benifical in countering sparsity in our labels following multiple works on beat transcription.~\cite{9747048, signals4040042}
 
-\subsubsection{Splitting and Storing}
+\subsection{Splitting and Storing}
 
 These spectrogram/onset sequence pairs are stored together in PyTorch's TensorDatasets, separated into each track's respective train/validation/test split, and stored into PyTorch pickle files (with the suffix \textit{.pt}). By doing all this preprocessing in advance, minimal preprocessing has to be done during runtime, increasing the efficiency of training.
 
-\subsection{Preprocessing}
+\section{Preprocessing}
 
 Most of the preprocessing is done during the data preparation step, however there are some remaining. Most importantly, a given model computes the mean and standard deviation of its training dataset, and uses these parameters to standardize its input data before prediction during runtime. 
 
@@ -42,7 +40,7 @@ These weights are computed by calculating the probability of an instrument $i$ a
 
 \textcolor{red}{Should I mention anything on how the entropy is symmetric over 0.5? Such that a probability over 0.5 would lower our weights again, but how that is not a problem in ADT due to instrument onset inherently being sparse?}
 
-\subsection{Training}
+\section{Training}
 
 As mentioned, the \gls{ADT} task could be thought of as a sequence labeling task, where we each timeframe could have several instrument onsets present, taking the form of a 0 if an instrument is not present, and a 1 if it is. A natural loss function for this, where each value is handled as a separate independent probability distribution is the binary cross-entropy loss. Due to the numerical instability which can appear by applying a sigmoid activation function to our logits before computing the loss, we instead output our logits directly and utilize PyTorch's \texttt{BCEWithLogitsLoss} loss function, as recommended in their documentation \textcolor{red}{Do I need to cite this?}. It increases the numerical stability by taking advantage of the log-sum-exp trick, increasing numerical precision by avoiding underflow or overflow problems followed by significantly small or large input values.
 
@@ -52,9 +50,7 @@ It was observed during training that the magnitude of the loss values could vary
 
 Another addition which is frequenct in other \gls{ADT} works is the use of a learning rate scheduler. A learning rate scheduler keeps track of recent validation loss values, and if the minimum loss achieved plateaus (meaning it stop decreasing) for a certain number of epochs, the learning rate gets reducing by a given factor. In this thesis we reduce the learning rate by a factor of 5 if we observe 5 epochs of plateauing, with no improvement to our minimal validation loss~\cite{chang2024yourmt3multiinstrumentmusictranscription, signals4040042}. We also keep track of the general count of epochs since validation loss last improvement and perform an early stop if we ever observe 15 epochs without improvement (this is hightened to 25 epochs for the smallest dataset, ENST+MDB).
 
-\subsection{Evaluation}
-
-\subsubsection{Postprocessing}
+\subsection{Postprocessing}
 
 As mentioned, the model outputs a sequence of activation values, a 2 dimensional matrix with values on the interval $(0, 1)$ interpreted as the model's confidence in an instrument onset being present per frame. This can be utilized directly when computing our loss during training, however it is a difficult format to work with when talking about general performance, due to it rather representing a continuous confidence rather than discrete predictions. To suit this purpose, additional postprocessing is performed on the output.
 
@@ -76,15 +72,15 @@ These \gls{TP}, \gls{FP}, \gls{FN} predictions are then added together and used 
 
 \textcolor{red}{Also write how we evaluate our models. E.g count up TP, FP, FN, and compute micro F1-score after finishing the whole split.}
 
-\section{Experiments}
+\section{Hyperparameter Tuning}
 
 \textcolor{red}{Here we mention the setups for each of the experiments.}
 
 \textcolor{red}{Mention that we use RayTune to train, with PyTorch models. Mention that we only used RayTune's FIFOScheduler, and how for random search / grid search we used their built in parameter space functionality.}
 
+\section{Model Selection}
+
 \textcolor{red}{Mention that every single experiment was trained for at most 100 epochs, with a early stopping if validation loss didn't decrease within 10 epochs.
 Mention the learning rate scheduler, where we reduce the learning rate by a factor of 5 if the model hasn't improved in the last 3 epochs.}
-
-\textcolor{red}{Mention that we perform early stopping on the validation loss (and why, like the smooth nature, overfitting prevention, etc.), where as we store the best performing model based on the validation F1-score (due to this representing overall prediction performance).}
 
 \textcolor{red}{Mention that every experiment is model selected using hold-out validation, and best model is chosen based on micro F1-score.}
