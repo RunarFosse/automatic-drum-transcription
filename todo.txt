@@ -11,6 +11,8 @@
 
         - Figure out wether to explain hyperparameter values in-text, or as a separate table.
 
+    # Explicit layer norm in transformer architecures.
+
     # Correctively distinguish the usage of "WE" and "I". !! Important
 
     # Verify that "et al." is only used with three or more authors!
