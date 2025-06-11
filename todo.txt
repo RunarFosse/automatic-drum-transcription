@@ -1,5 +1,7 @@
 # Create analysis notebooks for model performance and plotting
 
+# Remove ADTOF from Convolutional RNN and Transformer model as they no longer are the same.
+
 # 100% Complete SADTP, by ensuring beats are not offset.
 # - After this, finish zero-shot testing of all models.
 
