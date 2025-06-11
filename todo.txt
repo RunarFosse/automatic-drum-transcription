@@ -19,6 +19,10 @@
 
     # Verify that "et al." is only used with three or more authors!
 
+    # Clean up bibliography, citing journals instead of arXiv if they are published.
+    
+    # Maybe cite Zenodo for where to download each dataset?
+
     ---
     Remember to distinguish what has been done before.
     Be clear when saying "I've combined these techniques which have been done before".
