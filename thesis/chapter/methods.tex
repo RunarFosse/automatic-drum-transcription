@@ -48,9 +48,9 @@ With the choice by what to use, Adam was considered. This is an optimizer so ubi
 
 It was observed during training that the magnitude of the loss values could vary greatly and often displayed a tendancy to explode. To counteract this observation, we clip the gradients with a maximum norm set to 2. This addition significantly lowered the observed chance of exploding gradients occuring. 
 
-Another addition which is frequenct in other \gls{ADT} works is the use of a learning rate scheduler. A learning rate scheduler keeps track of recent validation loss values, and if the minimum loss achieved plateaus (meaning it stop decreasing) for a certain number of epochs, the learning rate gets reducing by a given factor. In this thesis we reduce the learning rate by a factor of 5 if we observe 5 epochs of plateauing, with no improvement to our minimal validation loss~\cite{chang2024yourmt3multiinstrumentmusictranscription, signals4040042}. We also keep track of the general count of epochs since validation loss last improvement and perform an early stop if we ever observe 15 epochs without improvement (this is hightened to 25 epochs for the smallest dataset, ENST+MDB).
+Another addition which is frequenct in other \gls{ADT} works is the use of a learning rate scheduler. A learning rate scheduler keeps track of recent validation loss values, and if the minimum loss achieved plateaus (meaning it stop decreasing) for a certain number of epochs, the learning rate gets reducing by a given factor. In this thesis we reduce the learning rate by a factor of 5 if we observe 5 epochs of plateauing, with no improvement to our minimal validation loss~\cite{chang2024yourmt3multiinstrumentmusictranscription, signals4040042}. We also keep track of the general count of epochs since validation loss last improvement and perform an early stop if we ever observe 15 epochs without improvement.
 
-\subsection{Postprocessing}
+\section{Postprocessing}
 
 As mentioned, the model outputs a sequence of activation values, a 2 dimensional matrix with values on the interval $(0, 1)$ interpreted as the model's confidence in an instrument onset being present per frame. This can be utilized directly when computing our loss during training, however it is a difficult format to work with when talking about general performance, due to it rather representing a continuous confidence rather than discrete predictions. To suit this purpose, additional postprocessing is performed on the output.
 
@@ -66,21 +66,40 @@ First, we apply the aforementioned peak picking algorithm to isolate peaks in th
 
 These \gls{TP}, \gls{FP}, \gls{FN} predictions are then added together and used to compute the previously mentioned micro F1-score. For additional analysis, we also compute and store instrumentwise F1-scores.
 
-\textcolor{red}{Mention the loss function used, and why we use this (BCEWithLogitsLoss).}
-
-\textcolor{red}{Mention the computation of infrequency weights, i.e. how they are computed, why they are computed, the intuition into how they will help us...}
-
-\textcolor{red}{Also write how we evaluate our models. E.g count up TP, FP, FN, and compute micro F1-score after finishing the whole split.}
-
-\section{Hyperparameter Tuning}
-
-\textcolor{red}{Here we mention the setups for each of the experiments.}
-
-\textcolor{red}{Mention that we use RayTune to train, with PyTorch models. Mention that we only used RayTune's FIFOScheduler, and how for random search / grid search we used their built in parameter space functionality.}
-
 \section{Model Selection}
 
-\textcolor{red}{Mention that every single experiment was trained for at most 100 epochs, with a early stopping if validation loss didn't decrease within 10 epochs.
-Mention the learning rate scheduler, where we reduce the learning rate by a factor of 5 if the model hasn't improved in the last 3 epochs.}
+For model training and selection we utilize the RayTune library~\cite{liaw2018tuneresearchplatformdistributed}. It simplified the training of models by allowing us to input a training function, which metric to optimize for, hyperparameter spaces and search strategy, and additional configs. This simplifies our training, and through per-epoch reporting, it handles both checkpointing of model weights and best performing model selection for us.
 
-\textcolor{red}{Mention that every experiment is model selected using hold-out validation, and best model is chosen based on micro F1-score.}
+Through RayTune, we train 15 different models (25 solely for the smallest dataset ENST+MDB), with hyperparameters tuned through bayesian optimization (see the next section~\ref{HyperparameterTuning}). Each model is also ran for at most 100 epochs. As mentioned, we perform an early stop if performance stops increasing. We utilize PyTorch's dataloaders for iterating the datasets, with a batch size of 128. And using the AdamW optimizer, as previously mentioned.
+
+During each epoch of training, we evaluate the model on the training dataset's corresponding validation data. After training, the model with the highest Micro F1-score is selected. Due to the pre-split nature of most of our datasets, we utilize hold-out validation, with separate train, validation and test datasets. This is not only very common within \gls{ADT}~\cite{inproceedings, 8350302, chang2024yourmt3multiinstrumentmusictranscription}, but throughout the whole field of deep learning. Raschka mentions that \textit{"The holdout method is inarguably the simplest model evaluation technique"}~\cite{raschka2020modelevaluationmodelselection}, and might be one of the reasons for its popularity.
+Then, we estimate its performance on unseen data through evaluating it on the test dataset. At last, said model is stored together with its corresponding weights, training config, and metrics.
+
+\section{Hyperparameter Tuning}\label{HyperparameterTuning}
+
+\subsection{Search Strategies}
+
+There are several hyperparameters that are tuned for each model. One of the most thorough ways to tune these would be through a grid-search regime. Then, one would train and evaluate each possible hyperparameter combination, to find the best performing. However, this grows out of proportion fast, with an exponentially growing number of combinations based on the number of hyperparameters and their values, making it computationally expensive. Another way would be to use a random-search regime, where one randomly picks the combination of hyperparamters. This regime sacrifices hyperparameter combination coverage by increasing computational efficiency. The drawback with this approach however is its reliance on probability. During a given training trial, we might be unlucky with all our randomly selected hyperparameter combinations, leading to a suboptimal performing model.
+
+A combination of these two regimes, almost utilizing "the best of both worlds" would be to use a bayesian optimization regime. It chooses its hyperparameter combinations in a random fashion, like random-search, but also uses previously trained models' performance values to "intelligently" perform later choices, focusing in on promising combinations. In this way, we reap the rewards of the random-search regime's computational efficiency, while keeping some of the thoroughness from the grid-search regime.
+
+We utilize RayTune's implementation of \texttt{OptunaSearch}, a hyperparameter searching regime which uses Optuna, an automatic hyperparameter optimization software framework based on bayesian optimization~\cite{akiba2019optuna}. It has shown to be efficient in finding a good tradeoff between computation and performance, with authors like Shekhar et al. performing benchmarks on neural networks and showiung that \textit{"The performance score of Optuna is the highest for all datasets"}~\cite{shekhar2021comparative}.
+
+\textcolor{red}{How much do I need to cite here?}
+
+\subsection{Hyperparameters}
+
+RayTune allows one to easily declare the search space for each of the hyperparameters. Every architecture-specific hyperparameter is chosen based on a random choice. In addition to this, we also tune the optimizer-specific learning rate and weight decay using a logarithmically uniform random sample. The specific spaces can be found below, in table \ref{MethodHyperparams}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|c}
+        Hyperparameter & Search Space       \\
+        \hline
+        Learning Rate      & Log-uniform over $[1\cdot{10}^{-4}, 5\cdot{10}^{-3}]$ \\
+        Weight Decay     & Log-uniform over $[1\cdot{10}^{-6}, 1\cdot{10}^{-2}]$ \\
+        Architecture-specific Hyperparameters      & Random choice over each \\
+    \end{tabular}
+    \caption{The search space for each of the different hyperparameters. The architecture-specific hyperparameters can be found under each architecture in the Architecture chapter~\ref{Architectures}}
+    \label{MethodHyperparams}
+\end{table}
