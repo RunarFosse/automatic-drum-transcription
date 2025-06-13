@@ -5,6 +5,11 @@
 # 100% Complete SADTP, by ensuring beats are not offset.
 # - After this, finish zero-shot testing of all models.
 
+
+# Problem to discuss:
+    - Offset predictions, hallucinations
+    - Non-location invariance (Different prediction depending on start timeframe, i.e. snare prediction on frame 20 if starting prediction from 5, not 10)
+
 # Todos for thesis: 
 
     # For all Architecture figures:
