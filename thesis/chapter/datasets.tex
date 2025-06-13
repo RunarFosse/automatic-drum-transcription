@@ -44,11 +44,11 @@ These two datasets do not have predefined train/validation/test splits, such tha
 
 \section{E-GMD}
 
-The Expanded Groove MIDI Dataset (E-GMD) from Callender et al.~\cite{callender2020improving} is a large \gls{ADT} dataset consisting of audio recordings from human drum performances annotated in MIDI. It is an expansion of Gillick et al.'s Groove MIDI Dataset (GMD)~\cite{pmlr-v97-gillick19a}.
+The Expanded Groove MIDI Dataset (E-GMD) from Callender et al.~\cite{callender2020improvingperceptualqualitydrum} is a large \gls{ADT} dataset consisting of audio recordings from human drum performances annotated in MIDI. It is an expansion of Gillick et al.'s Groove MIDI Dataset (GMD)~\cite{pmlr-v97-gillick19a}.
 
-GMD was created through recording human performances in MIDI format through a Roland TD-11 electronic drumkit. This dataset does not contain audio recordings, only MIDI files, such that it is not applicable for \gls{ADT}. To expand this dataset to be used with \gls{ADT}, Callender et al. re-recorded the MIDI sequences on a Roland TD-17 electronic drumkit in real-time on a \gls{DAW}. These re-recordings were done over a large amount of differing soundfonts (confusingly also called \textit{drumkits} on electronic drumkits), synthesizing several differently sounding audio recordings from a single MIDI performance~\cite{pmlr-v97-gillick19a, callender2020improving}.
+GMD was created through recording human performances in MIDI format through a Roland TD-11 electronic drumkit. This dataset does not contain audio recordings, only MIDI files, such that it is not applicable for \gls{ADT}. To expand this dataset to be used with \gls{ADT}, Callender et al. re-recorded the MIDI sequences on a Roland TD-17 electronic drumkit in real-time on a \gls{DAW}. These re-recordings were done over a large amount of differing soundfonts (confusingly also called \textit{drumkits} on electronic drumkits), synthesizing several differently sounding audio recordings from a single MIDI performance~\cite{pmlr-v97-gillick19a, callender2020improvingperceptualqualitydrum}.
 
-In contrast to the other dataset's utilized in this thesis, this dataset is not created for a \gls{DTM} task, but rather a \gls{DTD} task. This is due to all recordings containing solo, drum-only performances. In addition, as this data is recorded from human performances in a semi-manual nature, there exist some errors from the recording process \textit{"that resulted in unusable tracks."}~\cite{callender2020improving}. The magnitude of these errors are not stated, however other authors propose that it might be as high as 20.5\% of the tracks with varying amounts of discrepancies~\cite{holz2021automatic}.
+In contrast to the other dataset's utilized in this thesis, this dataset is not created for a \gls{DTM} task, but rather a \gls{DTD} task. This is due to all recordings containing solo, drum-only performances. In addition, as this data is recorded from human performances in a semi-manual nature, there exist some errors from the recording process \textit{"that resulted in unusable tracks."}~\cite{callender2020improvingperceptualqualitydrum}. The magnitude of these errors are not stated, however other authors propose that it might be as high as 20.5\% of the tracks with varying amounts of discrepancies~\cite{holz2021automatic}.
 
 This dataset contains 444.5 hours of audio recordings, from 1,059 unique drum performances resampled to 45,537 MIDI sequences.
 
@@ -102,4 +102,4 @@ The dataset contains 1.08 hours of music, which can be split into 977 non-overla
 
 \section{Differences}
 
-\textcolor{red}{Provide a table with information neatly gathered in a table. Such information should be size (total duration), vocabulary, real or synthetic data (human/non human), number of tracks. Should be like e.g. \cite{signals4040042,callender2020improving} or others.}
+\textcolor{red}{Provide a table with information neatly gathered in a table. Such information should be size (total duration), vocabulary, real or synthetic data (human/non human), number of tracks. Should be like e.g. \cite{signals4040042,callender2020improvingperceptualqualitydrum} or others.}
