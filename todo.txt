@@ -11,7 +11,7 @@
 
         - Add a flatten indication between convolutional/patch embedding and the remaining layers? !! Important
 
-        - Figure out wether to explain hyperparameter values in-text, or as a separate table.
+        - Figure out wether to explain hyperparameter values in-text, or as a separate table. (If moving, rewrite implementation details)
 
     # Explicit layer norm in transformer architecures.
 
