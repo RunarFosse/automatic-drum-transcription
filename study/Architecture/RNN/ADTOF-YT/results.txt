@@ -1,9 +1,9 @@
-Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_train.pt'), 'val_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_validation.pt'), 'transforms': {'mean': tensor([0.7242]), 'std': tensor([0.5009])}, 'lr': 0.0003009310990738417, 'weight_decay': 1.4884666121839681e-05, 'amsgrad': False, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.RNN'>, 'parameters': {'num_layers': 6, 'hidden_size': 288, 'use_gru': True}, 'device': 'cuda:0', 'seed': 1743159824}
-Best result final validation loss: 0.3539937141183189
-Best result final validation micro F1: 0.8985958099365234
-Best result final validation macro F1: 0.8656015396118164
-Best result final validation class F1: [0.9787994027137756, 0.931706428527832, 0.8476266860961914, 0.7565203309059143, 0.8133548498153687]
+Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_paths': [PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_train.pt')], 'val_paths': [PosixPath('/Home/siv32/rfo034/master-thesis/data/adtof/adtof_yt_validation.pt')], 'transforms': {'mean': tensor([0.7242]), 'std': tensor([0.5012])}, 'lr': 0.00036152288784589806, 'weight_decay': 8.172662767961291e-05, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.RNN'>, 'parameters': {'num_layers': 6, 'hidden_size': 576, 'use_gru': True}, 'device': 'cuda:0', 'seed': 1746823616}
+Best result final validation loss: 0.37192379614330073
+Best result final validation micro F1: 0.9022130966186523
+Best result final validation macro F1: 0.8709956407546997
+Best result final validation class F1: [0.9794563055038452, 0.9324350357055664, 0.8591206073760986, 0.7656860947608948, 0.8182798624038696]
  ---------- Evaluation of best perfoming model ---------- 
-Micro F1: 0.9498
-Macro F1: 0.9392
-Class F1: ['0.9818', '0.9558', '0.9238', '0.9070', '0.9279']
+Micro F1: 0.9635
+Macro F1: 0.9566
+Class F1: ['0.9844', '0.9619', '0.9452', '0.9394', '0.9521']

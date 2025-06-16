@@ -1,9 +1,9 @@
-Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/slakh2100_flac_redux/slakh_train.pt'), 'val_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/slakh2100_flac_redux/slakh_validation.pt'), 'transforms': {'mean': tensor([0.3864]), 'std': tensor([0.4309])}, 'lr': 0.0004906418028760076, 'weight_decay': 0.00015075917238971344, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.CNN'>, 'parameters': {'num_convs': 3, 'num_layers': 1, 'hidden_size': 288}, 'device': 'cuda:0', 'seed': 1745139893}
-Best result final validation loss: 0.2240881894835989
-Best result final validation micro F1: 0.8241930603981018
-Best result final validation macro F1: 0.714148998260498
-Best result final validation class F1: [0.9063225984573364, 0.850658655166626, 0.44530463218688965, 0.8436651825904846, 0.5247939229011536]
+Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_paths': [PosixPath('/Home/siv32/rfo034/master-thesis/data/slakh2100_flac_redux/slakh_train.pt')], 'val_paths': [PosixPath('/Home/siv32/rfo034/master-thesis/data/slakh2100_flac_redux/slakh_validation.pt')], 'transforms': {'mean': tensor([0.3865]), 'std': tensor([0.4332])}, 'lr': 0.002752402525696759, 'weight_decay': 0.0021811197799653536, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.CNN'>, 'parameters': {'num_convs': 3, 'num_layers': 1, 'hidden_size': 288}, 'device': 'cuda:0', 'seed': 1748552726}
+Best result final validation loss: 0.2289137989282608
+Best result final validation micro F1: 0.8255585432052612
+Best result final validation macro F1: 0.71723473072052
+Best result final validation class F1: [0.9059633612632751, 0.8569970726966858, 0.44146662950515747, 0.8444789052009583, 0.5372679829597473]
  ---------- Evaluation of best perfoming model ---------- 
-Micro F1: 0.8305
-Macro F1: 0.7366
-Class F1: ['0.9105', '0.8736', '0.5103', '0.8386', '0.5503']
+Micro F1: 0.8318
+Macro F1: 0.7367
+Class F1: ['0.9114', '0.8785', '0.5008', '0.8417', '0.5511']

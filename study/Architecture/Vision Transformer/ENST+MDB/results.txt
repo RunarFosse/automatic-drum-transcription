@@ -1,9 +1,9 @@
-Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/ENST+MDB/enst+mdb_train.pt'), 'val_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/ENST+MDB/enst+mdb_validation.pt'), 'transforms': {'mean': tensor([0.4206]), 'std': tensor([0.4561])}, 'lr': 0.0005993256412392638, 'weight_decay': 1.3520821212096605e-05, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.VisionTransformer'>, 'parameters': {'patch_size': (1, 7), 'num_heads': 8, 'num_layers': 4, 'embed_dim': 576}, 'device': 'cuda:0', 'seed': 1745343743}
-Best result final validation loss: 0.7504574954509735
-Best result final validation micro F1: 0.49384060502052307
-Best result final validation macro F1: 0.3877415060997009
-Best result final validation class F1: [0.7254326343536377, 0.4619862139225006, 0.028708135709166527, 0.440907746553421, 0.28167280554771423]
+Best result config: {'num_epochs': 100, 'batch_size': 128, 'train_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/ENST+MDB/enst+mdb_train.pt'), 'val_path': PosixPath('/Home/siv32/rfo034/master-thesis/data/ENST+MDB/enst+mdb_validation.pt'), 'transforms': {'mean': tensor([0.4206]), 'std': tensor([0.4561])}, 'lr': 0.0041003441767351895, 'weight_decay': 0.002109042514842338, 'optimizer': <class 'torch.optim.adamw.AdamW'>, 'Model': <class 'models.VisionTransformer'>, 'parameters': {'patch_size': (1, 7), 'num_heads': 8, 'num_layers': 6, 'embed_dim': 144}, 'device': 'cuda:0', 'seed': 1746019338}
+Best result final validation loss: 0.7825685143470764
+Best result final validation micro F1: 0.5179982781410217
+Best result final validation macro F1: 0.39502567052841187
+Best result final validation class F1: [0.7368420958518982, 0.4666212797164917, 0.026200873777270317, 0.5155791640281677, 0.2298850417137146]
  ---------- Evaluation of best perfoming model ---------- 
-Micro F1: 0.5164
-Macro F1: 0.3691
-Class F1: ['0.7589', '0.5332', '0.0120', '0.4116', '0.1299']
+Micro F1: 0.5426
+Macro F1: 0.3737
+Class F1: ['0.7850', '0.5242', '0.0123', '0.4700', '0.0771']
