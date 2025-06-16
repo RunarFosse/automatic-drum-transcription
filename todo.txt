@@ -7,8 +7,8 @@
 
 
 # Problem to discuss:
-    - Offset predictions, hallucinations
-    - Non-location invariance (Different prediction depending on start timeframe, i.e. snare prediction on frame 20 if starting prediction from 5, not 10)
+    - Offset predictions, hallucinations (like the tapping in etæk 'n),
+    - Location variance (Different prediction depending on start timeframe, i.e. snare prediction on frame 20 if starting prediction from 5, not 10)
 
 # Todos for thesis: 
 
