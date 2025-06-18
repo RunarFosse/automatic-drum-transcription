@@ -1,13 +1,12 @@
 \chapter{Architecture Study}
 
+This study's main purpose is to figure out how suited each architecture is for \gls{ADT}, more specifically \gls{DTM} tasks. This could help us figure out which architecture is superiour for \gls{ADT}, if there are any similarities between architectures who perform similarly well, or if there are any architectures who perform poorly.
+
 \section{Methodology}
 
-This study's main goal train different architectures over different \gls{ADT} datasets, and figure out if there exists any architecture which outperforms the other on the majority. This could answer the question; "Is there an architecture which is superiour when it comes to \gls{ADT} related tasks?". \textcolor{red}{For example. Some kind of introduction to the study more or less.}
+We perform hyperparameter tuning and model selection to train a separate model for each architecture over each dataset. At last we test the model on each dataset's respective test split. As a result, we are left with performance measures on unseen data from the same distribution as those each model was train on. This will give us a good intuition into each architecture's ability to learn the task of \gls{ADT} and could help us estimate their generalization ability.
 
 \section{Results}
-
-\textcolor{red}{Display a table of results, class-wise and micro-F1:
-Best architecture per dataset is bolded.}
 
 \begin{center}
     \begin{tabular}{|l|c|c|c|c|}

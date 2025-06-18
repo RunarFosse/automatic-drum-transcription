@@ -24,7 +24,7 @@ The datasets declaring onsets in text files (ENST-Drums and MDB-Drums) follow a 
 
 The data given in MIDI format, the annotations are parsed using the library \texttt{Partitura}, and loads the information into an array of MIDI events called \textit{notes}. These \textit{notes} contain information for each event, importantly time, pitch, and velocity. These events are very thorough, but strict instrument onsets can be isolated by restricting our view to notes with a non-zero velocity. Instruments are denoted by the event's pitch, and a mapping is done from each pitch to a respective class. The time is converted identically to the loading of the text annotations, turning them into timeframe indices. At last, we also here set each specific registered onset (timeframe, class) cell to 1.
 
-In addition to this, we apply a \textit{target widening} step, setting values in timeframes adjacent to an instrument onset with a lower weight, equal to 0.5. This has shown to be benifical in countering sparsity in our labels following multiple works on beat transcription.~\cite{9747048, signals4040042}
+In addition to this, we apply a \textit{target widening} step, setting values in timeframes adjacent to an instrument onset with a lower weight, equal to 0.5. These additional neighbouring \textit{soft labels} have shown to be benifical in countering sparsity in our labels following multiple works on beat transcription~\cite{9747048, signals4040042}.
 
 \subsection{Splitting and Storing}
 
