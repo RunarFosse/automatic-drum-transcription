@@ -6,7 +6,7 @@ Finding a suitable architecture is a vital step in creating a well-performant de
 
 The \gls{RNN} is a standard architecture when it comes prediction on sequence data. It has been tried and tested, showing promising results for audio tasks.
 
-The fundamental building block for \gls{RNN}s is the \textit{recurrent unit}. It iterates the whole input sequence, storing information from previous timesteps in a form of memory, through maintenance of a \textit{hidden state}. This can be extended to gaining information about future timesteps by using \textit{bidirectional} versions. In this way, prediction on current timesteps are affected by the information from surrounding timesteps. This is relevant in tasks such as \gls{ADT} as auditory information usually spreads over several timesteps, e.g. the timbre of an instrument event lingering after onset.
+The fundamental building block for \glspl{RNN} is the \textit{recurrent unit}. It iterates the whole input sequence, storing information from previous timesteps in a form of memory, through maintenance of a \textit{hidden state}. This can be extended to gaining information about future timesteps by using \textit{bidirectional} versions. In this way, prediction on current timesteps are affected by the information from surrounding timesteps. This is relevant in tasks such as \gls{ADT} as auditory information usually spreads over several timesteps, e.g. the timbre of an instrument event lingering after onset.
 
 \begin{figure}[H]
     \centering
@@ -15,9 +15,9 @@ The fundamental building block for \gls{RNN}s is the \textit{recurrent unit}. It
     \label{RNNInfluenceFigure}
 \end{figure}
 
-However, traditional \gls{RNN}s suffer from the \textit{vanishing gradient problem} due to a timestep's influence diminishing with distance, making \textit{long range dependencies} harder to learn. Different architectures have been developed to try to overcome these issues, such as the \gls{GRU} by Cho et al.~\cite{DBLP:conf/emnlp/ChoMGBBSB14}, and \gls{LSTM} by Hochreiter and Schmidhuber~\cite{10.1162/neco.1997.9.8.1735}.
+However, traditional \glspl{RNN} suffer from the \textit{vanishing gradient problem} due to a timestep's influence diminishing with distance, making \textit{long range dependencies} harder to learn. Different architectures have been developed to try to overcome these issues, such as the \gls{GRU} by Cho et al.~\cite{DBLP:conf/emnlp/ChoMGBBSB14}, and \gls{LSTM} by Hochreiter and Schmidhuber~\cite{10.1162/neco.1997.9.8.1735}.
 
-It has been shown that \gls{GRU}s and \gls{LSTM}s are capable of learning \gls{ADT} related tasks, and is therefore in interest to comparatively measure how their efficiency stands in regards to other architectures~\cite{Southall2016AutomaticDT, vogl2016recurrent, Vogl2017DrumTV, signals4040042}.
+It has been shown that \glspl{GRU} and \glspl{LSTM} are capable of learning \gls{ADT} related tasks, and is therefore in interest to comparatively measure how their efficiency stands in regards to other architectures~\cite{Southall2016AutomaticDT, vogl2016recurrent, Vogl2017DrumTV, signals4040042}.
 
 \subsection{Implementation}
 
@@ -41,7 +41,7 @@ We've mentioned that spectrograms can be treated as images. Therefore it would m
     \label{CNNInfluenceFigure}
 \end{figure}
 
-\gls{CNN}s have been shown to give reasonable performance within \gls{ADT}. This could be due to contextual information being important for identifying instrument onsets, and making learning easier for our models~\cite{Vogl2017DrumTV}.
+\glspl{CNN} have been shown to give reasonable performance within \gls{ADT}. This could be due to contextual information being important for identifying instrument onsets, and making learning easier for our models~\cite{Vogl2017DrumTV}.
 
 \subsection{Implementation}
 
@@ -58,7 +58,7 @@ Our \gls{CNN} architecure consists of $I \in \{1, 2, 3\}$ initial convolutional 
 
 The previous features, recurrent layers and convolutions, are not mutually exclusive. Theoretically they can harmonize together, complementing eachother for easier learning. This results in the \gls{CRNN} architecture.
 
-Intuitively, the \gls{CNN}s ability to process images like the spectrogram, together with the \gls{RNN}s ability to understand temporal sequence data should prove beneficial for \gls{ADT} tasks. And indeed, this combination of cross-timestep memory and contextual data representation has shown to be insightful~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, signals4040042}.
+Intuitively, the \glspl{CNN} ability to process images like the spectrogram, together with the \glspl{RNN} ability to understand temporal sequence data should prove beneficial for \gls{ADT} tasks. And indeed, this combination of cross-timestep memory and contextual data representation has shown to be insightful~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, signals4040042}.
 
 \begin{figure}[H]
     \centering
