@@ -61,16 +61,16 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     return weights
 
 
-def invert_log_filter_spectrogram(spectrogram: torch.Tensor, sr: int = 44100, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, f_min: int = 20, f_max: int = 20000, power: int = 1, norm: bool = True) -> torch.Tensor:
+def invert_log_filter_spectrogram(log_filter_spectrogram: torch.Tensor, sr: int = 44100, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, f_min: int = 20, f_max: int = 20000, power: int = 1, norm: bool = True) -> torch.Tensor:
     """ Given a log logarithmically filterbank spectrogram, invert it, and return its waveform. """
 
     # Invert log magnitude
-    spectrogram = torch.pow(torch.tensor(10), spectrogram) - 1
+    log_filter_spectrogram = torch.pow(torch.tensor(10), log_filter_spectrogram) - 1
     
     # Remove filters from spectrogram
     filterbank = compute_log_filterbank(sr=sr, n_fft=n_fft, f_min=f_min, f_max=f_max)
     inverse_filterbank = torch.linalg.pinv(filterbank)
-    spectrogram = inverse_filterbank @ spectrogram
+    spectrogram = inverse_filterbank @ log_filter_spectrogram
 
     # Apply Griffin-Lim transform
     griffin_lim_transform = torchaudio.transforms.GriffinLim(power=power, n_fft=n_fft, win_length=win_length, hop_length=hop_length)
@@ -79,17 +79,22 @@ def invert_log_filter_spectrogram(spectrogram: torch.Tensor, sr: int = 44100, n_
     return waveform
 
 
-def invert_mel_spectrogram(spectrogram: torch.Tensor, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, n_mels: int = 84, f_min: int = 20, f_max: int = 20000, norm: str = "slaney", mel_scale: str = "htk", n_iter: int = 32, power: int = 2) -> torch.Tensor:
+def invert_mel_spectrogram(mel_spectrogram: torch.Tensor, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, n_mels: int = 84, f_min: int = 20, f_max: int = 20000, norm: str = "slaney", mel_scale: str = "htk", n_iter: int = 32, power: int = 2) -> torch.Tensor:
     """ Given a log mel spectrogram, invert it, and return its waveform. """
 
     # Sampling rate corresponds to 44.1 khz
     sr = 44100
     n_stft = int((n_fft//2) + 1)
 
+    # Invert log magnitude
+    mel_spectrogram = torch.pow(torch.tensor(10), mel_spectrogram) - 1
+    
+    # Remove mel-filters from spectrogram
     inverse_transform = torchaudio.transforms.InverseMelScale(sample_rate=sr, n_stft=n_stft, n_mels=n_mels, f_min=f_min, f_max=f_max, norm=norm, mel_scale=mel_scale)
+    spectrogram = inverse_transform(mel_spectrogram)
+
+    # Apply Griffin-Lim transform
     grifflim_transform = torchaudio.transforms.GriffinLim(power=power, n_iter=n_iter, n_fft=n_fft, win_length=win_length, hop_length=hop_length)
+    waveform = grifflim_transform(spectrogram)
 
-    inverse_waveform = inverse_transform(spectrogram)
-    pseudo_waveform = grifflim_transform(inverse_waveform)
-
-    return pseudo_waveform
+    return waveform
