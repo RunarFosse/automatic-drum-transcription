@@ -2,9 +2,7 @@
 
 # Remove ADTOF from Convolutional RNN and Transformer model as they no longer are the same.
 
-# 100% Complete SADTP, by ensuring beats are not offset.
-# - After this, finish zero-shot testing of all models.
-
+# Mention ADOTF-YT format correctly, as they state in their paper they are using log-spectrograms, but mel-spectrograms on Zenodo
 
 # Problem to discuss:
     - Offset predictions, hallucinations (like the tapping in etæk 'n),
