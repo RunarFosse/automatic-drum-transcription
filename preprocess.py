@@ -61,7 +61,7 @@ def compute_infrequency_weights(dataloader: DataLoader) -> torch.Tensor:
     return weights
 
 
-def invert_log_filter_spectrogram(log_filter_spectrogram: torch.Tensor, sr: int = 44100, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, f_min: int = 20, f_max: int = 20000, power: int = 1, norm: bool = True) -> torch.Tensor:
+def invert_log_filter_spectrogram(log_filter_spectrogram: torch.Tensor, sr: int = 44100, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, f_min: int = 20, f_max: int = 20000, power: int = 1) -> torch.Tensor:
     """ Given a log logarithmically filterbank spectrogram, invert it, and return its waveform. """
 
     # Invert log magnitude
@@ -79,7 +79,7 @@ def invert_log_filter_spectrogram(log_filter_spectrogram: torch.Tensor, sr: int 
     return waveform
 
 
-def invert_mel_spectrogram(mel_spectrogram: torch.Tensor, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, n_mels: int = 84, f_min: int = 20, f_max: int = 20000, norm: str = "slaney", mel_scale: str = "htk", n_iter: int = 32, power: int = 2) -> torch.Tensor:
+def invert_mel_spectrogram(mel_spectrogram: torch.Tensor, n_fft: int = 2048, win_length: int = 2048, hop_length: int = 441, n_mels: int = 84, f_min: int = 20, f_max: int = 20000, norm: str = "slaney", mel_scale: str = "htk", n_iter: int = 32, power: int = 1) -> torch.Tensor:
     """ Given a log mel spectrogram, invert it, and return its waveform. """
 
     # Sampling rate corresponds to 44.1 khz
