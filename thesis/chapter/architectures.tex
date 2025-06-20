@@ -21,7 +21,7 @@ It has been shown that \glspl{GRU} and \glspl{LSTM} are capable of learning \gls
 
 \subsection{Implementation}
 
-Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train both a \gls{GRU} and an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L \in \{2, 3, 4, 5, 6\}$ and hidden size $H \in \{72, 144, 288\}$, selecting the one with best performance. At last, we have a linear layer, outputting onset probabilities for each of the drums per timeframe.
+Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train either a \gls{GRU} or an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L$ and hidden size $H$, selecting the one with best performance. At last, we have a linear layer, outputting onset probabilities for each of the drums per timeframe.
 
 \begin{figure}[H]
     \centering
@@ -29,6 +29,19 @@ Our \gls{RNN} architecture consists of several bidirectional recurrent units, en
     \caption{RNN architecture structure.}
     \label{RNNFigure}
 \end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lr|c}
+        \multicolumn{2}{c|}{Hyperparameter} & Values       \\
+        \hline
+        $L$ & Number of layers      & \{2, 3, 4, 5, 6\} \\
+        $H$ & Hidden size      & \{72, 144, 288, 576\} \\
+        \gls{BiRU} & \acrlong{BiRU} & \{\gls{GRU}, \gls{LSTM}\}\\
+    \end{tabular}
+    \caption{The different hyperparameters and their respective values tuned to train the Recurrent Neural Network.}
+    \label{RNNHyperparams}
+\end{table}
 
 \section{Convolutional Neural Network}
 
@@ -45,7 +58,7 @@ We've mentioned that spectrograms can be treated as images. Therefore it would m
 
 \subsection{Implementation}
 
-Our \gls{CNN} architecure consists of $I \in \{1, 2, 3\}$ initial convolutional blocks. Inside this block, convolutional layers have an increasing number of kernels $C = \{32, 64, 96\}$, intuitively leading to an increase in complexity along with depth. Then we have a varying amount of fully connected layers $L \in \{1, 2, 3, 4\}$, projecting into a latent space sized $H \in \{72, 144, 288, 576\}$. Both the convolutional and fully connected layers are followed by a \gls{ReLU} activation function. Lastly, an output layer computed each instrument's onset probabilities.
+Our \gls{CNN} architecure consists of $I$ initial convolutional blocks. Inside this block, convolutional layers have an increasing number of kernels $C = \{32, 64, 96\}$, intuitively leading to an increase in complexity along with depth. Note that this is not a hyperparameter, but just denotes that we increase the amount of kernels the deeper into the convolutional block we go. Then we have a varying amount of fully connected layers $L$, projecting into a latent space sized $H$. Both the convolutional and fully connected layers are followed by a \gls{ReLU} activation function. Lastly, an output layer computed each instrument's onset probabilities.
 
 \begin{figure}[H]
     \centering
@@ -53,6 +66,19 @@ Our \gls{CNN} architecure consists of $I \in \{1, 2, 3\}$ initial convolutional 
     \caption{CNN architecture structure.}
     \label{CNNFigure}
 \end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lr|c}
+        \multicolumn{2}{c|}{Hyperparameter} & Values       \\
+        \hline
+        $I$ & Number of convolutions & \{1, 2, 3\}\\
+        $L$ & Number of layers      & \{2, 3, 4\} \\
+        $H$ & Hidden size      & \{72, 144, 288, 576\} \\
+    \end{tabular}
+    \caption{The different hyperparameters and their respective values tuned to train the Convolutional Neural Network.}
+    \label{CNNHyperparams}
+\end{table}
 
 \section[Convolutional RNN]{Convolutional Recurrent Neural Network}
 
@@ -69,7 +95,7 @@ Intuitively, the \glspl{CNN} ability to process images like the spectrogram, tog
 
 \subsection{Implementation}
 
-We begin with a fixed-size convolutional block with $I = 2$, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. Following the \gls{CNN} it has an increasing number of kernels $C = \{32, 64\}$. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$. Output probabilities are then computed through the final linear layer.
+We begin with a fixed-size convolutional block with $I = 2$, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. Following the \gls{CNN}, it has an increasing number of kernels $C = \{32, 64\}$ the deeper into the convolutions we go. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$. Output probabilities are then computed through the final linear layer.
 
 \begin{figure}[H]
     \centering
@@ -77,6 +103,19 @@ We begin with a fixed-size convolutional block with $I = 2$, as used by several 
     \caption{Convolutional RNN architecture structure.}
     \label{CRNNFigure}
 \end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lr|c}
+        \multicolumn{2}{c|}{Hyperparameter} & Values       \\
+        \hline
+        $L$ & Number of layers      & \{2, 3, 4, 5\} \\
+        $H$ & Hidden size      & \{72, 144, 288, 576\} \\
+        \gls{BiRU} & \acrlong{BiRU} & \{\gls{GRU}, \gls{LSTM}\}\\
+    \end{tabular}
+    \caption{The different hyperparameters and their respective values tuned to train the Convolutional Recurrent Neural Network.}
+    \label{CRNNHyperparams}
+\end{table}
 
 \section{Convolutional Transformer}
 
@@ -98,9 +137,9 @@ Simply replacing the recurrent layers with attention blocks could allow our mode
 
 \subsection{Implementation}
 
-Similar to the \gls{CRNN}, an initial fixed-size convolutional block with $I = 2$ is used, with an increasing number of kernels $C = \{32, 64\}$. Then, we project the resulting latent space into a separate, lower dimensional embedding space with dimension $D_e \in \{72, 144, 288\}$, before combining it with a sinusoidal positional encoding. 
+Similar to the \gls{CRNN}, an initial fixed-size convolutional block with $I = 2$ is used, with an increasing number of kernels $C = \{32, 64\}$. Then, we project the resulting latent space into a separate, lower dimensional embedding space with dimension $D_e$, before combining it with a sinusoidal positional encoding. 
 
-Following this, the model contains $L \in \{2, 4, 6, 8\}$ standard pre-layer normalization attention block, as these recently have been shown to be more stable during learning than the post-layer versions~\cite{pmlr-v119-xiong20b}. These attention blocks contain multi-head self-attention layers with $H \in \{2, 4, 6, 8\}$ number of heads. Note that the first layer of the feedforward layer inside these attention blocks uses the \gls{GELU} activation function due to it being the standard within transformers and for its possible performance improvements over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. Lastly, the linear layer outputs onset probabilities.
+Following this, the model contains $L$ standard pre-layer normalization attention block, as these recently have been shown to be more stable during learning than the post-layer versions~\cite{pmlr-v119-xiong20b}. These attention blocks contain multi-head self-attention layers with $H$ number of heads. Note that the first layer of the feedforward layer inside these attention blocks uses the \gls{GELU} activation function due to it being the standard within transformers and for its possible performance improvements over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. Lastly, the linear layer outputs onset probabilities.
 
 \begin{figure}[H]
     \centering
@@ -108,6 +147,19 @@ Following this, the model contains $L \in \{2, 4, 6, 8\}$ standard pre-layer nor
     \caption{Convolutional Transformer architecture structure.}
     \label{CTFigure}
 \end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lr|c}
+        \multicolumn{2}{c|}{Hyperparameter} & Values       \\
+        \hline
+        $H$ & Number of heads     & \{2, 4, 6, 8\} \\
+        $L$ & Number of layers      & \{2, 4, 6, 8, 10\} \\
+        $D_e$ & Embedding dimension      & \{72, 144, 288, 576\} \\
+    \end{tabular}
+    \caption{The different hyperparameters and their respective values tuned to train the Convolutional Transformer.}
+    \label{CTHyperparams}
+\end{table}
 
 \section{Vision Transformer}
 
@@ -162,6 +214,6 @@ Afterwards, we combine it with a sinusoidal positional encoding, and successivel
         $L$ & Number of layers      & \{2, 4, 6, 8, 10\} \\
         $D_e$ & Embedding dimension      & \{72, 144, 288, 576\} \\
     \end{tabular}
-    \caption{The different hyperparameters tuned to train the Vision Transformer.}
+    \caption{The different hyperparameters and their respective values tuned to train the Vision Transformer.}
     \label{ViTHyperparams}
 \end{table}
