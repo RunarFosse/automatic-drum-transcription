@@ -16,15 +16,9 @@
 
         - Add a flatten indication between convolutional/patch embedding and the remaining layers? !! Important
 
-        - Figure out wether to explain hyperparameter values in-text, or as a separate table. (If moving, rewrite implementation details)
-
     # Explicit layer norm in transformer architecures.
 
     # Correctively distinguish the usage of "WE" and "I". !! Important
-
-    # Verify that "et al." is only used with three or more authors!
-
-    # Clean up bibliography, citing journals instead of arXiv if they are published.
     
     # Maybe cite Zenodo for where to download each dataset?
 
@@ -42,12 +36,7 @@
     
     Methods should explain what I've done, not necessarily why or where stuff comes from.
     
-    - Talk more about how we have to label the data
-    - Mention why inaccurate labels are inevitable
     - Mention the size of each of the data
         - I.e. Waveform = (1, sr * seconds)
                Spectrogram = (frequencies, sr * second / hop_length)
                etc.
-
-    Sort in order of experiments after methods:
-    Methods -> Experiment 1 (Method -> Result -> Discussion) -> Experiment 2 (Method -> Result -> Discussion) -> Conclusion
