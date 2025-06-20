@@ -1,3 +1,13 @@
 \chapter{Conclusion}
 
-This is the conclusion.
+This thesis set out to investigate how to achieve optimal performance on \acrfull{ADT} tasks, specifically \acrfull{DTM}. Through exploring and analysing how different deep learning architectures and different dataset compositions affect model performance. 
+
+In the first study we trained and compared the performance of five deep learning architectures, namely a recurrent neural network, convolutional neural network, convolutional recurrent neural network, convolutional transformer, and vision transformer, each trained and tested over different dataset. The best architecture showing the strongest overall performance was the convolutional recurrent neural network, which performed the best performance on three of the four datasets. However, we also note that more experimentation should be done with the recurrent neural network, and the vision transformer, specifically on larger dataset, which both identically achieved the best performance on the last dataset.
+
+In the second study we explored how combining datasets of different characteristics influences a model's generalization ability. We found out that combining datasets substantially improves both on- and \acrfull{OOD} performance. However, we also identified that carefully constructing these datasets is vital, but that an increase in data amount generally leads to better performance.
+
+This thesis contributes not only by comparing different architectural choices for \gls{DTM} tasks, but also through evaluating different \gls{ADT} datasets' affection on model generalization, this on both public datasets, and on a novel dataset composed and transcribed for this thesis, SADTP. These contributions could give valuable insight into \gls{ADT} by emphasizing both choices on deep learning architectures as well as construction of datasets.
+
+Future work should expand upon this research by performing rigorous architecture analyses over larger datasets, as well as optionally inspecting how the different number of drum instrument classes both affect and perform over these different datasets.
+
+Lastly, this thesis demonstrates that deep learning model's can exhibit great performance on \gls{ADT} and \gls{DTM} tasks achievable through intelligent choices in both architecture and dataset.

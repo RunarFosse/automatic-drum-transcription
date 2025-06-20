@@ -1,12 +1,12 @@
 \chapter{Dataset Study}
 
-This study's main purpose is to figure out how each dataset, and their characteristics, combined can influence a model's performance, both on and out-of-distribution. This could help us figure out how to utilize and combine current datasets, or how to intelligently construct future datasets, to optimize models' performance and generalization ability for \acrfull{ADT} and \acrfull{DTM}.
+This study's main purpose is to figure out how each dataset, and their characteristics, combined can influence a model's performance, both on- and \gls{OOD}. This could help us figure out how to utilize and combine current datasets, or how to intelligently construct future datasets, to optimize models' performance and generalization ability for \acrfull{ADT} and \acrfull{DTM}.
 
 \section{Methodology}
 
 We train convolutional recurrent neural networks, the best performing architecture from the first study, over several different combinations of the first four datasets ENST+MDB, E-GMD, Slakh, and ADTOF-YT. Datasets are combined as a union, where one epoch over the combined dataset would be equivalent to one epoch of both datasets separately. Each model is also evaluated on the remaining datasets, in addition to the SADPT dataset.
 
-The number of different combination of datasets \textcolor{red}{(explain why we have a subset of combinations, and how they were selected.)}
+To get a comprehensive overview over how the different datasets could complement or contrast eachother's performances, without doing redundant experiments with diminishing returns, we select and train on a subset of all possible dataset combination. More specifically, we select 10 different combinations of datasets in such a way that we could extract valuable information about how their characteristics affect the resulting model's generalization ability.
 
 \section{Results}
 
@@ -22,18 +22,59 @@ The number of different combination of datasets \textcolor{red}{(explain why we 
         SLAKH	& \cellcolor{blue!5} 0.7987	& \cellcolor{blue!5} 0.6676	& 0.8959	& \cellcolor{blue!5} 0.5922	& \cellcolor{blue!5} 0.4769 \\
         ADTOF-YT	& \cellcolor{blue!5} 0.8403	& \cellcolor{blue!5} 0.6253	& \cellcolor{blue!5} \underline{0.6546}	& 0.9333	& \cellcolor{blue!5} 0.607 \\
         \hline
-        SLAKH + ADTOF-YT	& \cellcolor{blue!5} 0.8552	& \cellcolor{blue!5} 0.6493	& \textbf{0.9008}	& \textbf{0.965}	& \cellcolor{blue!5} 0.6178 \\
-        ENST+MDB + ADTOF-YT	& 0.863	& \cellcolor{blue!5} 0.6368	& \cellcolor{blue!5} 0.6342	& 0.9404	& \cellcolor{blue!5} \textbf{\underline{0.6189}} \\
         ENST+MDB + SLAKH	& 0.8394	& \cellcolor{blue!5} 0.6669	& 0.8983	& \cellcolor{blue!5} \underline{0.6324}	& \cellcolor{blue!5} 0.475 \\
+        ENST+MDB + ADTOF-YT	& 0.863	& \cellcolor{blue!5} 0.6368	& \cellcolor{blue!5} 0.6342	& 0.9404	& \cellcolor{blue!5} \textbf{\underline{0.6189}} \\
+        SLAKH + ADTOF-YT	& \cellcolor{blue!5} 0.8552	& \cellcolor{blue!5} 0.6493	& \textbf{0.9008}	& \textbf{0.965}	& \cellcolor{blue!5} 0.6178 \\
         \hline
-        E-GMD + SLAKH + ADTOF-YT	& \cellcolor{blue!5} \underline{0.8576}	& 0.8911	& 0.897	& 0.9401	& \cellcolor{blue!5} 0.6165 \\
         ENST+MDB + SLAKH + ADTOF-YT	& \textbf{0.8772}	& \cellcolor{blue!5} \underline{0.6768}	& 0.8942	& 0.9502	& \cellcolor{blue!5} 0.6122 \\
+        E-GMD + SLAKH + ADTOF-YT	& \cellcolor{blue!5} \underline{0.8576}	& 0.8911	& 0.897	& 0.9401	& \cellcolor{blue!5} 0.6165 \\
         \hline
         ENST+MDB + E-GMD + SLAKH + ADTOF-YT	& 0.8646	& 0.8919	& 0.8932	& 0.9335	& \cellcolor{blue!5} 0.6169 \\
     \end{tabular}%
     }
-    \caption{The Micro F1-score for each architecture, trained and tested on each dataset. The performances which are bolded represent the highest F1-score, and thus best performance, for that respective dataset.}
+    \caption{The Micro F1-score for a convolutional recurrent neural network trained over different combination of datasets, and tested on all datasets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset. Cells which are \colorbox{blue!10}{coloured light blue} represent \gls{OOD} evaluations. Values which are \underline{underlined} represent the highest possible F1-score of \gls{OOD} evaluations for the respective dataset.}
     \label{DatasetResultsTable}
 \end{table}
 
+\begin{table}[H]
+    \centering
+    \hspace*{-0.6cm}
+    \begin{tabular}{l|cccc}
+        Model & ENST+MDB & Slakh & ADTOF-YT      \\
+        \hline
+        SLAKH + ADTOF-YT & 0.8552	& \textbf{0.9008}	& \textbf{0.965} \\
+        ENST+MDB + SLAKH + ADTOF-YT & \textbf{0.8772}	& 0.8942	& 0.9502 \\
+        \hline
+        ADTOF-RGW + ADTOF-YT~\cite{signals4040042} & 0.78/0.81* & - & 0.85 \\
+        \hline
+        MT3 (mixture)~\cite{gardner2022mt3multitaskmultitrackmusic} & - & 0.76 & - \\
+        \hline
+        YPTF.MoE+M~\cite{chang2024yourmt3+} & 0.8727**/- & 0.8456 & - \\
+    \end{tabular}
+    \caption{The Micro F1-score of selectively chosen convolutional recurrent neural networks from this dataset study, compared with best performing models from other literature over the three of the test sets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset for all compared models.
+    (*) Zehren et. al tests on ENST-Drums and MDB-Drums separately and tests on different test splits than ours~\cite{signals4040042}.
+    (**) Chang et. al only tests ENST-Drums and tests on a different test split than ours~\cite{chang2024yourmt3+}.}
+    \label{DatasetComparisonTable}
+\end{table}
+
 \section{Discussion}
+
+The results from the dataset study, summarized in Table \ref{DatasetResultsTable} highlight important insights regarding how dataset composition could affect and impact model generalization. These results clearly demonstrate that strategically combining \gls{ADT} datasets improve both on- and \acrfull{OOD} generalization.
+
+Firstly, it is evident that each dataset exhibits great performance on test splits which distribution overlaps with their own training dataset, but a lesser performance when testing \gls{OOD}. There are several hypotheses one could propose for why this is the case, however one plausible one is that the datasets are characteristically varied enough in such a way that they each contrast eachother. This could give rise to this generalization penalty we see and explains the drop in performance. This generalization penalty also seem to be very uniform for different datasets, except one (E-GMD) which is talked about in the following paragraph. The best performing \gls{OOD} evaluations all lie in the Micro F1-score range of $0.6$ to $0.7$, except for the smallest dataset (ENST+MDB) which displays an F1-score of around $0.87$. Interestingly, the best performing \gls{OOD} evaluation for ENST+MDB is significantly close to its best performance overall. As we know, in contrast to the other datasets ENST+MDB consist of high quality, really precise \gls{DTM} data. A hypothesis is that this transcription quality of ENST+MDB more easily show the strength of the other model's, which might be hidden in the lesser quality of other test splits.
+
+Another important observation, as mentioned, is that of E-GMD. As known, this dataset differs from the others by being a \acrfull{DTD} dataset, instead of a \gls{DTM} one. Despite its large size, it is the worst at generalizing to the others, and it is the worst performing model on all other datasets. However, it is worth to note that it also displays the best performance on itself. This helps reinforcing the differences between the tasks of \gls{DTD} and \gls{DTM}, showing how model's trained on differently tasked datasets are not directly applicable interchangeably. 
+
+Building on this information we could inspect the opposite relationship. Notably, the other model's \gls{OOD} evaluation on E-GMD is comparable to that of their \gls{OOD} evaluations on themselves. This also helps strengthen the hypothesis that these tasks, \gls{DTD} and \gls{DTM}, display a complexity hierarchy where one seems to build upon the other. In other words, \gls{DTM} might be a more difficult transcription task than \gls{DTD}, but in return, a model trained for \gls{DTM} might be sufficient for \gls{DTD} tasks, and exhibits a zero-shot generalization ability which does not hold for the opposite.
+
+One results that might merit discussion is the correlation between high ADTOF-YT performance and high SADTP performance. A high F1-score in the ADTOF-YT test split is accompanied by a relatively high \gls{OOD} F1-score for SADTP. Due to the crowdsourced nature of ADTOF-YT, and the SADTP consisting of contemporary and public music tracks, there might exist some overlap in their distribution which could explain this behaviour.\textcolor{red}{Maybe show correlation graph?}.
+
+An insightful observation is that the best performance of all \gls{DTM} datasets from the architecture study, sees themselves beat by models trained on a combination of datasets. This is an important observation and shows that model performance often is enhanced by expanding the dataset size and variation. However, building upon what we discussed in the last paragraph, it is important to understand the differences between \gls{DTD} and \gls{DTM} datasets. As we observe, the best Micro F1-score for \gls{DTD} dataset comes from training data solely of \gls{DTD} data. The same holds the other way, in that the best performances on \gls{DTM} datasets happen when solely trained on \gls{DTM} data.
+
+Secondly, take a look at the model trained on the largest amount of data, the combination of all datasets. This model exhibits superior performance across the board, however interestingly it does not achieve the highest Micro F1-score on any, though being very close. This strengthens the hypothesis that expanding the amount data will heighten generalization ability for a given model, and agrees with the current consensus that training dataset size is vital to achieving an optimally generalizing model~\cite{signals4040042, 9747048}. For future works it would be interesting to analyze how valuable data augmentation would be for \gls{ADT}, and if it affects generalization positively.
+
+Lastly, in Table \ref{DatasetComparisonTable} we compare our best performing model's with other literature and giving remarkable insight. Note that not much literature exist with models evaluated on thsee datasets. Gardner et. al's MT3~\cite{gardner2022mt3multitaskmultitrackmusic} and Chang et. al's YPTF.MOE+M~\cite{chang2024yourmt3+} are general \gls{AMT} models, predicting several different instruments in addition to drums. They also present using the Offset F1-score terminology, equivalent to our Micro F1-score (also used by Zehren et. al~\cite{signals4040042}). Zehren et. al's ADTOF-RGW + ADTOF-YT is a \gls{DTM} model, similar to that of ours. Observably, we note that our model's outperform the others' by a singificant amount on both the Slakh and ADTOF-YT datasets. Due to the splits and datasets being a bit different for ENST+MDB, a direct comparison is a bit more difficult, but one could reason that our model's performance is comparable to that of YPTF.MOE+M~\cite{chang2024yourmt3+}. By comparing with results from other literature, we can put our model's performance into perspective and strengthens the argument that our combinations could in fact provide valuable advancements for the state-of-the-art in \gls{ADT} and \gls{DTM}.
+
+In summary we can conclude that our results strongly indicate and strengthens our hypothesis that combining different datasets with variable characteristics, will help a model perform better on \gls{ADT} tasks, and could make them generalize better towards \acrfull{OOD} datasets. We also note that applicability of different \gls{ADT} tasks follow a relationship, where \gls{DTM} datasets generalize better on \gls{DTD} datasets than the inverse.
+
+\textcolor{red}{I'm unsure if I've discussed enough (or too much of certain aspects) around the results presented in \ref{DatasetResultsTable}?}
