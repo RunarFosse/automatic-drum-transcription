@@ -10,6 +10,8 @@
 
 # Todos for thesis: 
 
+    # Mention that we do 5 instrument transcription. I'm not sure if this is mentioned but this is really important. !! Important
+
     # For all Architecture figures:
 
         - Add a flatten indication between convolutional/patch embedding and the remaining layers? !! Important
