@@ -19,7 +19,7 @@ The drum set is a collection of percussive instruments like different drums, cym
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5, trim={0 1cm 0 0},clip]{figures/drumset}
-    \caption{Example of the different instruments on the drumset.}
+    \caption{Example of the different instruments on the drumset. They are the \gls{KD}, \gls{SD}, \gls{HH}, \gls{CC}, \gls{RC}, \gls{HT}, \gls{MT}, \gls{LT}.}
     \label{DrumsetFigure}
 \end{figure}
 
@@ -28,7 +28,7 @@ As mentioned, percussion like the drum set, stands in contrast to other musical 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5, trim={0 1cm 0 0},clip]{figures/drumsettimbre}
-    \caption{Example of the different audible footprint for drum set percussion.}
+    \caption{Example of the different audible footprint for drum set percussion. Plotted are the waveforms of three different drum instruments played at different speeds, together with its corresponding spectrogram. As we can see, each instrument event different significantly in how they look in and affect the spectrogram.}
     \label{DrumsetTimbreFigure}
 \end{figure}
 
@@ -36,7 +36,14 @@ As mentioned, percussion like the drum set, stands in contrast to other musical 
 
 \section{Transcription Task}
 
-\textcolor{red}{\textbf{An introduction to the task, with an image overview over the pipeline (Waveform $\rightarrow$ Spectrogram $\rightarrow$ Neural Network $\rightarrow$ Activation Functions $\rightarrow$ Transcription) should be done here, and is natural to give the reader a thorough understanding of the task before any other information. UNDERSTANDING THE TASK IS THE MOST IMPORTANT PART!}}
+\textcolor{red}{\textbf{An introduction to the task, with an image overview over the pipeline (Waveform $\rightarrow$ Spectrogram $\rightarrow$ Neural Network $\rightarrow$ Activation Functions $\rightarrow$ Transcription) should be done here, and is natural to give the reader a thorough understanding of the task before any other information. Understanding the task is the most important part!}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{figures/activations.png}
+    \caption{Example of what the prediction pipeline of an \gls{ADT} model would look like, and how it transcribes instruments played in an input spectrogram.}
+    \label{ADTFigure}
+\end{figure}
 
 \section{Audio}
 
@@ -163,8 +170,6 @@ The mel scale was created to mimic human perception of sound, however within \gl
 
 Transcription refers to a process in which we convert information from an audible format, like music, to another medium. This medium then contains a \textit{description} of said audio. As we focus on a musical context, there are a few notable such mediums.
 
-\textcolor{red}{Explain what a transcription is, and what formats they usually are on. Explain what our model is predicting.}
-
 \subsection{Sheet Music}
 
 Sheet music is a written transcription using musical notation that, for a given instrument, contains the \textit{recipe} for a musician to play parts of the original recording. This is the standard when it comes to printing arrangements, and is extensively used by musicians.
@@ -191,8 +196,6 @@ Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempt
     \label{MIDIFigure}
 \end{figure}
 
-\textcolor{red}{Accuracy ...}
-
 \subsection{Activation Functions}
 
 In machine learning, the task of detecting instrument onsets could be described as a multi-label sequence labeling task. This involves, for each timeframe in a sequence, predicting a probability, or rather confidence value, that a certain instrument onset happens. In the domain of \gls{MIR} and \gls{AMT}, it has become common place to describe these confidence distributions as \textit{activation functions}; not to be confused with the general deep learning term, activation functions like ReLU or sigmoid.~\cite{Southall2016AutomaticDT, vogl2018multiinstrumentdrumtranscription}
@@ -201,7 +204,8 @@ This way of frame-level prediction is extensively used within onset detection in
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{figures/activations.png}
+    %\includegraphics[scale=0.5]{figures/activations.png}
+    \textcolor{red}{Need an isolated example of activation functions and respective labels.}
     \caption{Example of \gls{ADT} activation function output}
     \label{ActivationsFigure}
 \end{figure}
@@ -245,6 +249,6 @@ There are different ways of computing and combining F1-score on multi-label data
 
 \textit{Macro F1-score} is computed through the arithmetic mean of the classwise computed F1-scores. Finding a model which maximizes this measure would be similar to finding the model which performes best on each of the separate classes, preventing a class from taking priority due to imbalanced datasets. Relating this to \gls{ADT}, it would mean focusing on transcribing each instrument equally well.
 
-\textit{Micro F1-score} is computed through finding the F1-score with global \gls{TP}, \gls{FP}, \gls{FN} values. Maximizing this would mean prioritizing classes that occur more frequently in the datasets. Such as in \gls{ADT}, this would mean focusing on transcribing instruments which appear often, like the snare or base drum, over rarer instruments like the toms \textcolor{red}{(Somewhere in this master thesis we need a quick introduction to the drums, and which piece of the drumset is which)}. 
+\textit{Micro F1-score} is computed through finding the F1-score with global \gls{TP}, \gls{FP}, \gls{FN} values. Maximizing this would mean prioritizing classes that occur more frequently in the datasets. Such as in \gls{ADT}, this would mean focusing on transcribing instruments which appear often, like the snare or base drum, over rarer instruments like the toms.
 
 For \gls{ADT}, the trend has been to select Micro F1-score as the main performance measure, due to its ability to show a model's \textit{general} performance on musical pieces. We want our model to maximize their ability to transcribe music, not maximize their ability to transcribe each instrument in said music. \gls{ADT}, prioritizing frequent instruments is relevant. As mentioned previously, the more frequent instruments lay the ground work for the fundamentals, and could be said to be more important than scarcely occuring ones.

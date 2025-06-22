@@ -11,7 +11,7 @@ The fundamental building block for \glspl{RNN} is the \textit{recurrent unit}. I
 \begin{figure}[H]
     \centering
     \input{tikz/rnnspectrogram}
-    \caption{Visualization of adjacent timestep's influence for a bidirectional RNN.}
+    \caption{An example of how bidirectional \glspl{RNN} allow for adjacent timesteps to influence the prediction of the current timestep. The background is a spectrogram, and the red boxes represent influence in the middle timeframe. The height of the box help visualize influence strength.}
     \label{RNNInfluenceFigure}
 \end{figure}
 
@@ -50,7 +50,7 @@ We've mentioned that spectrograms can be treated as images. Therefore it would m
 \begin{figure}[H]
     \centering
     \input{tikz/cnnspectrogram}
-    \caption{Visualization of a timestep's contextual influence with CNNs.}
+    \caption{An example of how \glspl{CNN} allow for a fixed context of influence from neighbouring timesteps when predicting each timestep. The background is a spectrogram, and the red boxes represent influence in the middle timeframe, being described by the red shaded region.}
     \label{CNNInfluenceFigure}
 \end{figure}
 
@@ -86,13 +86,6 @@ The previous features, recurrent layers and convolutions, are not mutually exclu
 
 Intuitively, the \glspl{CNN} ability to process images like the spectrogram, together with the \glspl{RNN} ability to understand temporal sequence data should prove beneficial for \gls{ADT} tasks. And indeed, this combination of cross-timestep memory and contextual data representation has shown to be insightful~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, signals4040042}.
 
-\begin{figure}[H]
-    \centering
-    \input{tikz/crnnspectrogram}
-    \caption{Visualization of a timestep's contextual and cross-timestep influence with Convolutional RNNs.}
-    \label{CRNNInfluenceFigure}
-\end{figure}
-
 \subsection{Implementation}
 
 We begin with a fixed-size convolutional block with $I = 2$, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. Following the \gls{CNN}, it has an increasing number of kernels $C = \{32, 64\}$ the deeper into the convolutions we go. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$. Output probabilities are then computed through the final linear layer.
@@ -126,7 +119,7 @@ As mentioned, the \gls{RNN} displays difficulty in sustaining long range depende
 \begin{figure}[H]
     \centering
     \input{tikz/ctspectrogram}
-    \caption{Visualization of a timestep's attention to each other timestep in an attention model.}
+    \caption{An example of how attention layers allow for attentive influence from from other timeframes spanning large distances. The background is a spectrogram, and the red boxes represent influence in the middle timeframe. The height of the box help visualize influence strength.}
     \label{CTInfluenceFigure}
 \end{figure}
 
