@@ -1,16 +1,16 @@
-\chapter{Background}
+\chapter{Background}\label{Background}
 
 \section{Automatic Drum Transcription}
 
-As mentioned, \gls{ADT} describes the task of transcribing symbolic notation for drums from audio. To be even more descriptive, \gls{ADT} can be split into further tasks. From least to most complex we have: \gls{DSC}, where we classify drum instruments from isolated recordings. \gls{DTD}, where we transcribe audio containing exclusively drum instruments. \gls{DTP}, where we transcribe audio containing drum instruments, and additional percussive instruments which the transcription should exclude. Finally, we have \gls{DTM}, which describes the task of drum transcription with audio containing both drum, and melodic instruments.~\cite{8350302}
+As mentioned, \gls{ADT} describes the task of transcribing symbolic notation for drums from audio. To be even more descriptive, \gls{ADT} can be split into further tasks. From least to most complex we have: \gls{DSC}, where we classify drum instruments from isolated single event recordings. \gls{DTD}, where we transcribe audio containing exclusively drum instruments. \gls{DTP}, where we transcribe audio containing drum instruments, and additional percussive instruments which the transcription should exclude. Finally, we have \gls{DTM}, which describes the task of drum transcription with audio containing both drum, and melodic instruments.~\cite{8350302}
 
-In this thesis, we will focus on the most complex of these, namely \gls{DTM}. Intuitively, we want to develop a deep learning model which, given input audio, has the ability to detect and classify different drum instrument onsets (events), while selectively ignoring unrelated, melodic instruments.
+As mentioned, this thesis will focus on the most complex of these, namely \gls{DTM}. Intuitively, we want to develop a deep learning model which, given input audio, has the ability to detect and classify different drum instrument onsets (events), while selectively ignoring unrelated, melodic instruments.
 
 This task comes with difficulties not seen in the less complex tasks. Zehren et al.~\cite{signals4040042} describes one example, in where \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
 
-Deep learning has shown to be a promising method to solve such a task, and several different approaches have been tried, many with great success. Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV} displayed good results with both a convolutional, and a convolutional-recurrent neural network. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} focused on datasets, showing that the amount of data and quality of data are equally important to get good performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} explored an autoregressive, language model approach. This approach explored multi-instrument transcriptions, but their results on \gls{ADT} were notable.
+Deep learning has shown to be a promising method to solve such a task, and several different approaches have been tried, many with great success. Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV} displayed good results with both a convolutional, and a convolutional-recurrent neural network. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} focused on datasets, showing that the amount of data and quality of data are equally important to get good performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} explored an autoregressive, language model approach. This approach explored multi-instrument transcriptions, but their results regarding \gls{DTM} were notable.
 
-This reinforces the fact that there still exist many approaches to attempt, which could lead to a general improvement on \gls{ADT} models.
+This reinforces the fact that there still exist many approaches to attempt, which could lead to a general improvement for both general \gls{ADT} and \gls{DTM} models.
 
 \section{The Drum Set}
 
@@ -36,14 +36,18 @@ As mentioned, percussion like the drum set, stands in contrast to other musical 
 
 \section{Transcription Task}
 
-\textcolor{red}{\textbf{An introduction to the task, with an image overview over the pipeline (Waveform $\rightarrow$ Spectrogram $\rightarrow$ Neural Network $\rightarrow$ Activation Functions $\rightarrow$ Transcription) should be done here, and is natural to give the reader a thorough understanding of the task before any other information. Understanding the task is the most important part!}}
+Understand the pipeline for a transcription task, specifically \gls{ADT}, is crucial for this thesis. It all starts with an initial audio waveform representing the audio track we want to transcribe, usually split into smaller non-overlapping partitions~\cite{vogl2018multiinstrumentdrumtranscription, gardner2022mt3multitaskmultitrackmusic}. This is parsed into a spectrogram, which unravels the frequencies of the audio wave while condensing information across time, making the input features easier for a model to handle and interpret. The spectrogram is then input into an \gls{ADT} model, such as a \gls{DNN}, which reads this input spectrogram and for each timeframe predicts the probability that a certain instrument is played. These continuous likelihood predictions are then postprocessed into a more readable and intended format, such as drum notation.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{figures/activations.png}
-    \caption{Example of what the prediction pipeline of an \gls{ADT} model would look like, and how it transcribes instruments played in an input spectrogram.}
+    \caption{Example of what the prediction pipeline of an \gls{ADT} model could look like. Given an input spectrogram, a model predicts a likelihood distribution of each instrument appearing (called the activation functions), which then is quantized into drum onsets and sheet music notation.}
     \label{ADTFigure}
 \end{figure}
+
+Following this pipeline there are certain parameters which need to be kept in mind when constructing the \gls{DNN}, namely: what does the input and ouput of model look like? The input is given as a spectrogram, but these can vary in size and format based different parameters. These will be discussed further in a later section. The output of the model has a sequence size based on the input spectrogram, but also based on the number of instruments we want to transcribe.
+
+Early \gls{ADT} literature used a 3-instrument approach, predicting the basic \acrfull{KD}, \acrfull{SD} and \acrfull{HH}~\cite{vogl2016recurrent}. These give a useful basis in investigating wether \gls{ADT} problems are solvable using deep learning methods, but are too sparse as this leaves out instruments crucial to the basic drum set. To address this, we expand to a 5-instrument approach, including cymbals (capturing both \acrfull{CC} and \acrfull{RC}) and \acrfull{TT} (capturing all toms) in addition to the three prior instruments. This makes the problem slightly more complex, but allows for denser coverage by representing a full drum set.
 
 \section{Audio}
 
@@ -104,7 +108,7 @@ When we discretize a signal, e.g. when going from continuous audio waves in the 
     \label{AliasingFigure}
 \end{figure}
 
-Regarding the \gls{DFT}, it here directly follows that the maximum frequency we accurately could extract information about is proportional to the sampling rate of the signal.
+Regarding the \gls{DFT}, it here directly follows that the maximum frequency we accurately could extract information about is proportional to the sampling rate of the signal, that being it is equal to the nyquist frequency of the signal.
 
 \subsection{Fast Fourier Transform}
 
@@ -120,18 +124,28 @@ The Fourier Transform comes with some drawbacks, notably how by moving from time
 
 This leads us to the \gls{STFT}. By instead of transforming the whole signal, we transform smaller \textit{windows}, we could gain insight into the frequency space while keeping temporal information relatively intact. This turns our data from being one-dimensional into two-dimensional, giving us insight into the intensities of different frequencies, along different timesteps.
 
-\textcolor{red}{Talk more about the partitioning. The window functions applied, and why. Spectral leakage..}
-
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.35]{figures/stft}
-    \caption{Example of the \gls{STFT}}
+    \caption{Example of the \gls{STFT}. Given a signal we partition into separate windows, with an applied windowing function. Each window is then applied an \gls{FFT}.}
     \label{STFTFigure}
 \end{figure}
 
+The \gls{STFT} comes with several parameters which affect the output format, most importantly the \textit{window function}, \textit{window length} and \textit{hop length}. Due to a phenomena called \textit{spectral leakage}, where spectral information spread larger than a window bleeds into other frequencies, a windowing function is applied per window. A usual function for this is the "Hann window", as seen in figure \ref{HannWindowFigure}. The window length is crucial regarding the time-frequency resolution, where a larger window length provides better frequency resolution, but a worse time resolution. This because it decides how much of the original signal each window \gls{FFT} should cover. The last, hop length, also affects the temporal resolution, by deciding how many windows the signal should be partitioned into. This can also be used to give each window a temporal index. By using a lower hop length, each window would represent a smaller time window, but would require a higher number of \glspl{FFT} due to increasing the number of windows.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.35]{figures/hannwindow}
+    \caption{The Hann window function, a function applied to each window during the \gls{STFT} to lessen the effects of spectral leakage.}
+    \label{HannWindowFigure}
+\end{figure}
+
+For \gls{ADT}, a common approach is to use the previously mentioned Hann-window, along with a window size of 2048 input samples, and a hop length representing 10ms, equal to the sampling rate divided by 100~\cite{8350302, vogl2016recurrent,vogl2018multiinstrumentdrumtranscription, signals4040042}.
+
 \subsection{Spectrogram}
 
-The \gls{STFT}, as the standard Fourier Transform, returns the data as complex values. To turn these into strictly real values without discarding data, we could compute the spectrogram. This is done by squaring the absolute value of each complex number. 
+The \gls{STFT}, similar to the standard Fourier Transform, returns the data as complex values. To turn these into strictly real values without discarding data, we could compute the spectrogram. This is done by squaring the absolute value of each complex number. 
 
 This results in a 2-dimensional, real representation of our signal. A representation like this is equivalent to an \textit{image}, but can also still be modelled as a time series. In this way, we've converted our audible information into visual information. Naturally, these spectrograms can be visualized using e.g. a heatmap.
 
@@ -156,7 +170,7 @@ The mel scale, presented by Stevens, Volkmann, and Newmann in 1937, is a transfo
 
 \subsubsection{Logarithmic Filters}
 
-The mel scale was created to mimic human perception of sound, however within \gls{ADT} there is a different trend. By instead using logarithmically spaced filters, centered on the note $\text{A}_4$, we get a \textit{logarithmically filtered spectrogram}. Intuitively one could assume this, instead of mimicing human perception, ports the spectrogram into a format preserving musical relationship and information. This seems to be a standard for \gls{ADT} and has been used extensively by the likes of Vogl et al.~\cite{8350302, vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV, signals4040042}
+The mel scale was created to mimic human perception of sound, however within \gls{ADT} there is a different trend. By instead using logarithmically spaced filters, centered on the note $\text{A}_4$, we get a \textit{logarithmically filtered spectrogram}. Intuitively one could assume this, instead of mimicing human perception, ports the spectrogram into a format preserving musical relationship and information. This seems to be a standard for \gls{ADT} and has been used extensively by the likes of Vogl et al.Specifically, one constructs 12 different logarithmically spaced filters per octave, for a frrequency range from 20 to 20,000 Hz. This results in a spectrogram with $D_{STFT} = 84$ frequency bins~\cite{8350302, vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV, signals4040042}.
 
 \begin{figure}[H]
     \centering
@@ -198,7 +212,7 @@ Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempt
 
 \subsection{Activation Functions}
 
-In machine learning, the task of detecting instrument onsets could be described as a multi-label sequence labeling task. This involves, for each timeframe in a sequence, predicting a probability, or rather confidence value, that a certain instrument onset happens. In the domain of \gls{MIR} and \gls{AMT}, it has become common place to describe these confidence distributions as \textit{activation functions}; not to be confused with the general deep learning term, activation functions like ReLU or sigmoid.~\cite{Southall2016AutomaticDT, vogl2018multiinstrumentdrumtranscription}
+In machine learning, the task of detecting instrument onsets could be described as a multi-label sequence labeling task. This involves, for each timeframe in a sequence, predicting a probability, or rather confidence value, that a certain instrument onset happens. In the domain of \gls{MIR} and \gls{AMT}, it has become common place to describe these confidence distributions as \textit{activation functions}; not to be confused with the general deep learning term, activation functions like ReLU or sigmoid.~\cite{8350302, Southall2016AutomaticDT, vogl2018multiinstrumentdrumtranscription}
 
 This way of frame-level prediction is extensively used within onset detection in \gls{ADT} and is the approach we will be taking in this thesis.
 
