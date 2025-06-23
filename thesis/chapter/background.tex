@@ -170,7 +170,7 @@ The mel scale, presented by Stevens, Volkmann, and Newmann in 1937, is a transfo
 
 \subsubsection{Logarithmic Filters}
 
-The mel scale was created to mimic human perception of sound, however within \gls{ADT} there is a different trend. By instead using logarithmically spaced filters, centered on the note $\text{A}_4$, we get a \textit{logarithmically filtered spectrogram}. Intuitively one could assume this, instead of mimicing human perception, ports the spectrogram into a format preserving musical relationship and information. This seems to be a standard for \gls{ADT} and has been used extensively by the likes of Vogl et al.Specifically, one constructs 12 different logarithmically spaced filters per octave, for a frrequency range from 20 to 20,000 Hz. This results in a spectrogram with $D_{STFT} = 84$ frequency bins~\cite{8350302, vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV, signals4040042}.
+The mel scale was created to mimic human perception of sound, however within \gls{ADT} there is a different trend. By instead using logarithmically spaced filters, centered on the note $\text{A}_4$, we get a \textit{logarithmically filtered spectrogram}. Intuitively one could assume this, instead of mimicing human perception, ports the spectrogram into a format preserving musical relationship and information. This seems to be a standard for \gls{ADT} and has been used extensively by the likes of Vogl et al. Specifically, one constructs 12 different logarithmically spaced filters per octave, for a frrequency range from 20 to 20,000 Hz. This results in a spectrogram with $D_{STFT} = 84$ frequency bins~\cite{8350302, vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV, signals4040042}.
 
 \begin{figure}[H]
     \centering
