@@ -18,8 +18,8 @@ The drum set is a collection of percussive instruments like different drums, cym
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5, trim={0 1cm 0 0},clip]{figures/drumset}
-    \caption{Example of the different instruments on the drumset. They are the \acrfull{KD}, \acrfull{SD}, \acrfull{HH}, \acrfull{CC}, \acrfull{RC}, \acrfull{HT}, \acrfull{MT}, \acrfull{LT}.}
+    \includegraphics[scale=0.7, trim={0 1cm 0 0},clip]{figures/drumset}
+    \caption{Example of the different instruments that make up the full standard drum set. They are the \acrfull{KD}, \acrfull{SD}, \acrfull{HH}, \acrfull{CC}, \acrfull{RC}, \acrfull{HT}, \acrfull{MT}, \acrfull{LT}.}
     \label{DrumsetFigure}
 \end{figure}
 
@@ -27,7 +27,7 @@ As mentioned, percussion like the drum set, stands in contrast to other musical 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5, trim={0 1cm 0 0},clip]{figures/drumsettimbre}
+    \includegraphics[scale=0.6, trim={0 1cm 0 0},clip]{figures/drumsettimbre}
     \caption{Example of the different audible footprint for drum set percussion. Plotted are the waveforms of three different drum instruments played at different speeds, together with its corresponding spectrogram. As we can see, each instrument event different significantly in how they look in and affect the spectrogram.}
     \label{DrumsetTimbreFigure}
 \end{figure}
@@ -38,7 +38,7 @@ Understand the pipeline for a transcription task, specifically \gls{ADT}, is cru
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5]{figures/activations.png}
+    \includegraphics[scale=0.7]{figures/adtpipeline.png}
     \caption{Example of what the prediction pipeline of an \gls{ADT} model could look like. Given an input spectrogram, a model predicts a likelihood distribution of each instrument appearing (called the activation functions), which then is quantized into drum onsets and sheet music notation.}
     \label{ADTFigure}
 \end{figure}
@@ -55,8 +55,8 @@ Thus sound can be described as the propogation and perception of waves. Mathemat
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.3]{figures/waveform}
-    \caption{Soundwave to waveform relationship}
+    \includegraphics[scale=0.35]{figures/waveform}
+    \caption{Soundwave to waveform relationship. The waveform represents the pressure of the air molecules in the soundwave at a given time. Higher and lower pressure in the soundwaves gives respective \textit{peaks} and \textit{troughs} in the waveform.}
     \label{WaveformFigure}
 \end{figure}
 
@@ -73,7 +73,7 @@ By doing such a transform, we turn our temporal data into spectral data. This in
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.4]{figures/fft.jpg}
-    \caption{Application of a Fourier Transform}
+    \caption{By applying the Fourier Transform one deconstructs a given wave into its frequency components.}
     \label{FTFigure}
 \end{figure}
 
@@ -101,8 +101,8 @@ When we discretize a signal, e.g. when going from continuous audio waves in the 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=2.0]{figures/signalaliasing.png}
-    \caption{Example of aliasing in an undersampled signal.}
+    \includegraphics[scale=2.5]{figures/signalaliasing.png}
+    \caption{Example of aliasing in an undersampled signal. By undersampling a wave we lose information to accurately describe that wave, leading to an aliased signal.}
     \label{AliasingFigure}
 \end{figure}
 
@@ -124,7 +124,7 @@ This leads us to the \gls{STFT}. By instead of transforming the whole signal, we
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{figures/stft}
+    \includegraphics[scale=0.4]{figures/stft}
     \caption{Example of the \gls{STFT}. Given a signal we partition into separate windows, with an applied windowing function. Each window is then applied an \gls{FFT}.}
     \label{STFTFigure}
 \end{figure}
@@ -134,8 +134,8 @@ The \gls{STFT} comes with several parameters which affect the output format, mos
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{figures/hannwindow}
-    \caption{The Hann window function, a function applied to each window during the \gls{STFT} to lessen the effects of spectral leakage.}
+    \includegraphics[scale=0.45]{figures/hannwindow}
+    \caption{The Hann window function, a function applied to each window during the \gls{STFT} to lessen the effects of spectral leakage. It achieves this by scaling the ampltiude of the window's signal down towards the edges.}
     \label{HannWindowFigure}
 \end{figure}
 
@@ -149,8 +149,8 @@ This results in a 2-dimensional, real representation of our signal. A representa
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{figures/spectrogram}
-    \caption{Heatmap of an audio spectrogram.}
+    \includegraphics[scale=0.8]{figures/logspectrogram}
+    \caption{Heatmap of an audio spectrogram, of the SADTP track "Red Swan" from 3:35 to 3:40 minutes. It is computed using 512 \glspl{FFT}, with a window length of 512 and hop length representing 10ms. The color is represented in log-magnitude.}
     \label{SpectrogramFigure}
 \end{figure}
 
@@ -178,6 +178,20 @@ The mel scale was created to mimic human perception of sound, however within \gl
     %\label{AliasingFigure}
 \end{figure}
 
+\subsection{Loudness of Magnitude}
+
+Similarly to perception of pitch, loudness also perceived an approximately logarithmic. A soundwave which is 10 times louder in energy is not perceived as being 10 times louder by us. Instead, a doubling in perceived loudness corresponds to a rougly 10 \gls{dB} increase in signal amplitude. The \acrlong{dB} is a relative unit of measurement, expressing the ratio of the power between two signals, where 1 \gls{dB} have a power ratio of $10^\frac{1}{10}$, with the power of a signal is being computed as the magnitude squared. This has two major consequences. Firstly, the magnitude scale does not follow the natural perceived loudness scale of us humans. A loud signal and a quiet signal could differ significantly in magnitude. However secondly, this means the normal spectrogram is very variational when it comes to magnitudal information, and makes it hard to identify frequencies other than the largest ones.
+
+This is often solved by instead computing a log-magnitude spectrogram (like in Figure \ref{SpectrogramFigure}), which turns the magnitude into logarithmic scale. The base chosen for this logarithm is almost exclusively base 10, due to the \acrlong{dB} being a logarithmic scale in this scale.
+
+\begin{figure}[H]
+    \centering
+    \hspace*{-1.0cm}
+    \includegraphics[scale=1.0]{figures/spectrogramlogspectrogram}
+    \caption{Comparison of a magnitude spectrogram on the left with a log-magnitude spectrogram on the right. As we can see, differences in magnitude are much harder to visualize when scaled linearly, versus when scaled logarithmically.}
+    \label{SpectrogramLogspectrogramFigure}
+\end{figure}
+
 \section{Transcription}
 
 Transcription refers to a process in which we convert information from an audible format, like music, to another medium. This medium then contains a \textit{description} of said audio. As we focus on a musical context, there are a few notable such mediums.
@@ -203,7 +217,7 @@ Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempt
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5, trim={0 0 13.8cm 0},clip]{figures/midi}
+    \includegraphics[scale=0.6, trim={0 0 13.8cm 0},clip]{figures/midi}
     \caption{Example MIDI arrangement in a readable format}
     \label{MIDIFigure}
 \end{figure}
