@@ -66,14 +66,18 @@ For monophonic sound, this waveform is a one-dimensional representation. Even th
 
 The Fourier Transform is a mathematical transformation which, given a frequency, computes its significance, or intensity, in a given signal. As we've established, audio is represented as a signal, and we can therefore use this transform to turn this audio signal into frequency space. 
 
-The fourier transform is a complex transformation. Given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, resulting in a \textit{complex} number. This number consists of a \textit{real} part and an \textit{imaginary} part. The real part consists of the amplitude of a certain frequency, where as the imaginary part consists of the phase. This information is what allows us to, for a given signal, figure out which frequencies it is made out of and how much each frequency contributes.
+The fourier transform is a complex transformation. Given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, resulting in a \textit{complex} number $z = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{|\frac{b}{a}|}$ the phase of the respective frequency in the original signal $f$. This information is what allows us to, for a given signal, figure out which frequencies it is made out of and how much each frequency contributes. 
 
 By doing such a transform, we turn our temporal data into spectral data. This initively \textit{untangles} our signal into its respective base frequencies. Such an transformation could lessen the complexity of the task, making \textit{understanding} of audio easier.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.4]{figures/fft.jpg}
-    \caption{By applying the Fourier Transform one deconstructs a given wave into its frequency components.}
+    \hspace*{-1.2cm}
+    \begin{tikzpicture}
+        \node at (0, 0) {\includegraphics[scale=0.8]{figures/fouriertransform}};
+        \draw[->] (-1, 0) -- (1, 0) node[above, midway, font=\footnotesize] {Fourier Transform};
+    \end{tikzpicture}
+    \caption{Applying the Fourier Transform deconstructs a wave into its respective frequency components.}
     \label{FTFigure}
 \end{figure}
 
@@ -101,8 +105,8 @@ When we discretize a signal, e.g. when going from continuous audio waves in the 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=2.5]{figures/signalaliasing.png}
-    \caption{Example of aliasing in an undersampled signal. By undersampling a wave we lose information to accurately describe that wave, leading to an aliased signal.}
+    \input{tikz/aliasing}
+    \caption{Example of aliasing in an undersampled signal. The original signal has a frequency of 9Hz. Above, when sampled at a sufficient sampling rate of 45Hz we perceive the signal at its actual frequency. However below, when sampled with a sampling rate of 7Hz, we instead incorrectly perceive the signal as having a frequency of 2Hz.}
     \label{AliasingFigure}
 \end{figure}
 
@@ -114,7 +118,7 @@ Keen-eyed computer scientists may have spotted that the \gls{DFT} runs in $\math
 
 The \gls{FFT} is an algorithm which solves this problem, and instead computes the \gls{DFT} of a signal within $\mathcal{O}(n\log{n})$ time. Described by Gilbert Strang as \textit{"the most important numerical algorithm of our lifetime"}~\cite{strang1993wavelet}, this practically solves our scaling problem, and allows us to efficiently extract spectral information from a signal regardless of sampling rate.
 
-There exist many different implementations of the \gls{FFT}. However the Cooley-Tukey algorithm is by far the most used \gls{FFT} and optimizes calculations through a \textit{divide and conquer} approach, utilizing previous calculations to compute others.~\cite{d3ea2d52-5ab2-3128-8b80-efb85267295d}
+There exist many different implementations of the \gls{FFT}. However the Cooley-Tukey algorithm is by far the most used \gls{FFT} and optimizes calculations through a \textit{divide and conquer} approach, utilizing prior calculations to compute others.~\cite{d3ea2d52-5ab2-3128-8b80-efb85267295d}
 
 \subsection{Short-time Fourier Transform}
 
@@ -130,7 +134,6 @@ This leads us to the \gls{STFT}. By instead of transforming the whole signal, we
 \end{figure}
 
 The \gls{STFT} comes with several parameters which affect the output format, most importantly the \textit{window function}, \textit{window length} and \textit{hop length}. Due to a phenomena called \textit{spectral leakage}, where spectral information spread larger than a window bleeds into other frequencies, a windowing function is applied per window. A usual function for this is the "Hann window", as seen in figure \ref{HannWindowFigure}. The window length is crucial regarding the time-frequency resolution, where a larger window length provides better frequency resolution, but a worse time resolution. This because it decides how much of the original signal each window \gls{FFT} should cover. By making each window larger, one is able to more accurately compute each frequency's magnitudes, but this comes at the cost of covering and overlapping more with other windows. Intuitively, smaller windows blur frequential information where as larger windows blur temporal information; a tradeoff described as the \textit{time-frequency tradeoff}. The last, hop length, also affects the temporal resolution, by deciding how many windows the signal should be partitioned into. This can also be used to give each window a temporal index. By using a lower hop length, each window would represent a smaller time window, but would require a higher number of \glspl{FFT} due to increasing the number of windows.
-
 
 \begin{figure}[H]
     \centering
@@ -156,7 +159,7 @@ This results in a 2-dimensional, real representation of our signal. A representa
 
 The number of frequency bins (observed as the y-axis of Figure \ref{SpectrogramFigure}) one is left with in a spectrogram is equal to half the number of \glspl{FFT} used when computing it. These frequency bins contain frequential information about each linearly spaced frequency, from 0Hz up to the Nyquist frequency of the signal. The number of timeframes (the x-axis) is as mentioned given by the hop length of the \gls{STFT}, with a smaller hop length resulting in a larger number of timeframes. In such a way, one has significant control over the dimensionality of the spectrogram based on the values of the specific parameters. 
 
-One drawback about the spectrogram is that it contains no information about the phase of the signal it represents. This is because the phase of a signal is stored in the rotation angle of a complex number, which is discarded when taking the absolute value. That means it will not be possible to reverse the process and recreate the exact original signal. However, one could try to create an approximation like is done with the Griffin-Lim algorithm~\cite{1164317}.
+One drawback about the spectrogram is that it contains no information about the phase of the signal it represents. As mentioned, the phase of a signal is stored in the rotation angle of a complex number, which is discarded when taking the absolute value. That means it will not be possible to reverse the spectrogram transformartion process and recreate the exact original signal. However, one could approximate it using an algorithm like Griffin-Lim~\cite{1164317}.
 
 \subsection{Loudness of Magnitude}
 
