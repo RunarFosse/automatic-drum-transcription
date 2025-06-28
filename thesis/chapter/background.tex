@@ -201,16 +201,16 @@ The mel scale was created to mimic human perception of sound, however within \gl
 
 Transcription refers to a process in which we convert information from an audible format, like music, to another medium. This medium then contains a \textit{description} of said audio. As we focus on a musical context, there are a few notable such mediums.
 
-\subsection{Sheet Music}
+\subsection{Music Notation}
 
-Sheet music is a written transcription using musical notation that, for a given instrument, contains the \textit{recipe} for a musician to play parts of the original recording. This is the standard when it comes to printing arrangements, and is extensively used by musicians.
+Modern staff notation is a written transcription for a given instrument, that contains the \textit{recipe} for a musician to play parts of the original recording. This has become the standard way of noting down music, and is used by musicians of many different genres all throughout the world.
 
-Sheet music is typically descriptively exhaustive, and could contain information about musical properties like instrument onsets, tempo, velocity, etc. 
+Sheet music with this notation is typically descriptively exhaustive, and contain information about musical properties like instrument onsets, tempo, velocity, etc. When reading it, time moves horizontally from left-to-right. Each note represents an onset, where the onset's pitch (for melodic instruments) or percussion (for percussive instruments, like the drum set) is denoted by the note's vertical position. The duration or time segment of a given onset is denoted by the form of the note-head or note-stem.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=1.0]{figures/drumsheet}
-    \caption{Example sheet music for a drumset}
+    \input{tikz/drumsheet}
+    \caption{An example drum sheet containing all instruments of a 5-instrument \gls{ADT} task. The instrument in each respective row is shown on the left. From the bottom they are the \acrfull{KD}, \acrfull{TT}, \acrfull{SD}, \acrfull{HH}, and \acrfull{CC+RC}.}
     \label{DrumsheetFigure}
 \end{figure}
 
@@ -235,7 +235,8 @@ This way of frame-level prediction is extensively used within onset detection in
 
 \begin{figure}[H]
     \centering
-    %\includegraphics[scale=0.5]{figures/activations.png}
+    \includegraphics[scale=1.0]{lilypond/activation.cropped.pdf}
+    \newline
     \textcolor{red}{Need an isolated example of activation functions and respective labels.}
     \caption{Example of \gls{ADT} activation function output}
     \label{ActivationsFigure}
