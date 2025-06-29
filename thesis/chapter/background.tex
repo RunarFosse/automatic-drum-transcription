@@ -214,6 +214,8 @@ Sheet music with this notation is typically descriptively exhaustive, and contai
     \label{DrumsheetFigure}
 \end{figure}
 
+Note that rest marks, like \HaPa, \ViPa, or \SePa, might appear in notation transcriptions. These are symbols which indicate silence or pauses in the music. Although these might appear inline with the instrument onsets, one should not expect an onset at their respective timing, rather it indicating a short break.
+
 \subsection{MIDI Annotations}
 
 \gls{MIDI} is the industry standard for handling music digitally. It is a binary format, containing sequences of commands that allow digital interfaces to \textit{synthesize} music. As it is binary, it is unreadable to us humans without translating it into another format. When computers play \gls{MIDI} arrangements, the \gls{MIDI} sequences are parsed at a constant speed, playing different sounds through \textit{note on}/\textit{note off} events, delayed by time \textit{deltas}. Similar to sheet music, \gls{MIDI} is also very descriptive. And one could say that, intuitively, \gls{MIDI} is to a computer what sheet music is to a musician.
@@ -283,3 +285,11 @@ There are different ways of computing and combining F1-score on multi-label data
 \textit{Micro F1-score} is computed through finding the F1-score with global \gls{TP}, \gls{FP}, \gls{FN} values. Maximizing this would mean prioritizing classes that occur more frequently in the datasets. Such as in \gls{ADT}, this would mean focusing on transcribing instruments which appear often, like the snare or base drum, over rarer instruments like the toms.
 
 For \gls{ADT}, the trend has been to select Micro F1-score as the main performance measure, due to its ability to show a model's \textit{general} performance on musical pieces. We want our model to maximize their ability to transcribe music, not maximize their ability to transcribe each instrument in said music. \gls{ADT}, prioritizing frequent instruments is relevant. As mentioned previously, the more frequent instruments lay the ground work for the fundamentals, and could be said to be more important than scarcely occuring ones.
+
+\begin{figure}[H]
+    \centering
+    \hspace*{-0.5cm}
+    \input{tikz/f1.tex}
+    \caption{Example of F1-score.}
+    \label{F1Figure}
+\end{figure}
