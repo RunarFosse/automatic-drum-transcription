@@ -231,14 +231,13 @@ Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempt
 
 In machine learning, the task of detecting instrument onsets could be described as a multi-label sequence labeling task. This involves, for each timeframe in a sequence, predicting a probability, or rather confidence value, that a certain instrument onset happens. In the domain of \gls{MIR} and \gls{AMT}, it has become common place to describe these confidence distributions as \textit{activation functions}; not to be confused with the general deep learning term, activation functions like ReLU or sigmoid.~\cite{8350302, Southall2016AutomaticDT, vogl2018multiinstrumentdrumtranscription}
 
-This way of frame-level prediction is extensively used within onset detection in \gls{ADT} and is the approach we will be taking in this thesis.
+This way of frame-level prediction is extensively used within onset detection in \gls{ADT} and is the approach we will be taking in this thesis. When predicting these activation functions, we concatenate each activation function distribution rowwise onto a matrix format, based on each instrument.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=1.0]{lilypond/activation.cropped.pdf}
-    \newline
-    \textcolor{red}{Need an isolated example of activation functions and respective labels.}
-    \caption{Example of \gls{ADT} activation function output}
+    \hspace*{-0.5cm}
+    \input{tikz/activations.tex}
+    \caption{The activation function representation for a 5-instrument \gls{ADT} task of a piece written in drum notation. Note how the value of each respective activation function is zero everywhere, except at its onsets, where it is one.}
     \label{ActivationsFigure}
 \end{figure}
 
