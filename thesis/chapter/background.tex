@@ -72,12 +72,12 @@ By doing such a transform, we turn our temporal data into spectral data. This in
 
 \begin{figure}[H]
     \centering
-    \hspace*{-1.2cm}
+    \hspace*{-1.3cm}
     \begin{tikzpicture}
         \node at (0, 0) {\includegraphics[scale=0.8]{figures/fouriertransform}};
-        \draw[->] (-1, 0) -- (1, 0) node[above, midway, font=\footnotesize] {Fourier Transform};
+        \draw[->] (-1, 0) -- (1.75, 0) node[above, midway, font=\footnotesize] {Fourier Transform};
     \end{tikzpicture}
-    \caption{Applying the Fourier Transform deconstructs a wave into its respective frequency components.}
+    \caption{Applying the Fourier Transform deconstructs a wave into its respective frequency components. The waveform on the left (time-domain) is measured in amplitude, where a high amplitude denotes a high pressure level. The spectrum on the right (frequency-domain) is also measured in amplitude, but represents the strength of different frequencies in the original signal.}
     \label{FTFigure}
 \end{figure}
 
@@ -88,14 +88,6 @@ Note that the Fourier Transform is invertible, meaning that, given information a
 The Fourier Transform is defined as an integral over continuous time. On computers, instead of storing signals continuously we store signals using a discrete number of samples. Each signal's \textit{sampling rate} describes how many samples a signal contains per second of audio, and is denoted in \textit{Hz}.
 
 To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works as the normal Fourier Transform, but ported to work on discrete-valued signals. It is given by the formula \[ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}}, \] where $k$ denotes a certain frequency bin and $N$ the number of discrete samples. Note that contrary to the normal Fourier transformer, instead of computing the magnitude of each specific real-valued frequency, we instead compute the magnitude of frequencies covered by certain frequency bins. The number of these bins are directly dependent on the number of samples $N$, and the respective frequencies covered by each bin is given by the signal's sampling rate.
-
-\begin{figure}[H]
-    \centering
-    %\includegraphics[scale=2.0]{figures/signalaliasing.png}
-    \textcolor{red}{Add a example figure of FT vs DFT}
-    %\caption{Example of aliasing in an undersampled signal.}
-    %\label{AliasingFigure}
-\end{figure}
 
 \subsection{Nyquist frequency}
 
@@ -128,7 +120,8 @@ This leads us to the \gls{STFT}. By instead of transforming the whole signal, we
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.4]{figures/stft}
+    %\includegraphics[scale=0.4]{figures/stft}
+    \input{tikz/stft.tex}
     \caption{Example of the \gls{STFT}. Given a signal we partition into separate windows, with an applied windowing function. Each window is then applied an \gls{FFT}.}
     \label{STFTFigure}
 \end{figure}
@@ -214,7 +207,7 @@ Sheet music with this notation is typically descriptively exhaustive, and contai
     \label{DrumsheetFigure}
 \end{figure}
 
-Note that rest marks, like \HaPa, \ViPa, or \SePa, might appear in notation transcriptions. These are symbols which indicate silence or pauses in the music. Although these might appear inline with the instrument onsets, one should not expect an onset at their respective timing, rather it indicating a short break.
+Note that rest marks, like \HaPa, \ViPa, \AcPa, or \SePa, might appear in notation transcriptions. These are symbols which indicate silence or pauses in the music. Although these might appear inline with the instrument onsets, one should not expect an onset at their respective timing, rather it indicating a short break.
 
 \subsection{MIDI Annotations}
 
@@ -266,7 +259,7 @@ Our machine learning models predict instrument onset events on a frame-level bas
 
 For classification tasks, a standard performance measure would be \textit{accuracy}: \[ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}.\] Summing up correct predictions, \gls{TP} and \gls{TN}, and dividing by total number of predictions, sum of \gls{TP}, \gls{TN}, \gls{FP} and \gls{FN}, we find a model's probability of having a correct prediction.
 
-This performance measure falls short in that it is very susceptible to imbalanced datasets. In \gls{ADT}, most timeframes contain no onset, meaning a naïve predictor would get a high accuracy by never predicting any onsets. Another problem with accuracy is that, due to our tolerance window approach we do not have quantities for \gls{TN}, such that the standard accuracy computation is incomputable.
+This performance measure falls short in that it is very susceptible to imbalanced datasets. In \gls{ADT}, most timeframes contain no onset, meaning a naïve predictor would get a high accuracy by never predicting any onsets. Another problem with accuracy is that, due to our tolerance window approach we do not necessarily have quantities for \gls{TN}, such that the standard accuracy computation would be incomputable.
 
 \subsection{F1-score}
 
