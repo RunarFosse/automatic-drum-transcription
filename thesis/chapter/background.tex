@@ -122,7 +122,7 @@ This leads us to the \gls{STFT}. By instead of transforming the whole signal, we
     \centering
     %\includegraphics[scale=0.4]{figures/stft}
     \input{tikz/stft.tex}
-    \caption{Example of the \gls{STFT}. Given a signal we partition into separate windows, with an applied windowing function. Each window is then applied an \gls{FFT}.}
+    \caption{The application of the \gls{STFT} on a signal. We partition the original signal into different signal windows by multiplying it with multiple, differently offset window functions. We apply the \gls{FFT} on each of these signal partitions seperately to obtain several frequency spectra.}
     \label{STFTFigure}
 \end{figure}
 
@@ -130,8 +130,8 @@ The \gls{STFT} comes with several parameters which affect the output format, mos
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.45]{figures/hannwindow}
-    \caption{The Hann window function, a function applied to each window during the \gls{STFT} to lessen the effects of spectral leakage. It achieves this by scaling the ampltiude of the window's signal down towards the edges.}
+    \includegraphics[scale=0.8]{figures/hann}
+    \caption{The Hann window function, a function applied to each partition during the \gls{STFT} to lessen the effects of spectral leakage. It achieves this by scaling the amplitude of a partition's signal down towards the edges. This window has a window length of 2048 samples.}
     \label{HannWindowFigure}
 \end{figure}
 
