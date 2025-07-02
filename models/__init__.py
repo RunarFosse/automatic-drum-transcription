@@ -11,6 +11,7 @@ from .recurrent import RNNDecoder
 from .attention import AttentionDecoder, PatchEmbedding
 
 from typing import Tuple
+from warnings import warn
 
 
 class RNN(nn.Module):
@@ -54,7 +55,7 @@ class CNN(nn.Module):
         "hidden_size": tune.choice([72, 144, 288, 576])
     }
 
-class ADTOF_FrameRNN(nn.Module):
+class ConvolutionalRNN(nn.Module):
     def __init__(self, num_layers: int = 3, hidden_size: int = 288, use_gru: bool = True):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
@@ -73,7 +74,7 @@ class ADTOF_FrameRNN(nn.Module):
     }
     
     
-class ADTOF_FrameAttention(nn.Module):
+class ConvolutionalTransformer(nn.Module):
     def __init__(self, num_heads: int = 6, num_layers: int = 5, embed_dim: int = 576):
         super().__init__()
         self.encoder = FrameSynchronousCNNEncoder()
@@ -110,3 +111,15 @@ class VisionTransformer(nn.Module):
         "num_layers": tune.choice([2, 4, 6, 8, 10]),
         "embed_dim": tune.choice([72, 144, 288, 576])
     }
+
+
+# --- Old model names ---
+class ADTOF_FrameRNN(ConvolutionalRNN):
+    def __init__(self, *args, **kwargs):
+        warn("Class 'ADTOF_FrameRNN' is deprecated. Use 'ConvolutionalRNN' instead.", DeprecationWarning)
+        super().__init__(*args, **kwargs)
+
+class ADTOF_FrameAttention(ConvolutionalTransformer):
+    def __init__(self, *args, **kwargs):
+        warn("Class 'ADTOF_FrameAttention' is deprecated. Use 'ConvolutionalTransformer' instead.", DeprecationWarning)
+        super().__init__(*args, **kwargs)

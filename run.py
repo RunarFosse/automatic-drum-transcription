@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader, ConcatDataset
 from ray import init, tune, train
 from ray.tune.search.optuna import OptunaSearch
 from time import time
-from models import RNN, CNN, ADTOF_FrameRNN, ADTOF_FrameAttention, VisionTransformer
+from models import RNN, CNN, ConvolutionalRNN, ConvolutionalTransformer, VisionTransformer
 from preprocess import compute_normalization, create_transform
 from evaluate import evaluate_model
 from train import train_model
@@ -40,8 +40,8 @@ seed = int(time())
 Model = {
     "rnn": RNN, 
     "cnn": CNN, 
-    "crnn": ADTOF_FrameRNN, 
-    "ct": ADTOF_FrameAttention, 
+    "crnn": ConvolutionalRNN, 
+    "ct": ConvolutionalTransformer, 
     "vit": VisionTransformer,
     }[args.model]
 
