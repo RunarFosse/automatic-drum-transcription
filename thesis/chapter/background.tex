@@ -1,51 +1,8 @@
 \chapter{Background}\label{Background}
 
-\section{Automatic Drum Transcription}
+\section{The Transcription Task}
 
-As mentioned, \gls{ADT} describes the task of transcribing symbolic notation for drums from audio. To be even more descriptive, \gls{ADT} can be split into further tasks. From least to most complex we have: \gls{DSC}, where we classify drum instruments from isolated single event recordings. \gls{DTD}, where we transcribe audio containing exclusively drum instruments. \gls{DTP}, where we transcribe audio containing drum instruments, and additional percussive instruments which the transcription should exclude. Finally, we have \gls{DTM}, which describes the task of drum transcription with audio containing both drum, and melodic instruments.~\cite{8350302}
-
-As mentioned, this thesis will focus on the most complex of these, namely \gls{DTM}. Intuitively, we want to develop a deep learning model which, given input audio, has the ability to detect and classify different drum instrument onsets (events), while selectively ignoring unrelated, melodic instruments.
-
-This task comes with difficulties not seen in the less complex tasks. Zehren et al.~\cite{signals4040042} describes one example, in where \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
-
-Deep learning has shown to be a promising method to solve such a task, and several different approaches have been tried, many with great success. Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV} displayed good results with both a convolutional, and a convolutional-recurrent neural network. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} focused on datasets, showing that the amount of data and quality of data are equally important to get good performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} explored an autoregressive, language model approach. This approach explored multi-instrument transcriptions, but their results regarding \gls{DTM} were notable.
-
-This reinforces the fact that there still exist many approaches to attempt, which could lead to a general improvement for both general \gls{ADT} and \gls{DTM} models.
-
-\section{The Drum Set}
-
-The drum set is a collection of percussive instruments like different drums, cymbals, and possibly different auxillary percussions. A drum set can vary in what it is composed of, however a standard kit usually consists of a \gls{SD}, a \gls{KD}, one or more \glspl{TT} (toms), one or more cymbals (\gls{CC} and \gls{RC}), and a \gls{HH} cymbal~\cite{TheDrumHandbook2003}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.7, trim={0 1cm 0 0},clip]{figures/drumset}
-    \caption{Example of the different instruments that make up the full standard drum set. They are the \acrfull{KD}, \acrfull{SD}, \acrfull{HH}, \acrfull{CC}, \acrfull{RC}, \acrfull{HT}, \acrfull{MT}, \acrfull{LT}.}
-    \label{DrumsetFigure}
-\end{figure}
-
-As mentioned, percussion like the drum set, stands in contrast to other musical instruments in that the different ways of playing the same instrument often differ a lot in their \textit{"audible footprint"}. The snare drum, bass drum and hi-hat all have quite different timbres, frequency span, volume, and all in all fundamentally are different instruments.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.6, trim={0 1cm 0 0},clip]{figures/drumsettimbre}
-    \caption{Example of the different audible footprint for drum set percussion. Plotted are the waveforms of three different drum instruments played at different speeds, together with its corresponding spectrogram. As we can see, each instrument event different significantly in how they look in and affect the spectrogram.}
-    \label{DrumsetTimbreFigure}
-\end{figure}
-
-\section{Transcription Task}
-
-Understand the pipeline for a transcription task, specifically \gls{ADT}, is crucial for this thesis. It all starts with an initial audio waveform representing the audio track we want to transcribe, usually split into smaller non-overlapping partitions~\cite{vogl2018multiinstrumentdrumtranscription, gardner2022mt3multitaskmultitrackmusic}. This is parsed into a spectrogram, which unravels the frequencies of the audio wave while condensing information across time, making the input features easier for a model to handle and interpret. The spectrogram is then input into an \gls{ADT} model, such as a \gls{DNN}, which reads this input spectrogram and for each timeframe predicts the probability that a certain instrument is played. These continuous likelihood predictions are then postprocessed into a more readable and intended format, such as drum notation.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.7]{figures/adtpipeline.png}
-    \caption{Example of what the prediction pipeline of an \gls{ADT} model could look like. Given an input spectrogram, a model predicts a likelihood distribution of each instrument appearing (called the activation functions), which then is quantized into drum onsets and sheet music notation.}
-    \label{ADTFigure}
-\end{figure}
-
-Following this pipeline there are certain parameters which need to be kept in mind when constructing the \gls{DNN}, namely: what does the input and ouput of model look like? The input is given as a spectrogram, but these can vary in size and format based different parameters. These will be discussed further in a later section. The output of the model has a sequence size based on the input spectrogram, but also based on the number of instruments we want to transcribe.
-
-Early \gls{ADT} literature used a 3-instrument approach, predicting the basic \acrfull{KD}, \acrfull{SD} and \acrfull{HH}~\cite{vogl2016recurrent}. These give a useful basis in investigating wether \gls{ADT} problems are solvable using deep learning methods, but are too sparse as this leaves out instruments crucial to the basic drum set. To address this, we expand to a 5-instrument approach, including cymbals (capturing both \acrfull{CC} and \acrfull{RC}) and \acrfull{TT} (capturing all toms) in addition to the three prior instruments. This makes the problem slightly more complex, but allows for denser coverage by representing the standard, full drum set.
+\textcolor{red}{Do an introduction to the general transcription task here. We only need intuition for what task we are solving, without having to understand any audio/spectrogram-, or output/music notation specifics.}
 
 \section{Audio}
 
@@ -66,7 +23,7 @@ For monophonic sound, this waveform is a one-dimensional representation. Even th
 
 The Fourier Transform is a mathematical transformation which, given a frequency, computes its significance, or intensity, in a given signal. As we've established, audio is represented as a signal, and we can therefore use this transform to turn this audio signal into frequency space. 
 
-The fourier transform is a complex transformation. Given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, resulting in a \textit{complex} number $z = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{|\frac{b}{a}|}$ the phase of the respective frequency in the original signal $f$. This information is what allows us to, for a given signal, figure out which frequencies it is made out of and how much each frequency contributes. 
+The fourier transform is a complex transformation. Given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number on the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{|\frac{b}{a}|}$ the phase of the respective frequency in the original signal $f$. This information is what allows us to, for a given signal, figure out which frequencies it is made out of and how much each frequency contributes. 
 
 By doing such a transform, we turn our temporal data into spectral data. This initively \textit{untangles} our signal into its respective base frequencies. Such an transformation could lessen the complexity of the task, making \textit{understanding} of audio easier.
 
@@ -164,7 +121,7 @@ This is often solved by instead computing a log-magnitude spectrogram (like in F
     \centering
     \hspace*{-1.0cm}
     \includegraphics[scale=1.0]{figures/spectrogramlogspectrogram}
-    \caption{Comparison of a magnitude spectrogram on the left with a log-magnitude spectrogram on the right. As we can see, differences in magnitude are much harder to visualize when scaled linearly, versus when scaled logarithmically.}
+    \caption{Comparison of a magnitude spectrogram on the left with a log-magnitude spectrogram on the right. Visually, differences in magnitude are much harder to spot when scaled linearly versus when scaled logarithmically.}
     \label{SpectrogramLogspectrogramFigure}
 \end{figure}
 
@@ -189,6 +146,7 @@ The mel scale was created to mimic human perception of sound, however within \gl
     \caption{Comparison between the full, log-magnitude spectrogram, with a log-magnitude mel-spectrogram and log-magnitude, log-filtered spectrogram. Both the mel-spectrogram and log-filtered spectrogram have 84 area-normalized filters. The logarithmic scaling of frequencies in the mel- and log-filtered spectrograms are observable, and frequency information is significantly more densely uniform along the vertical axis.}
     \label{AllSpectrogramFigure}
 \end{figure}
+
 
 \section{Transcription}
 
@@ -232,7 +190,7 @@ This way of frame-level prediction is extensively used within onset detection in
     \centering
     \hspace*{-0.5cm}
     \input{tikz/activations.tex}
-    \caption{The activation function representation for a 5-instrument \gls{ADT} task of a piece written in drum notation. Note how the value of each respective activation function is zero everywhere, except at its onsets, where it is one.}
+    \caption{The activation function representation for a 5-instrument \gls{ADT} task of a piece written in drum notation. Note how the value of each respective activation function is zero everywhere, except at its onsets, where it is one. The $\SePa$ symbol represents a short, 16th note rest in the \gls{KD} instrument, not an onset.}
     \label{ActivationsFigure}
 \end{figure}
 
@@ -248,6 +206,57 @@ The peak-picking algorithm, introduced in its current form by Böck et al.~\cite
 \end{align*}
 
 For appropriately trained deep learning models, Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription} showed that the peak-picking parameters which gave the best results were $m = a = w = 2$ and $\delta = 0.1$.
+
+
+\section{Automatic Drum Transcription}
+
+\textcolor{red}{This whole section and the two other following need to be rewritten after moving them. Shouldn't be too big of an issue.}
+
+As mentioned, \gls{ADT} describes the task of transcribing symbolic notation for drums from audio. To be even more descriptive, \gls{ADT} can be split into further tasks. From least to most complex we have: \gls{DSC}, where we classify drum instruments from isolated single event recordings. \gls{DTD}, where we transcribe audio containing exclusively drum instruments. \gls{DTP}, where we transcribe audio containing drum instruments, and additional percussive instruments which the transcription should exclude. Finally, we have \gls{DTM}, which describes the task of drum transcription with audio containing both drum, and melodic instruments.~\cite{8350302}
+
+As mentioned, this thesis will focus on the most complex of these, namely \gls{DTM}. Intuitively, we want to develop a deep learning model which, given input audio, has the ability to detect and classify different drum instrument onsets (events), while selectively ignoring unrelated, melodic instruments.
+
+This task comes with difficulties not seen in the less complex tasks. Zehren et al.~\cite{signals4040042} describes one example, in where \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
+
+Deep learning has shown to be a promising method to solve such a task, and several different approaches have been tried, many with great success. Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV} displayed good results with both a convolutional, and a convolutional-recurrent neural network. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} focused on datasets, showing that the amount of data and quality of data are equally important to get good performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} explored an autoregressive, language model approach. This approach explored multi-instrument transcriptions, but their results regarding \gls{DTM} were notable.
+
+This reinforces the fact that there still exist many approaches to attempt, which could lead to a general improvement for both general \gls{ADT} and \gls{DTM} models.
+
+\section{The Drum Set}
+
+The drum set is a collection of percussive instruments like different drums, cymbals, and possibly different auxillary percussions. A drum set can vary in what it is composed of, however a standard kit usually consists of a \gls{SD}, a \gls{KD}, one or more \glspl{TT} (toms), one or more cymbals (\gls{CC} and \gls{RC}), and a \gls{HH} cymbal~\cite{TheDrumHandbook2003}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7, trim={0 1cm 0 0},clip]{figures/drumset}
+    \caption{Example of the different instruments that make up the full standard drum set. They are the \acrfull{KD}, \acrfull{SD}, \acrfull{HH}, \acrfull{CC}, \acrfull{RC}, \acrfull{HT}, \acrfull{MT}, \acrfull{LT}.}
+    \label{DrumsetFigure}
+\end{figure}
+
+As mentioned, percussion like the drum set, stands in contrast to other musical instruments in that the different ways of playing the same instrument often differ a lot in their \textit{"audible footprint"}. The snare drum, bass drum and hi-hat all have quite different timbres, frequency span, volume, and all in all fundamentally are different instruments.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6, trim={0 1cm 0 0},clip]{figures/drumsettimbre}
+    \caption{Example of the different audible footprint for drum set percussion. Plotted are the waveforms of three different drum instruments played at different speeds, together with its corresponding spectrogram. As we can see, each instrument event different significantly in how they look in and affect the spectrogram.}
+    \label{DrumsetTimbreFigure}
+\end{figure}
+
+\section{Transcription Task}
+
+Understand the pipeline for a transcription task, specifically \gls{ADT}, is crucial for this thesis. It all starts with an initial audio waveform representing the audio track we want to transcribe, usually split into smaller non-overlapping partitions~\cite{vogl2018multiinstrumentdrumtranscription, gardner2022mt3multitaskmultitrackmusic}. This is parsed into a spectrogram, which unravels the frequencies of the audio wave while condensing information across time, making the input features easier for a model to handle and interpret. The spectrogram is then input into an \gls{ADT} model, such as a \gls{DNN}, which reads this input spectrogram and for each timeframe predicts the probability that a certain instrument is played. These continuous likelihood predictions are then postprocessed into a more readable and intended format, such as drum notation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{figures/adtpipeline.png}
+    \caption{Example of what the prediction pipeline of an \gls{ADT} model could look like. Given an input spectrogram, a model predicts a likelihood distribution of each instrument appearing (called the activation functions), which then is quantized into drum onsets and sheet music notation.}
+    \label{ADTFigure}
+\end{figure}
+
+Following this pipeline there are certain parameters which need to be kept in mind when constructing the \gls{DNN}, namely: what does the input and ouput of model look like? The input is given as a spectrogram, but these can vary in size and format based different parameters. These will be discussed further in a later section. The output of the model has a sequence size based on the input spectrogram, but also based on the number of instruments we want to transcribe.
+
+Early \gls{ADT} literature used a 3-instrument approach, predicting the basic \acrfull{KD}, \acrfull{SD} and \acrfull{HH}~\cite{vogl2016recurrent}. These give a useful basis in investigating wether \gls{ADT} problems are solvable using deep learning methods, but are too sparse as this leaves out instruments crucial to the basic drum set. To address this, we expand to a 5-instrument approach, including cymbals (capturing both \acrfull{CC} and \acrfull{RC}) and \acrfull{TT} (capturing all toms) in addition to the three prior instruments. This makes the problem slightly more complex, but allows for denser coverage by representing the standard, full drum set.
+
 
 \section{Performance Measure}
 
