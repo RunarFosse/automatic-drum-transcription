@@ -17,19 +17,19 @@ To get a comprehensive overview over how the different datasets could complement
     \begin{tabular}{l|ccccc}
         Training Dataset & ENST+MDB & E-GMD & Slakh & ADTOF-YT & SADTP      \\
         \hline
-        ENST+MDB	& 0.8132	& \cellcolor{blue!5} 0.5328	& \cellcolor{blue!5} 0.5294	& \cellcolor{blue!5} 0.5983	& \cellcolor{blue!5} 0.4165 \\
-        E-GMD	& \cellcolor{blue!5} 0.4208	& \textbf{0.8935}	& \cellcolor{blue!5} 0.3532	& \cellcolor{blue!5} 0.3011	& \cellcolor{blue!5} 0.1833 \\
-        Slakh	& \cellcolor{blue!5} 0.7987	& \cellcolor{blue!5} 0.6676	& 0.8959	& \cellcolor{blue!5} 0.5922	& \cellcolor{blue!5} 0.4769 \\
-        ADTOF-YT	& \cellcolor{blue!5} 0.8403	& \cellcolor{blue!5} 0.6253	& \cellcolor{blue!5} \underline{0.6546}	& 0.9333	& \cellcolor{blue!5} 0.607 \\
+        ENST+MDB	& 0.81	& \cellcolor{blue!5} 0.53	& \cellcolor{blue!5} 0.53	& \cellcolor{blue!5} 0.60	& \cellcolor{blue!5} 0.42 \\
+        E-GMD	& \cellcolor{blue!5} 0.42	& \textbf{0.89}	& \cellcolor{blue!5} 0.35	& \cellcolor{blue!5} 0.30	& \cellcolor{blue!5} 0.18 \\
+        Slakh	& \cellcolor{blue!5} 0.80	& \cellcolor{blue!5} 0.67	& 0.90	& \cellcolor{blue!5} 0.60	& \cellcolor{blue!5} 0.48 \\
+        ADTOF-YT	& \cellcolor{blue!5} 0.84	& \cellcolor{blue!5} 0.63	& \cellcolor{blue!5} \underline{0.65}	& 0.93	& \cellcolor{blue!5} 0.60 \\
         \hline
-        ENST+MDB + Slakh	& 0.8394	& \cellcolor{blue!5} 0.6669	& 0.8983	& \cellcolor{blue!5} \underline{0.6324}	& \cellcolor{blue!5} 0.475 \\
-        ENST+MDB + ADTOF-YT	& 0.863	& \cellcolor{blue!5} 0.6368	& \cellcolor{blue!5} 0.6342	& 0.9404	& \cellcolor{blue!5} \textbf{\underline{0.6189}} \\
-        Slakh + ADTOF-YT	& \cellcolor{blue!5} 0.8552	& \cellcolor{blue!5} 0.6493	& \textbf{0.9008}	& \textbf{0.965}	& \cellcolor{blue!5} 0.6178 \\
+        ENST+MDB + Slakh	& 0.84	& \cellcolor{blue!5} 0.67	& 0.90	& \cellcolor{blue!5} \underline{0.63}	& \cellcolor{blue!5} 0.48 \\
+        ENST+MDB + ADTOF-YT	& 0.86	& \cellcolor{blue!5} 0.64	& \cellcolor{blue!5} 0.63	& 0.94	& \cellcolor{blue!5} \textbf{\underline{0.62}} \\
+        Slakh + ADTOF-YT	& \cellcolor{blue!5} 0.86	& \cellcolor{blue!5} 0.65	& \textbf{0.90}	& \textbf{0.97}	& \cellcolor{blue!5} 0.62 \\
         \hline
-        ENST+MDB + Slakh + ADTOF-YT	& \textbf{0.8772}	& \cellcolor{blue!5} \underline{0.6768}	& 0.8942	& 0.9502	& \cellcolor{blue!5} 0.6122 \\
-        E-GMD + Slakh + ADTOF-YT	& \cellcolor{blue!5} \underline{0.8576}	& 0.8911	& 0.897	& 0.9401	& \cellcolor{blue!5} 0.6165 \\
+        ENST+MDB + Slakh + ADTOF-YT	& \textbf{0.88}	& \cellcolor{blue!5} \underline{0.68}	& 0.89	& 0.95	& \cellcolor{blue!5} 0.61 \\
+        E-GMD + Slakh + ADTOF-YT	& \cellcolor{blue!5} \underline{0.86}	& 0.89	& 0.90	& 0.94	& \cellcolor{blue!5} 0.62 \\
         \hline
-        ENST+MDB + E-GMD + Slakh + ADTOF-YT	& 0.8646	& 0.8919	& 0.8932	& 0.9335	& \cellcolor{blue!5} 0.6169 \\
+        ENST+MDB + E-GMD + Slakh + ADTOF-YT	& 0.86	& 0.89	& 0.89	& 0.93	& \cellcolor{blue!5} 0.67 \\
     \end{tabular}%
     }
     \caption{The Micro F1-score for a convolutional recurrent neural network trained over different combination of datasets, and tested on all datasets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset. Cells which are \colorbox{blue!10}{coloured light blue} represent \gls{OOD} evaluations. Values which are \underline{underlined} represent the highest possible F1-score of \gls{OOD} evaluations for the respective dataset.}
@@ -42,14 +42,14 @@ To get a comprehensive overview over how the different datasets could complement
     \begin{tabular}{l|cccc}
         Model & ENST+MDB & Slakh & ADTOF-YT      \\
         \hline
-        Slakh + ADTOF-YT & 0.8552	& \textbf{0.9008}	& \textbf{0.965} \\
-        ENST+MDB + Slakh + ADTOF-YT & \textbf{0.8772}	& 0.8942	& 0.9502 \\
+        Slakh + ADTOF-YT & 0.86	& \textbf{0.90}	& \textbf{0.97} \\
+        ENST+MDB + Slakh + ADTOF-YT & \textbf{0.88}	& 0.89	& 0.95 \\
         \hline
         ADTOF-RGW + ADTOF-YT~\cite{signals4040042} & 0.78/0.81* & - & 0.85 \\
         \hline
         MT3 (mixture)~\cite{gardner2022mt3multitaskmultitrackmusic} & - & 0.76 & - \\
         \hline
-        YPTF.MoE+M~\cite{chang2024yourmt3+} & 0.8727**/- & 0.8456 & - \\
+        YPTF.MoE+M~\cite{chang2024yourmt3+} & 0.87**/- & 0.85 & - \\
     \end{tabular}
     \caption{The Micro F1-score of selectively chosen convolutional recurrent neural networks from this dataset study, compared with best performing models from other literature over the three of the test sets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset for all compared models.
     (*) Zehren et. al tests on ENST-Drums and MDB-Drums separately and tests on different test splits than ours~\cite{signals4040042}.
