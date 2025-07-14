@@ -119,7 +119,7 @@ fill=red!20,
 minimum height=1cm,
 minimum width=4cm,
 label={west:$L\times$}
-] (v) {Attention Block};
+] (v) {Transformer Block};
 
 \draw[arrow] (v) -- (0, -10.25) node[rectangle, 
 rounded corners, 
@@ -135,13 +135,13 @@ minimum width=4cm
 \node[anchor=north, label=below:{Output Probabilities}] at (0, -11.75){\footnotesize{($T \times 5$)}};
 
 
-% ---- Attention Block ----
+% ---- Transformer Block ----
 \draw (7.5, -4.5) node[rectangle,
 rounded corners,
 draw,
 anchor=north,
 fill=yellow!20,
-label=north:Attention Block,
+label=north:Transformer Block,
 minimum height=0.75cm,
 minimum width=4cm
 ] (i) {Layer normalization};

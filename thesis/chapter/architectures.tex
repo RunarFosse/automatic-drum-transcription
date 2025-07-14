@@ -112,7 +112,7 @@ We begin with a fixed-size convolutional block with $I = 2$, as used by several 
 
 \section{Convolutional Transformer}
 
-Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243} made headway in regards to sequence prediction. It introduced the \textit{Attention} layer, making a model capable of learning to \textit{attend} to different elements in a sequence, and learning the relationship between them. Models dropping the recurrent units in favour of attention blocks are called \textit{transformers}.
+Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243} made headway in regards to sequence prediction. It introduced the \textit{Attention} layer, making a model capable of learning to \textit{attend} to different elements in a sequence, and learning the relationship between them. Models dropping the recurrent units in favour of blocks containing attention layers (so-called transformer blocks) are called \textit{transformers}.
 
 As mentioned, the \gls{RNN} displays difficulty in sustaining long range dependencies through its hidden state, and information further away tends to become attenuated. The attention layer solves this by allowing each element to individually attend to each other element in the sequence separately. Intuitively, it allows each element to \textit{"intelligently"} pick and choose where it wants to look, and what elements it wants to be influenced by. This stands in contrast to the recurrent units, where each element has to learn and predict what information about itself other elements could find useful, and \textit{"remembering"} that, adding it to the hidden state.
 
@@ -126,13 +126,13 @@ As mentioned, the \gls{RNN} displays difficulty in sustaining long range depende
 
 Recently, the attention layers have shown great success in \gls{AMT} and \gls{ADT} tasks, in some cases proving superior to the \gls{RNN}~\cite{gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3+, zehren2024analyzingreducingsynthetictorealtransfer}.
 
-Simply replacing the recurrent layers with attention blocks could allow our model to reap the reward by increasing its ability to understand sequences, while keeping the previously gotten gains from the convolutional layer. Both inside and outside of \gls{ADT}, combining convolutional layers with transformers has seemed beneficial~\cite{zehren2024analyzingreducingsynthetictorealtransfer, gulati2020conformerconvolutionaugmentedtransformerspeech}.
+Simply replacing the recurrent layers with transformer blocks could allow our model to reap the reward by increasing its ability to understand sequences, while keeping the previously gotten gains from the convolutional layer. Both inside and outside of \gls{ADT}, combining convolutional layers with transformers has seemed beneficial~\cite{zehren2024analyzingreducingsynthetictorealtransfer, gulati2020conformerconvolutionaugmentedtransformerspeech}.
 
 \subsection{Implementation}
 
 Similar to the \gls{CRNN}, an initial fixed-size convolutional block with $I = 2$ is used, with an increasing number of kernels $C = \{32, 64\}$. Then, we project the resulting latent space into a separate, lower dimensional embedding space with dimension $D_e$, before combining it with a sinusoidal positional encoding. 
 
-Following this, the model contains $L$ standard pre-layer normalization attention block, as these recently have been shown to be more stable during learning than the post-layer versions~\cite{pmlr-v119-xiong20b}. These attention blocks contain multi-head self-attention layers with $H$ number of heads. Note that the first layer of the feedforward layer inside these attention blocks uses the \gls{GELU} activation function due to it being the standard within transformers and for its possible performance improvements over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. Lastly, the linear layer outputs onset probabilities.
+Following this, the model contains $L$ standard pre-layer normalization transformer block, as these recently have been shown to be more stable during learning than the post-layer versions~\cite{pmlr-v119-xiong20b}. These transformer blocks contain multi-head self-attention layers with $H$ number of heads. Note that the first layer of the feedforward layer inside these transformer blocks uses the \gls{GELU} activation function due to it being the standard within transformers and for its possible performance improvements over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. Lastly, the linear layer outputs onset probabilities.
 
 \begin{figure}[H]
     \centering
@@ -187,7 +187,7 @@ This can be solved by treating a group of patches from the patch embedding toget
 
 Initally, we transform the input spectrogram into a ($T \times D_e$) patch embedding. The Convolutional layer splits the spectrogram into ($T \times D_e / P \times P$) different patches. Added to these are a ($D_e / P \times P$) learnable positional embedding, providing positional information to each patch. These are then permuted and flattened, transforming them into our final patch embedding.
 
-Afterwards, we combine it with a sinusoidal positional encoding, and successively apply $L$ attention blocks with number of heads $H$, identical in structure with those used in the Convolutional Transformer. Lastly, the linear layer outputs onset probabilities.
+Afterwards, we combine it with a sinusoidal positional encoding, and successively apply $L$ transformer blocks with number of heads $H$, identical in structure with those used in the Convolutional Transformer. Lastly, the linear layer outputs onset probabilities.
 
 \begin{figure}[H]
     \hspace*{-0.5cm}
