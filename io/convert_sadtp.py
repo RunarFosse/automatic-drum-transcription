@@ -79,7 +79,7 @@ MIDI_MAPPING = {
     26: 3, #'Unknown Hi Hat',
 }
 
-    
+vocabulary = set()
 
 if __name__ == "__main__":
     # Declare the path to the dataset directory
@@ -98,7 +98,7 @@ if __name__ == "__main__":
             
         spectrogram = readAudio(audio_path)
         timesteps = spectrogram.shape[0]
-        label = readMidi(midi_path, MIDI_MAPPING, timesteps, 5)
+        label = readMidi(midi_path, MIDI_MAPPING, timesteps, 5, vocabulary)
 
         partitions = timesteps // 400
         data += list(spectrogram.tensor_split(partitions, dim=0))
@@ -130,3 +130,6 @@ if __name__ == "__main__":
             print("\033[92m", "Batched entry in dataloader has features of shape: ", "\033[0m", features.shape, "\033[92m", ", and labels of shape: ", "\033[0m", labels.shape, sep="")
         mean += torch.mean(features, dim=(0, 1, 2))
         std += torch.std(features, dim=(0, 1, 2))
+
+    # At last, print final vocabulary size
+    print("\033[95m", "Vocabulary size:", "\033[0m", len(vocabulary), sep="")

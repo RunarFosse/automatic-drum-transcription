@@ -42,6 +42,8 @@ EGMD_MAPPING = {
     26: None, #Unknown Mapping - Not Percussion
 }
 
+vocabulary = set()
+
 if __name__ == "__main__":
     # Declare the path to the dataset directory
     path = Path(__file__).resolve().parent.parent / "data" / "e-gmd-v1.0.0"
@@ -63,7 +65,7 @@ if __name__ == "__main__":
             
             spectrogram = readAudio(audio_path)
             timesteps = spectrogram.shape[0]
-            label = readMidi(midi_path, EGMD_MAPPING, timesteps, 5)
+            label = readMidi(midi_path, EGMD_MAPPING, timesteps, 5, vocabulary)
 
             partitions = timesteps // 400
             data += list(spectrogram.tensor_split(partitions, dim=0))
@@ -100,5 +102,5 @@ if __name__ == "__main__":
     std /= num_batches
     print("\033[92m", "Training dataset has mean of: ", "\033[0m", mean, "\033[92m", ", and std of: ", "\033[0m", std, sep="")
         
-
-        
+    # At last, print final vocabulary size
+    print("\033[95m", "Vocabulary size:", "\033[0m", len(vocabulary), sep="")

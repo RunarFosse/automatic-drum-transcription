@@ -5,7 +5,7 @@ from torchaudio import transforms, functional
 import partitura
 
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Set, Optional
 
 MS_PER_FRAME = 10
 
@@ -144,7 +144,7 @@ def readAnnotations(path: Path, mapping: Dict[str, int], num_frames: int, num_la
 
     return tensor
 
-def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: int) -> torch.Tensor:
+def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: int, vocabulary: Optional[Set[int]] = None) -> torch.Tensor:
     """ Read a midi-annotation file into a torch tensor. """
 
     # Load the midi into list of notes
@@ -167,6 +167,9 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
                 print(f"Encountered invalid pitch {pitch}")
                 seen_invalid_pitches.add(pitch)
             continue
+
+        if vocabulary is not None:
+            vocabulary.add(pitch)
 
         # Turn into frames and labels
         frame = int(round(float(time) / MS_PER_FRAME * 1000))
