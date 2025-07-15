@@ -132,4 +132,4 @@ if __name__ == "__main__":
         std += torch.std(features, dim=(0, 1, 2))
 
     # At last, print final vocabulary size
-    print("\033[95m", "Vocabulary size:", "\033[0m", len(vocabulary), sep="")
+    print("\033[95m", "Vocabulary size:", "\033[0m ", len(vocabulary), sep="")
