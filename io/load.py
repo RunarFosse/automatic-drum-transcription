@@ -167,6 +167,7 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
                 print(f"Encountered invalid pitch {pitch}")
                 seen_invalid_pitches.add(pitch)
             continue
+        global i
         if pitch == 58:
             i += 1
             print(pitch, i)
