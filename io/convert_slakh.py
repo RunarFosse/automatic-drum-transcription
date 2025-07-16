@@ -22,14 +22,14 @@ MIDI_MAPPING = {
     47: 2, #'Low-Mid Tom',
     48: 2, #'Hi-Mid Tom',
     50: 2, #'High Tom',
+    58: 2, #'High Floor Tom (Rim)', -Manually retrieved from Roland TD-11
 
+    22: 3, #'Hi-Hat Open (Edge)',   -Manually retrieved from Roland TD-11
+    26: 3, #'Hi-Hat Closed (Edge)', -Manually retrieved from Roland TD-11
     42: 3, #'Closed Hi-Hat',
     44: 3, #'Pedal Hi-Hat',
     46: 3, #'Open Hi-Hat',
     54: 3, #'Tambourine',
-    # Manually retrieved from Roland TD-11
-    22: 3, #'Hi-Hat Open (Edge)',
-    26: 3, #'Hi-Hat Closed (Edge)',
 
     49: 4, #'Crash Cymbal 1',
     51: 4, #'Ride Cymbal 1',
@@ -48,7 +48,6 @@ MIDI_MAPPING = {
     32: None, #'Square Click (GM2)',
     33: None, #'Metronome Click (GM2)',
     34: None, #'Metronome Bell (GM2)',
-    58: None, #'Vibraslap',
     60: None, #'Hi Bongo',
     61: None, #'Low Bongo',
     62: None, #'Mute Hi Conga',
