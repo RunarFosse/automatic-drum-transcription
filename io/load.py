@@ -143,7 +143,7 @@ def readAnnotations(path: Path, mapping: Dict[str, int], num_frames: int, num_la
     tensor += adjacents * 0.5
 
     return tensor
-
+i = 0
 def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: int, vocabulary: Optional[Set[int]] = None) -> torch.Tensor:
     """ Read a midi-annotation file into a torch tensor. """
 
@@ -167,6 +167,9 @@ def readMidi(path: Path, mapping: Dict[str, int], num_frames: int, num_labels: i
                 print(f"Encountered invalid pitch {pitch}")
                 seen_invalid_pitches.add(pitch)
             continue
+        if pitch == 58:
+            i += 1
+            print(pitch, i)
 
         if vocabulary is not None:
             vocabulary.add(pitch)
