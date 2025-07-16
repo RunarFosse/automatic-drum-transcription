@@ -18,7 +18,7 @@ After this, a filterbank is computed by generating 12 normalized logarithmically
 
 \subsection{Annotations}
 
-The annotations are either distributed in specific formats as text files (with the suffix \textit{.txt}), or in MIDI files (with the suffix \textit{.mid} or \textit{.midi}), each one having a different transformation into a sequence of instrument onset probabilities.
+The annotations are either distributed in specific formats as text files (with the suffix \textit{.txt}), or in MIDI files (with the suffix \textit{.mid} or \textit{.midi}), each one having a different transformation into a sequence of instrument onset probabilities. Although more specific information might be contained in the datasets, such as velocity, I solely utilize the time and specific drum-instrument for each onset.
 
 The datasets declaring onsets in text files (ENST-Drums and MDB-Drums) follow a similar format, storing onsets on separate lines, each one containing the time in seconds for the onset, and its respective instrument ID, separated by a space or tab respectively. To convert this into the onset probability sequence, we convert the time into a timeframe index by turning the time into milliseconds, dividing by 10 to group into 10ms intervals, and rounding to the nearest integer. After this, we map the instrument ID into its respective class, and set that specific (timeframe, class) cell value to 1.
 

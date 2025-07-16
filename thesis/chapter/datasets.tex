@@ -38,7 +38,7 @@ The ENST-Drums and MDB-Drums datasets are transcribed with 20 and 21 respective 
         \acrfull{HH} & \textit{chh}, \textit{ohh} & \textit{CHH}, \textit{OHH}, \textit{PHH}, \textit{TMB} \\
         \acrfull{CC+RC} & \textit{cr}, \textit{spl}, \textit{ch}, \textit{rc}, \textit{c}, \textit{cb} & \textit{RDC}, \textit{RDB}, \textit{CRC}, \textit{CHC}, \textit{SPC} \\
     \end{tabular}
-    \caption{The mapping for each of the original transcribed instruments in ENST-Drums and MDB-Drums, onto the 5-instrument vocabulary in this thesis. The description of each of the original annotated instruments can be found in their respective papers.~\cite{gillet2006enst, southall2017mdb}}
+    \caption{The mapping for each of the original transcribed instruments in ENST-Drums and MDB-Drums, onto the 5-instrument vocabulary used in this thesis. The description of each of the original annotated instruments can be found in their respective papers.~\cite{gillet2006enst, southall2017mdb}}
     \label{ENSTMDBMapping}
 \end{table}
 
@@ -56,7 +56,27 @@ This dataset contains 444.5 hours of audio recordings, from 1,059 unique drum pe
 
 \subsection{Mapping}
 
-\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
+The E-GMD dataset is annotated on a Roland electric drumkit and stored in MIDI files. These files store the instruments as specific pitches, with the pitch-to-instrument mapping being given by the standard \textit{General MIDI} percussion key map, as well as specific Roland default MIDI mappings~\cite{roland_drum_midi_td_17}.
+
+This \textit{General MIDI} percussion mapping is extensive, containing MIDI pitches for vast amounts of percussive instruments. Many of these either do not appear in drumset transcriptions, or do not have a logical 5-instrument mapping. Such instruments are ignored, and are omitted from the mapping.
+
+General MIDI is a widely used standard, and is extensively documented. The specific MIDI percussion pitch to drum instrument can be found in e.g. "MIDI: A comprehensive introduction" by Rothstein~\cite{rothstein1995midi}, and the Roland specific MIDI pitches in their documentation~\cite{roland_drum_midi_td_17}.
+
+\begin{table}[H]
+    \centering
+    \hspace*{-0.6cm}
+    \begin{tabular}{c|ll}
+        Vocabulary mapping & MIDI Pitch \\
+        \hline
+        \acrfull{KD} & \textit{35}, \textit{36} \\
+        \acrfull{SD} & \textit{37}, \textit{38}, \textit{39}, \textit{40} \\
+        \acrfull{TT} & \textit{41}, \textit{43}, \textit{45}, \textit{47}, \textit{48}, \textit{50} \\
+        \acrfull{HH} & \textit{22}, \textit{26}, \textit{42}, \textit{44}, \textit{46}, \textit{54} \\
+        \acrfull{CC+RC} & \textit{49}, \textit{51}, \textit{52}, \textit{53}, \textit{55}, \textit{56}, \textit{57}, \textit{59} \\
+    \end{tabular}
+    \caption{The mapping for each of the General MIDI and Roland MIDI pitches, onto the 5-instrument vocabulary used in this thesis. MIDI pitches omitted not appearing do not have a logical 5-instrument drum mapping and are simply ignored.}
+    \label{MIDIMapping}
+\end{table}
 
 \section{Slakh}
 
@@ -71,7 +91,7 @@ This dataset contains 115 hours of audio recordings over 1709 different songs.
 
 \subsection{Mapping}
 
-\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
+The Slakh dataset stores its annotations in MIDI files, and thus, similarly to E-GMD, the MIDI mapping given in Table \ref{MIDIMapping} is applied to make it suitable with a 5-instrument vocabulary.
 
 \section{ADTOF-YT}
 
@@ -86,7 +106,7 @@ The dataset contains 245 hours of music over 2924 tracks.
 
 \subsection{Mapping}
 
-Due to this dataset being distributed in a preprocessed nature, no re-mapping has been done, and the dataset is used "as is".
+This dataset is distributed already on a 5-instrument vocabulary fitting the one used in this thesis. Therefore, there was no need to remap the annotations; the dataset was used "as is".
 
 \section{SADTP}
 
@@ -100,7 +120,7 @@ The dataset contains 1.08 hours of music, which can be split into 977 non-overla
 
 \subsection{Mapping}
 
-\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
+The SADTP dataset stores its annotations in MIDI files, and thus, similarly to E-GMD and Slakh, the MIDI mapping given in Table \ref{MIDIMapping} is applied to make it suitable with a 5-instrument vocabulary.
 
 \section{Summary}
 
