@@ -62,6 +62,8 @@ This \textit{General MIDI} percussion mapping is extensive, containing MIDI pitc
 
 General MIDI is a widely used standard, and is extensively documented. The specific MIDI percussion pitch to drum instrument can be found in e.g. "MIDI: A comprehensive introduction" by Rothstein~\cite{rothstein1995midi}, and the Roland specific MIDI pitches in their documentation~\cite{roland_drum_midi_td_17}. In case there are two different instruments marked with the same MIDI pitch, the one from Roland is selected.
 
+\textcolor{red}{Show the mapping directly from Groove MIDI dataset instead (GMD) and Cite!}
+
 \begin{table}[H]
     \centering
     \hspace*{-0.6cm}
@@ -74,8 +76,8 @@ General MIDI is a widely used standard, and is extensively documented. The speci
         \acrfull{HH} & \textit{22}, \textit{26}, \textit{42}, \textit{44}, \textit{46}, \textit{54} \\
         \acrfull{CC+RC} & \textit{49}, \textit{51}, \textit{52}, \textit{53}, \textit{55}, \textit{56}, \textit{57}, \textit{59} \\
     \end{tabular}
-    \caption{The mapping for each of the General MIDI and Roland MIDI pitches, onto the 5-instrument vocabulary used in this thesis. MIDI pitches omitted not appearing do not have a logical 5-instrument drum mapping and are simply ignored.}
-    \label{MIDIMapping}
+    \caption{The mapping for each of the Roland TD-11 and General MIDI percussion pitches onto the 5-instrument vocabulary used in this thesis. MIDI pitches omitted do not have a intuitive 5-instrument drum mapping and are simply ignored.}
+    \label{RolandMIDIMapping}
 \end{table}
 
 \section{Slakh}
@@ -91,7 +93,23 @@ This dataset contains 115 hours of audio recordings over 1709 different songs.
 
 \subsection{Mapping}
 
-The Slakh dataset stores its annotations in MIDI files, and thus, similarly to E-GMD, the MIDI mapping given in Table \ref{MIDIMapping} is applied to make it suitable with a 5-instrument vocabulary.
+The Slakh dataset stores its annotations in MIDI files, similarly to E-GMD. Contrary to E-GMD it strictly uses the General MIDI percussion mapping. This mapping is very similar, only excluding the specific MIDI pitches \textit{22}, \textit{26}, and \textit{58}, seen in Table \ref{MIDIMapping}.
+
+\begin{table}[H]
+    \centering
+    \hspace*{-0.6cm}
+    \begin{tabular}{c|ll}
+        Vocabulary mapping & MIDI Pitch \\
+        \hline
+        \acrfull{KD} & \textit{35}, \textit{36} \\
+        \acrfull{SD} & \textit{37}, \textit{38}, \textit{39}, \textit{40} \\
+        \acrfull{TT} & \textit{41}, \textit{43}, \textit{45}, \textit{47}, \textit{48}, \textit{50} \\
+        \acrfull{HH} & \textit{42}, \textit{44}, \textit{46}, \textit{54} \\
+        \acrfull{CC+RC} & \textit{49}, \textit{51}, \textit{52}, \textit{53}, \textit{55}, \textit{56}, \textit{57}, \textit{59} \\
+    \end{tabular}
+    \caption{The mapping for each of General MIDI percussion pitches onto the 5-instrument vocabulary used in this thesis. MIDI pitches omitted do not have an intuitive 5-instrument drum mapping and are simply ignored.}
+    \label{MIDIMapping}
+\end{table}
 
 \section{ADTOF-YT}
 
@@ -120,7 +138,7 @@ The dataset contains 1.08 hours of music, which can be split into 977 non-overla
 
 \subsection{Mapping}
 
-The SADTP dataset stores its annotations in MIDI files, and thus, similarly to E-GMD and Slakh, the MIDI mapping given in Table \ref{MIDIMapping} is applied to make it suitable with a 5-instrument vocabulary.
+Similarly to E-GMD, the SADTP dataset stores its annotations in MIDI files recorded from a Roland TD-11 electric drumset. Hence, it applies the same Roland MIDI mapping given in Table \ref{RolandMIDIMapping} making it suitable for a 5-instrument vocabulary.
 
 \section{Summary}
 
