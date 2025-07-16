@@ -64,7 +64,7 @@ train_paths = [dataset_path / (dataset + "_train.pt") for dataset_path, dataset 
 val_paths = [dataset_path / (dataset + "_validation.pt") for dataset_path, dataset in zip(dataset_paths, args.dataset)]
 test_paths = [dataset_path / (dataset + "_test.pt") for dataset_path, dataset in zip(dataset_paths, args.dataset)]
 
-feature_mean, feature_std = compute_normalization(train_paths)
+feature_mean, feature_std = compute_normalization(train_paths, device=device)
 
 print(f"Traning data has a mean of: {feature_mean}, and a std of: {feature_std}")
 
