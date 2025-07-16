@@ -22,10 +22,13 @@ MIDI_MAPPING = {
     48: 2, #'Hi-Mid Tom',
     50: 2, #'High Tom',
 
-    42: 3, #'Closed Hi Hat',
+    42: 3, #'Closed Hi-Hat',
     44: 3, #'Pedal Hi-Hat',
     46: 3, #'Open Hi-Hat',
     54: 3, #'Tambourine',
+    # Manually retrieved from Roland TD-11
+    22: 3, #'Hi-Hat Open (Edge)',
+    26: 3, #'Hi-Hat Closed (Edge)',
 
     49: 4, #'Crash Cymbal 1',
     51: 4, #'Ride Cymbal 1',
@@ -34,7 +37,6 @@ MIDI_MAPPING = {
     55: 4, #'Splash Cymbal',
     56: 4, #'Cowbell',
     57: 4, #'Crash Cymbal 2',
-    58: None, #'Vibraslap',
     59: 4, #'Ride Cymbal 2',
 
     27: None, #'High Q (GM2)',
@@ -45,6 +47,7 @@ MIDI_MAPPING = {
     32: None, #'Square Click (GM2)',
     33: None, #'Metronome Click (GM2)',
     34: None, #'Metronome Bell (GM2)',
+    58: None, #'Vibraslap',
     60: None, #'Hi Bongo',
     61: None, #'Low Bongo',
     62: None, #'Mute Hi Conga',
@@ -73,10 +76,6 @@ MIDI_MAPPING = {
     85: None, #'Castanets (GM2)',
     86: None, #'Mute Surdo (GM2)',
     87: None, #'Open Surdo (GM2)',
-
-    # Manually retrieved from Roland TD-11
-    22: 3, #'Unknown Hi Hat',
-    26: 3, #'Unknown Hi Hat',
 }
 
 vocabulary = set()
