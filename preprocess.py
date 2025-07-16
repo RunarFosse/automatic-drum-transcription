@@ -16,7 +16,15 @@ def compute_normalization(train_paths: List[Path], device: str = "cpu") -> Tuple
 
     # Enter all datapoints into a stack
     train_loader = DataLoader(train_dataset, shuffle=False, batch_size=128, num_workers=4, pin_memory=True)
-    stack = torch.stack([img.to(device) for img, _ in train_loader])
+    N, (C, H, W) = len(train_dataset), train_dataset[0].shape 
+    stack = torch.empty((N, C, H, W), dtype=torch.float32, device=device)
+
+    # Fill it batch by batch
+    i = 0
+    for imgs, _ in train_loader:
+        b = imgs.size(0)
+        stack[i:i+b] = imgs.to(device)
+        i += b
 
     # And compute and return values
     mean, std = stack.mean(dim=(0, 1, 2)), stack.std(dim=(0, 1, 2))
