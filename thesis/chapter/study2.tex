@@ -17,19 +17,19 @@ To get a comprehensive overview over how the different datasets could complement
     \begin{tabular}{l|ccccc}
         Training Dataset & ENST+MDB & E-GMD & Slakh & ADTOF-YT & SADTP      \\
         \hline
-        ENST+MDB	& 0.81	& \cellcolor{blue!5} 0.53	& \cellcolor{blue!5} 0.53	& \cellcolor{blue!5} 0.60	& \cellcolor{blue!5} 0.42 \\
-        E-GMD	& \cellcolor{blue!5} 0.42	& \textbf{0.89}	& \cellcolor{blue!5} 0.35	& \cellcolor{blue!5} 0.30	& \cellcolor{blue!5} 0.18 \\
-        Slakh	& \cellcolor{blue!5} 0.80	& \cellcolor{blue!5} 0.67	& 0.90	& \cellcolor{blue!5} 0.60	& \cellcolor{blue!5} 0.48 \\
-        ADTOF-YT	& \cellcolor{blue!5} 0.84	& \cellcolor{blue!5} 0.63	& \cellcolor{blue!5} \underline{0.65}	& 0.93	& \cellcolor{blue!5} 0.60 \\
+        ENST+MDB	& 0.81	& \cellcolor{blue!5}	& \cellcolor{blue!5} 0.53	& \cellcolor{blue!5} 0.60	& \cellcolor{blue!5} 0.42 \\
+        E-GMD	& \cellcolor{blue!5}	& 	& \cellcolor{blue!5}	& \cellcolor{blue!5}	& \cellcolor{blue!5} \\
+        Slakh	& \cellcolor{blue!5} 0.80	& \cellcolor{blue!5}	& 0.90	& \cellcolor{blue!5} 0.60	& \cellcolor{blue!5} 0.48 \\
+        ADTOF-YT	& \cellcolor{blue!5} 0.84	& \cellcolor{blue!5}	& \cellcolor{blue!5} \underline{0.65}	& 0.93	& \cellcolor{blue!5} 0.60 \\
         \hline
-        ENST+MDB + Slakh	& 0.84	& \cellcolor{blue!5} 0.67	& 0.90	& \cellcolor{blue!5} \underline{0.63}	& \cellcolor{blue!5} 0.48 \\
-        ENST+MDB + ADTOF-YT	& 0.86	& \cellcolor{blue!5} 0.64	& \cellcolor{blue!5} 0.63	& 0.94	& \cellcolor{blue!5} \textbf{\underline{0.62}} \\
-        Slakh + ADTOF-YT	& \cellcolor{blue!5} 0.86	& \cellcolor{blue!5} 0.65	& \textbf{0.90}	& \textbf{0.97}	& \cellcolor{blue!5} 0.62 \\
+        ENST+MDB + Slakh	& 0.84	& \cellcolor{blue!5}	& 0.90	& \cellcolor{blue!5} \underline{0.63}	& \cellcolor{blue!5} 0.48 \\
+        ENST+MDB + ADTOF-YT	& 0.86	& \cellcolor{blue!5}	& \cellcolor{blue!5} 0.63	& 0.94	& \cellcolor{blue!5} \textbf{\underline{0.62}} \\
+        Slakh + ADTOF-YT	& \cellcolor{blue!5} 0.86	& \cellcolor{blue!5}	& \textbf{0.90}	& \textbf{0.97}	& \cellcolor{blue!5} 0.62 \\
         \hline
-        ENST+MDB + Slakh + ADTOF-YT	& \textbf{0.88}	& \cellcolor{blue!5} \underline{0.68}	& 0.89	& 0.95	& \cellcolor{blue!5} 0.61 \\
-        E-GMD + Slakh + ADTOF-YT	& \cellcolor{blue!5} \underline{0.86}	& 0.89	& 0.90	& 0.94	& \cellcolor{blue!5} 0.62 \\
+        ENST+MDB + Slakh + ADTOF-YT	& \textbf{0.88}	& \cellcolor{blue!5}	& 0.89	& 0.95	& \cellcolor{blue!5} 0.61 \\
+        E-GMD + Slakh + ADTOF-YT	& \cellcolor{blue!5}	&	& 	&	& \cellcolor{blue!5} \\
         \hline
-        ENST+MDB + E-GMD + Slakh + ADTOF-YT	& 0.86	& 0.89	& 0.89	& 0.93	& \cellcolor{blue!5} 0.67 \\
+        ENST+MDB + E-GMD + Slakh + ADTOF-YT	&	&	&	&	& \cellcolor{blue!5} \\
     \end{tabular}%
     }
     \caption{The Micro F1-score for a convolutional recurrent neural network trained over different combination of datasets, and tested on all datasets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset. Cells which are \colorbox{blue!10}{coloured light blue} represent \gls{OOD} evaluations. Values which are \underline{underlined} represent the highest possible F1-score of \gls{OOD} evaluations for the respective dataset.}
@@ -56,6 +56,8 @@ To get a comprehensive overview over how the different datasets could complement
     (**) Chang et. al only tests ENST-Drums and tests on a different test split than ours~\cite{chang2024yourmt3+}.}
     \label{DatasetComparisonTable}
 \end{table}
+
+\textcolor{red}{Add E-GMD to other literature.}
 
 \section{Discussion}
 
