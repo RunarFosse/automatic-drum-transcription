@@ -10,11 +10,13 @@ ENST-Drums contains 1.02 hours of music over 64 tracks.
 
 Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB (MDB) dataset~\cite{bittner2014medleydb}, but re-annotated and specialized for \gls{ADT} related tasks. This dataset is, similar to ENST-Drums, also split into different stem tracks, such as isolated drum recordings and accompaniement. However, they also contain already-mixed \textit{full mix} tracks, which are the ones we use in this thesis.
 
+Tracks in MDB-Drums come transcribed in two different granularities. First, a \textit{class} file, split into 6 larger drum classes, and a \textit{subclass} file, containing a more specific 21 drum instruments. Although the 6-class transcriptions may seem closer to a 5-instrument vocabulary, the 21 gave better control over which specific instruments coincided with which in the 5-instrument vocabulary. Therefore, these subclass transcriptions are utilized as annotations.
+
 MDB-Drums contains 0.35 hours of music over 23 tracks.
 
 Both of these datasets distributes their audio in waveform files, and their annotations in text files. Annotations are formatted by onset time and instrument label. They are also relatively small, and contain thorough, real, annotated data. Due to these similarities, in this thesis they are combined together into a slightly larger ENST+MDB dataset.
 
-In total, this dataset contains 1.37 hours of music over 87 tracks.
+In total, this dataset contains 1.37 hours of music over 87 tracks, split into 896, 236 and 152 respective training, validation and test sequences.
 
 \subsection{Splits}
 
@@ -22,7 +24,25 @@ These two datasets do not have predefined train/validation/test splits, such tha
 
 \subsection{Mapping}
 
-\textcolor{red}{Maybe (or maybe not) explain the mapping from this to 5-instrument mapping. Also put this under a Appendix.}
+The ENST-Drums and MDB-Drums datasets are transcribed with 20 and 21 respective instruments. This does not match our models' vocabulary of 5. To utilize as much data as we can, we apply a mapping for each of the original instruments to one in our 5-instrument vocabulary. Table \ref{ENSTMDBMapping} shows the mapping for the ENST+MDB dataset.
+
+\begin{table}[H]
+    \centering
+    \hspace*{-0.6cm}
+    \begin{tabular}{c|ll}
+        Vocabulary mapping & ENST-Drums & MDB-Drums \\
+        \hline
+        \acrfull{KD} & \textit{bd} & \textit{KD} \\
+        \acrfull{SD} & \textit{sd}, \textit{sweep}, \textit{rs}, \textit{sticks}, \textit{cs} & \textit{SD}, \textit{SDB}, \textit{SDD}, \textit{SDF}, \textit{SDG}, \textit{SDNS}, \textit{SST} \\
+        \acrfull{TT} & \textit{mt}, \textit{mtr}, \textit{lmt}, \textit{lt}, \textit{ltr}, \textit{lft} & \textit{HIT}, \textit{MHT}, \textit{HFT}, \textit{LFT} \\
+        \acrfull{HH} & \textit{chh}, \textit{ohh} & \textit{CHH}, \textit{OHH}, \textit{PHH}, \textit{TMB} \\
+        \acrfull{CC+RC} & \textit{cr}, \textit{spl}, \textit{ch}, \textit{rc}, \textit{c}, \textit{cb} & \textit{RDC}, \textit{RDB}, \textit{CRC}, \textit{CHC}, \textit{SPC} \\
+    \end{tabular}
+    \caption{The mapping for each of the original transcribed instruments in ENST-Drums and MDB-Drums, onto the 5-instrument vocabulary in this thesis. The description of each of the original annotated instruments can be found in their respective papers.~\cite{gillet2006enst, southall2017mdb}}
+    \label{ENSTMDBMapping}
+\end{table}
+
+It should be noted that ENST-Drums come with more specific annotations, with some instruments ending with a number (e.g. \textit{"rc3"}) informing that the drumset played on contains several of that instrument, with the number specifying which of these the current onset was made on. It also contains a few specific \textit{"sd-"} annotation, meaning that the respective snare drum onset is a softer \textit{ghost note} hit~\cite{gillet2006enst}. Aligning with the general \gls{ADT} practice and other datasets, these suffixes are ignored and onsets are recognized as their original instruments.
 
 \section{E-GMD}
 
@@ -55,7 +75,7 @@ This dataset contains 115 hours of audio recordings over 1709 different songs.
 
 \section{ADTOF-YT}
 
-The Automatic Drums Transcription On Fire YouTube (ADTOF-YT) dataset from Zehren et al.~\cite{signals4040042} is a large \gls{ADT} dataset containing crowdsourced data, hence the YouTube suffix. Due to the crowdsourced nature of this dataset, it is possible to utilize large amounts of non-synthetic, human data, but with the tradeoff in which we can not guarantee its quality.
+The Automatic Drums Transcription On Fire YouTube (ADTOF-YT) dataset from Zehren et al.~\cite{signals4040042} is a large \gls{ADT} dataset containing crowdsourced data, hence the YouTube suffix. Due to the crowdsourced nature of this dataset, it is possible to utilize large amounts of non-synthetic, human data, but with the tradeoff in which we can not guarantee its quality. It is also worth to be noted ADTOF-YT seems to be biased towards metal and rock musical genres, as noticed by Zehren et al.~\cite{signals4040042}.
 
 Contrary to the other datasets, this one is distributed in prepackaged TensorFlow datasets for each split, with datapoints as pairs of logarithmically filtered log-spectograms and sequence of instrument onset probabilities. This dataset also comes with a vocabulary of 5, and is thus the least diverse dataset in this thesis.
 
@@ -87,19 +107,33 @@ The dataset contains 1.08 hours of music, which can be split into 977 non-overla
 \begin{table}[H]
     \centering
     \hspace*{-0.6cm}
-    \begin{tabular}{l|ccccc}
-        Dataset & Duration (h) & Number of tracks & Vocabulary & Melodic & Synthetic \\
+    \begin{tabular}{l|cccc}
+        Dataset & Duration (h) & Number of tracks & Melodic & Synthetic \\
         \hline
-        ENST+MDB & 1.37 & 87 & 20/21 & $\checkmark$ & $\times$ \\
-        E-GMD & 444.5 & 45,537 & 7 & $\times$ & $\checkmark$ \\
-        Slakh & 115 & 1709 & ? & $\checkmark$ & $\checkmark$ \\
-        ADTOF-YT & 245 & 2915 & 5 & $\checkmark$ & $\times$ \\
-        SADTP & 1.08 & 977 & ? & $\checkmark$ & $\times$ \\
+        ENST+MDB & 1.37 & 87 & $\checkmark$ & $\times$ \\
+        E-GMD & 444.5 & 45,537 & $\times$ & $\checkmark$ \\
+        Slakh & 115 & 1709 & $\checkmark$ & $\checkmark$ \\
+        ADTOF-YT & 245 & 2915 & $\checkmark$ & $\times$ \\
+        SADTP & 1.08 & 977 & $\checkmark$ & $\times$ \\
     \end{tabular}
-    \caption{Comparison of each dataset's characteristics like total duration, number of tracks, and vocabulary size. Melodic datasets denote being a part of \gls{DTM}, otherwise they are \gls{DTD}. Synthetic datasets contain music which is synthesized digitally, with an often automatic generation scheme~\cite{zehren2024analyzingreducingsynthetictorealtransfer}.}
+    \caption{Comparison of each dataset's characteristics including total duration and number of tracks. Melodic datasets denote being a part of \gls{DTM}, otherwise they are \gls{DTD}. Synthetic datasets contain music which is synthesized digitally, with an often automatic generation scheme~\cite{zehren2024analyzingreducingsynthetictorealtransfer}.}
     \label{DatasetSummaryTable}
 \end{table}
 
-\textcolor{red}{\textbf{Compute specific vocabulary for the missing datasets, labeled (?)}}
+\begin{table}[H]
+    \centering
+    \hspace*{-0.6cm}
+    \begin{tabular}{l|ccc}
+        Dataset & Train & Validation & Test \\
+        \hline
+        ENST+MDB & 896 & 236 & 152 \\
+        E-GMD & 324,266 & 49,424 & 48,571 \\
+        Slakh & 80,662 & 16,643 & 9963 \\
+        ADTOF-YT & 134,332 & 28,984 & 18,650 \\
+        SADTP & - & - & 977 \\
+    \end{tabular}
+    \caption{Comparison of the sizes of each dataset's different splits. Each dataset contains sequences of size 400 (corresponding to 4 second audio clips). These only summarize the direct size of each dataset, but does not take specific dataset augmentation into account, e.g. oversampling a MIDI sequence with differently sounding synthesized instruments.}
+    \label{DatasetSplitSummaryTable}
+\end{table}
 
-In Table \ref{DatasetSummaryTable} we have a comprehensive summary of the different aspect of each of the dataset, as well as presenting them in a comparable format. These dataset span a good range of different characteristics, which could prove beneficial for training generalizing \gls{ADT} models.
+In Table \ref{DatasetSummaryTable} we have a comprehensive summary of the different aspect of each of the dataset, as well as presenting them in a comparable format. These dataset span a good range of different characteristics, which could prove beneficial for training generalizing \gls{ADT} models. Table \ref{DatasetSplitSummaryTable} explicitly shows us the size differences between these datasets, and will be crucial once we start comparing performances across datasets.
