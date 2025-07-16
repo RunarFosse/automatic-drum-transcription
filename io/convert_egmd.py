@@ -6,8 +6,8 @@ import pandas as pd
 
 """ Run this file to turn E-GMD into a stored PyTorch dataset """
 
-# 5-drum mapping for MIDI, from "https://github.com/khiner/DrumClassification/blob/main/create_label_mapping.py" and "https://soundprogramming.net/file-formats/general-midi-drum-note-numbers/"
-MIDI_MAPPING = {
+# 5-drum mapping for Roland MIDI, from "https://arxiv.org/pdf/1905.06118" (and from "https://github.com/khiner/DrumClassification/blob/main/create_label_mapping.py" and "https://soundprogramming.net/file-formats/general-midi-drum-note-numbers/")
+ROLAND_MIDI_MAPPING = {
     35: 0, #'Acoustic Bass Drum',
     36: 0, #'Bass Drum',
 
@@ -101,7 +101,7 @@ if __name__ == "__main__":
             
             spectrogram = readAudio(audio_path)
             timesteps = spectrogram.shape[0]
-            label = readMidi(midi_path, MIDI_MAPPING, timesteps, 5, vocabulary)
+            label = readMidi(midi_path, ROLAND_MIDI_MAPPING, timesteps, 5, vocabulary)
 
             partitions = timesteps // 400
             data += list(spectrogram.tensor_split(partitions, dim=0))
