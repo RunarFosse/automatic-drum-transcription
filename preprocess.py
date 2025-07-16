@@ -16,7 +16,7 @@ def compute_normalization(train_paths: List[Path], device: str = "cpu") -> Tuple
 
     # Enter all datapoints into a stack
     train_loader = DataLoader(train_dataset, shuffle=False, batch_size=128, num_workers=4, pin_memory=True)
-    N, (C, H, W) = len(train_dataset), train_dataset[0].shape 
+    N, (C, H, W) = len(train_dataset), train_dataset[0][0].shape 
     stack = torch.empty((N, C, H, W), dtype=torch.float32, device=device)
 
     # Fill it batch by batch
