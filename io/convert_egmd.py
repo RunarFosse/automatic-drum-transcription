@@ -6,8 +6,8 @@ import pandas as pd
 
 """ Run this file to turn E-GMD into a stored PyTorch dataset """
 
-# 5-drum mapping for EGMD, from "https://github.com/khiner/DrumClassification/blob/main/create_label_mapping.py"
-EGMD_MAPPING = {
+# 5-drum mapping for MIDI, from "https://github.com/khiner/DrumClassification/blob/main/create_label_mapping.py" and "https://soundprogramming.net/file-formats/general-midi-drum-note-numbers/"
+MIDI_MAPPING = {
     35: 0, #'Acoustic Bass Drum',
     36: 0, #'Bass Drum',
 
@@ -38,8 +38,46 @@ EGMD_MAPPING = {
     58: None, #'Vibraslap',
     59: 4, #'Ride Cymbal 2',
 
-    22: None, #Unknown Mapping - Not Percussion
-    26: None, #Unknown Mapping - Not Percussion
+    27: None, #'High Q (GM2)',
+    28: None, #'Slap (GM2)',
+    29: None, #'Scratch Push (GM2)',
+    30: None, #'Scratch Pull (GM2)',
+    31: None, #'Sticks (GM2)',
+    32: None, #'Square Click (GM2)',
+    33: None, #'Metronome Click (GM2)',
+    34: None, #'Metronome Bell (GM2)',
+    60: None, #'Hi Bongo',
+    61: None, #'Low Bongo',
+    62: None, #'Mute Hi Conga',
+    63: None, #'Open Hi Conga',
+    64: None, #'Low Conga',
+    65: None, #'High Timbale',
+    66: None, #'Low Timbale',
+    67: None, #'High Agogo',
+    68: None, #'Low Agogo',
+    69: None, #'Cabasa',
+    70: None, #'Maracas',
+    71: None, #'Short Whistle',
+    72: None, #'Long Whistle',
+    73: None, #'Short Guiro',
+    74: None, #'Long Guiro',
+    75: None, #'Claves',
+    76: None, #'Hi Wood Block',
+    77: None, #'Low Wood Block',
+    78: None, #'Mute Cuica',
+    79: None, #'Open Cuica',
+    80: None, #'Mute Triangle',
+    81: None, #'Open Triangle',
+    82: None, #'Shaker (GM2)',
+    83: None, #'Jingle Bell (GM2)',
+    84: None, #'Belltree (GM2)',
+    85: None, #'Castanets (GM2)',
+    86: None, #'Mute Surdo (GM2)',
+    87: None, #'Open Surdo (GM2)',
+
+    # Manually retrieved from Roland TD-11
+    22: 3, #'Unknown Hi Hat',
+    26: 3, #'Unknown Hi Hat',
 }
 
 vocabulary = set()
@@ -65,7 +103,7 @@ if __name__ == "__main__":
             
             spectrogram = readAudio(audio_path)
             timesteps = spectrogram.shape[0]
-            label = readMidi(midi_path, EGMD_MAPPING, timesteps, 5, vocabulary)
+            label = readMidi(midi_path, MIDI_MAPPING, timesteps, 5, vocabulary)
 
             partitions = timesteps // 400
             data += list(spectrogram.tensor_split(partitions, dim=0))
