@@ -1,9 +1,3 @@
-# Create analysis notebooks for model performance and plotting
-
-# Remove ADTOF from Convolutional RNN and Transformer model as they no longer are the same.
-
-# Mention ADOTF-YT format correctly, as they state in their paper they are using log-spectrograms, but mel-spectrograms on Zenodo
-
 # Problem to discuss:
     - Offset predictions, hallucinations (like the tapping in etæk 'n),
     - Location variance (Different prediction depending on start timeframe, i.e. snare prediction on frame 20 if starting prediction from 5, not 10)
@@ -11,10 +5,6 @@
 # Todos for thesis: 
 
     # Mention that we do 5 instrument transcription. I'm not sure if this is mentioned but this is really important. !! Important
-
-    # For all Architecture figures:
-
-        - Add a flatten indication between convolutional/patch embedding and the remaining layers? !! Important
 
     # Explicit layer norm in transformer architecures.
 
