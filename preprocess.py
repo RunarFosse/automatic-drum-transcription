@@ -27,7 +27,13 @@ def compute_normalization(train_paths: List[Path], device: str = "cpu") -> Tuple
         i += b
 
     # And compute and return values
-    mean, std = stack.mean(dim=(0, 1, 2)), stack.std(dim=(0, 1, 2))
+    mean, std = stack.mean(dim=(0, 1, 2)).to("cpu"), stack.std(dim=(0, 1, 2)).to("cpu")
+
+    # Delete the stack tensor and empty the cache
+    del stack
+    if device[:4] == "cuda" and torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
     return mean, std
 
 def create_transform(mean: torch.Tensor, std: torch.Tensor, channels_last: bool) -> transforms.Compose:
