@@ -1,8 +1,20 @@
 \chapter{Background}\label{Background}
 
-\section{The Transcription Task}
+\section{Automatic Music Transcription}
 
-\textcolor{red}{Do an introduction to the general transcription task here. We only need intuition for what task we are solving, without having to understand any audio/spectrogram-, or output/music notation specifics.}
+In general, transcription refers to the process of retrieving information from audible data, such as sounds or music. Specifically within applied on music, the information we often seek is an annotation, or a transcription, of the music. Generally, transcribing a musical piece is expensive, requiring both extensive experience within a specific instrumental field as well as a lot of  time-consuming, manual work. Early on, Martin Piszczalski stated that \textit{"The learned, human skill of transcribing music is one of the most sophisticated auditory-based pattern-recognition tasks that humans perform."}~\cite{10.5555/15202}, and not long after helped introduce the term \acrfull{AMT}~\cite{piszczalski1977automatic}. Now, many years later, both the fields of \gls{AMT} and machine learning have evolved significantly.
+
+\subsection{Transcription using Deep learning}
+Currently, much of the state-of-the-art within \gls{AMT} utilizes deep learning~\cite{8350302, signals4040042, jamshidi2024machine}. With enough data, one can train a neural network to automatically, given an input sequence of music, output a transcribed sequence representing musical notation. Musical notation could be extensive in their information, but by far the most important parts could be reduced down to \textit{"which instruments are playing"} and \textit{"when are they playing"}.
+
+Relating this to a common deep learning task, this could be described as a multi-label sequence tagging/sequence labelling task. For each element in an input sequence, output a respective one or more labels.
+
+\begin{figure}[H]
+    \centering
+    \input{tikz/amt.tex}
+    \caption{An abstract visualization of the \acrfull{AMT} process using deep learning. Music is input into a deep learning pipeline, e.g. a neural network, which processes it, and returns a finished transcription.}
+    \label{AMTFigure}
+\end{figure}
 
 \section{Audio}
 
