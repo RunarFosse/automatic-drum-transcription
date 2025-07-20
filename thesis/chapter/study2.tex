@@ -40,24 +40,28 @@ To get a comprehensive overview over how the different datasets could complement
     \centering
     \hspace*{-0.6cm}
     \begin{tabular}{l|cccc}
-        Model & ENST+MDB & Slakh & ADTOF-YT      \\
+        Model & ENST+MDB & E-GMD & Slakh & ADTOF-YT      \\
         \hline
-        Slakh + ADTOF-YT & 0.86	& \textbf{0.90}	& \textbf{0.97} \\
-        ENST+MDB + Slakh + ADTOF-YT & \textbf{0.88}	& 0.89	& 0.95 \\
+        Slakh + ADTOF-YT & 0.86	& 0.72 & \textbf{0.90}	& \textbf{0.97} \\
+        ENST+MDB + Slakh + ADTOF-YT & \textbf{0.88}	& 0.74 & 0.89	& 0.95 \\
         \hline
-        ADTOF-RGW + ADTOF-YT~\cite{signals4040042} & 0.78/0.81* & - & 0.85 \\
+        OaF-Drums~\cite{callender2020improvingperceptualqualitydrum} & 0.77* & 0.83 & - & - \\
         \hline
-        MT3 (mixture)~\cite{gardner2022mt3multitaskmultitrackmusic} & - & 0.76 & - \\
+        MT3 (mixture)~\cite{gardner2022mt3multitaskmultitrackmusic} & - &  & 0.76 & - \\
         \hline
-        YPTF.MoE+M~\cite{chang2024yourmt3+} & 0.87**/- & 0.85 & - \\
+        YPTF.MoE+M~\cite{chang2024yourmt3+} & 0.87**/- &  & 0.85 & - \\
+        \hline
+        ADTOF-RGW + ADTOF-YT~\cite{signals4040042} & 0.78/0.81*** &  & - & 0.85 \\
     \end{tabular}
     \caption{The Micro F1-score of selectively chosen convolutional recurrent neural networks from this dataset study, compared with best performing models from other literature over the three of the test sets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset for all compared models.
-    (*) Zehren et. al tests on ENST-Drums and MDB-Drums separately and tests on different test splits than ours~\cite{signals4040042}.
-    (**) Chang et. al only tests ENST-Drums and tests on a different test split than ours~\cite{chang2024yourmt3+}.}
+    (*) Callender et. al tests ENST-Drums strictly on isolated drum stems, handling it as a \gls{DTD} task, on a different test split than ours~\cite{callender2020improvingperceptualqualitydrum}.
+    (**) Chang et. al only tests ENST-Drums and tests on a different test split than ours~\cite{chang2024yourmt3+}.
+    (***) Zehren et. al tests on ENST-Drums and MDB-Drums separately and tests on different test splits than ours~\cite{signals4040042}.
+    }
     \label{DatasetComparisonTable}
 \end{table}
 
-\textcolor{red}{Add E-GMD to other literature.}
+\textcolor{red}{Add E-GMD to other literature and discuss it in discussion.}
 
 \section{Discussion}
 
