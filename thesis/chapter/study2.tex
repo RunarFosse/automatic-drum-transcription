@@ -15,7 +15,7 @@ To get a comprehensive overview over how the different datasets could complement
     \hspace*{-1.0cm}
     \resizebox{1.13\linewidth}{!}{%
     \begin{tabular}{l|ccccc}
-        Training Dataset & ENST+MDB & E-GMD & Slakh & ADTOF-YT & SADTP      \\
+        Training Datasets & ENST+MDB & E-GMD & Slakh & ADTOF-YT & SADTP      \\
         \hline
         ENST+MDB	& 0.81	& \cellcolor{blue!5} 0.59	& \cellcolor{blue!5} 0.53	& \cellcolor{blue!5} 0.60	& \cellcolor{blue!5} 0.42 \\
         E-GMD	& \cellcolor{blue!5} 0.55	& \textbf{0.90}	& \cellcolor{blue!5} 0.44	& \cellcolor{blue!5} 0.42	& \cellcolor{blue!5} 0.28 \\
@@ -24,12 +24,12 @@ To get a comprehensive overview over how the different datasets could complement
         \hline
         ENST+MDB + Slakh	& 0.84	& \cellcolor{blue!5} 0.73	& 0.90	& \cellcolor{blue!5} \underline{0.63}	& \cellcolor{blue!5} 0.48 \\
         ENST+MDB + ADTOF-YT	& 0.86	& \cellcolor{blue!5} 0.70 	& \cellcolor{blue!5} 0.63	& 0.94	& \cellcolor{blue!5} \textbf{\underline{0.62}} \\
-        Slakh + ADTOF-YT	& \cellcolor{blue!5} 0.86	& \cellcolor{blue!5} 0.72	& \textbf{0.90}	& \textbf{0.97}	& \cellcolor{blue!5} 0.62 \\
+        Slakh + ADTOF-YT	& \cellcolor{blue!5} \underline{0.86}	& \cellcolor{blue!5} 0.72	& \textbf{0.90}	& \textbf{0.97}	& \cellcolor{blue!5} \textbf{\underline{0.62}} \\
         \hline
-        ENST+MDB + Slakh + ADTOF-YT	& \textbf{0.88}	& \cellcolor{blue!5} 0.74	& 0.89	& 0.95	& \cellcolor{blue!5} 0.61 \\
-        E-GMD + Slakh + ADTOF-YT	& \cellcolor{blue!5}	&	& 	&	& \cellcolor{blue!5} \\
+        ENST+MDB + Slakh + ADTOF-YT	& \textbf{0.88}	& \cellcolor{blue!5} \underline{0.74}	& 0.89	& 0.95	& \cellcolor{blue!5} 0.61 \\
+        E-GMD + Slakh + ADTOF-YT	& \cellcolor{blue!5} 0.85	& \textbf{0.90} 	& 0.89	& 0.93	& \cellcolor{blue!5} 0.61 \\
         \hline
-        ENST+MDB + E-GMD + Slakh + ADTOF-YT	&	&	&	&	& \cellcolor{blue!5} \\
+        ENST+MDB + E-GMD + Slakh + ADTOF-YT	& 0.87	& 0.89	& \textbf{0.90} 	& 0.93	& \cellcolor{blue!5} \textbf{\underline{0.62}} \\
     \end{tabular}%
     }
     \caption{The Micro F1-score for a convolutional recurrent neural network trained over different combination of datasets, and tested on all datasets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset. Cells which are \colorbox{blue!10}{coloured light blue} represent \gls{OOD} evaluations. Values which are \underline{underlined} represent the highest possible F1-score of \gls{OOD} evaluations for the respective dataset.}
