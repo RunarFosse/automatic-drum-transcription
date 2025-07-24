@@ -178,9 +178,8 @@ We usually say that patch embeddings eliminate the use of convolutions in the Vi
 \begin{figure}[H]
     \centering
     %\input{tikz/patchembedding}
-    \includegraphics[trim=0 0 0 132, clip, scale=0.7]{figures/patchembedding.png}
-    %\textcolor{red}{Insert Patch Embedding visualization.}
-    \caption{The creation of a patch embedding from an input spectrogram.}
+    \includegraphics[trim=0 0 0 116, clip, scale=0.7]{figures/patchembedding.png}
+    \caption{The creation of a sequence of patch embeddings from an input spectrogram. The spectrogram is split into several overlapping or non-overlapping patches. These are linearly projected into a sequence of 1 dimensional patch embeddings. Each patch embedding also has a learnable positional embedding added to it. Here it is also represented with an initial \acrfull{CLS}, which often is the case for image classification tasks~\cite{gong2021astaudiospectrogramtransformer}.}
     \label{PatchEmbeddingFigure}
 \end{figure}
 
@@ -188,7 +187,7 @@ We usually say that patch embeddings eliminate the use of convolutions in the Vi
 
 Originally, the Vision Transformer has been used on classification tasks where the output is not a sequence. \gls{ADT} is a sequence labeling task, and requires that the output is a sequence, where the time dimension matches the size of the input.
 
-This can be solved by treating a group of patches from the patch embedding together as a timeframe, as long as we ensure that there the number of timeframes are a factor of the number of patches. Then the output of the Vision Transformer could be construed to match our intended output sequence.
+This can be solved by treating a group of patches from the patch embedding together as a timeframe, as long as we ensure that there the number of timeframes are a factor of the number of patches. Then the output of the Vision Transformer could be construed to match our intended output sequence. This also voids the need of an additional \gls{CLS}, which in classification tasks is transformed to represent the whole input image, later being used to output the class prediction~\cite{dosovitskiy2021imageworth16x16words}
 
 \subsection{Implementation}
 
