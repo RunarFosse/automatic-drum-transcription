@@ -188,8 +188,8 @@ Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempt
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.6, trim={0 0 13.8cm 0},clip]{figures/midi}
-    \caption{Example MIDI arrangement in a readable format}
+    \includegraphics[scale=0.65, trim={0 0 13.8cm 0},clip]{figures/midi}
+    \caption{Example MIDI arrangement in text format. The first lines contain meta data. Afterwards follow lines with note on/off events, with temporal information start and delta, with the instrument and sound being decided by channel, key and velocity information~\cite{starostenko2019}.}
     \label{MIDIFigure}
 \end{figure}
 
@@ -262,7 +262,7 @@ Understand the pipeline for a transcription task, specifically \gls{ADT}, is cru
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.7]{figures/adtpipeline.png}
-    \caption{Example of what the prediction pipeline of an \gls{ADT} model could look like. Given an input spectrogram, a model predicts a likelihood distribution of each instrument appearing (called the activation functions), which then is quantized into drum onsets and sheet music notation.}
+    \caption{Example of what the prediction pipeline of an \gls{ADT} model could look like. Given an input spectrogram, a model predicts a likelihood distribution of each instrument appearing (called the activation functions), which then is quantized into drum onsets and sheet music notation~\cite{Southall2016AutomaticDT}.}
     \label{ADTFigure}
 \end{figure}
 
