@@ -1,6 +1,6 @@
 \chapter{Methodology}\label{Methodology}
 
-Though we perform 2 different studies, with 2 different intentions, the dataset preparation and model selection pipeline remains the same. 
+In this thesis we perform 2 different studies. Although they differ in both intention and result comparison, their dataset preparation and model selection pipeline remains identical. 
 
 \section{Data Preparation}
 
@@ -12,7 +12,7 @@ Due to the preprocessed nature of the ADTOF-YT dataset, the unification is trivi
 
 The others are however distributed in the Waveform Audio File Format (with the suffix \textit{.wav}) or using the Free Lossless Audio Codec (with the suffix \textit{.flac}). Both of these formats are loaded using the PyTorch library \texttt{Torchaudio} and converted to monophonic format through meaning over each side's waveform. If any datasets contain distinct drum and accompaniement audio (like e.g. ENST-Drums), these are additively mixed together.
 
-After each track is loaded into a waveform, a zero-padding is added to the end of each sequence allowing for even partitioning into 4 second partitions. Then we turn the track into a spectrogram with 2048 fft's, and a window length of 2048. By keeping the hop length equal to the sampling rate divided by 100, the resulting spectrogram's timesteps represent a 10ms window of the original waveform.
+After each track is loaded into a waveform, a zero-padding is added to the end of each sequence allowing for even partitioning into 4 second partitions. Then we turn the track into a spectrogram with 2048 fft's, and a window length of 2048. By keeping the hop length equal to the sampling rate divided by 100, the resulting spectrogram's timesteps, or frames, represent a 10ms window of the original waveform. As each sequence consists of 4 seconds of audio, all resulting sequences will have a sequence length of $T = 400$ frames.
 
 After this, a filterbank is computed by generating 12 normalized logarithmically spaced filters, centered at 440Hz, and bounded over the interval [20Hz, 20,000Hz]. Applying this filterbank as a simple matrix multiplication over the spectrogram results in a logarithmically filtered spectrogram with $D_\text{STFT} = 84$ number of frequency bins. Lastly, we turn it into a log-spectrogram by applying a $\log_{10}$ operation to each cell, following an addition of 1 (preventing $\lim_{x \to 0}\log_{10}(x) = -\infty$ situations).
 
@@ -74,8 +74,10 @@ For model training and selection we utilize the RayTune library~\cite{liaw2018tu
 
 Through RayTune, we train 15 different models (25 solely for the smallest dataset ENST+MDB), with hyperparameters tuned through bayesian optimization (see the next section~\ref{HyperparameterTuning}). Each model is also ran for at most 100 epochs. As mentioned, we perform an early stop if performance stops increasing. We utilize PyTorch's dataloaders for iterating the datasets, with a batch size of 128. And using the AdamW optimizer, as previously mentioned.
 
-During each epoch of training, we evaluate the model on the training dataset's corresponding validation data. After training, the model with the highest Micro F1-score is selected. Due to the pre-split nature of most of our datasets, we utilize hold-out validation, with separate train, validation and test datasets. This is not only very common within \gls{ADT}~\cite{vogl2016recurrent, 8350302, chang2024yourmt3+}, but throughout the whole field of deep learning. Raschka mentions that \textit{"The holdout method is inarguably the simplest model evaluation technique"}~\cite{raschka2020modelevaluationmodelselection}, and might be one of the reasons for its popularity.
+During each epoch of training, we evaluate the model on the training dataset's corresponding validation data. After training, the model with the highest validation Micro F1-score is selected. Due to the pre-split nature of most of our datasets, we utilize hold-out validation, with separate train, validation and test datasets. This is not only very common within \gls{ADT}~\cite{vogl2016recurrent, 8350302, chang2024yourmt3+}, but throughout the whole field of deep learning. Raschka mentions that \textit{"The holdout method is inarguably the simplest model evaluation technique"}~\cite{raschka2020modelevaluationmodelselection}, and might be one of the reasons for its popularity.
 Then, we estimate its performance on unseen data through evaluating it on the test dataset. At last, said model is stored together with its corresponding weights, training config, and metrics.
+
+As just mentioned, every selected model is evaluated on test splits of the datasets. Although these test splits are traditionally reserved for a final performance evaluation, acting as a model's general performance on "unseen" data, they are here used to compare either architectural or dataset factors (respective to each study), and analysing how each of these controllable factors could be beneficial towards a model's generalization ability. No model selection nor hyper parameter tuning is done based on test evaluation, maintaining the validity of these performances as estimated performance on "unseen" data.
 
 \section{Hyperparameter Tuning}\label{HyperparameterTuning}
 

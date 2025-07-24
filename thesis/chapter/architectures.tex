@@ -2,7 +2,12 @@
 
 Finding a suitable architecture is a vital step in creating a well-performant deep learning model. By leveraging different techniques, we balance introduction of inductive biases and possibility for complexity, which hopefully can help us end up with a generalizing model.
 
-We train a model suitable at predicting the largest common vocabulary in \gls{ADT}, namely the 5-class vocabulary consisting of \acrfull{KD}, \acrfull{SD}, \acrfull{TT}, \acrfull{HH}, \acrfull{CC+RC}~\cite{zehren2024analyzingreducingsynthetictorealtransfer}.
+The models using these architectures will be applied onto spectrograms. These spectrograms have a size $(T \times D_{STFT})$, where $T$ is the sequence length, or number of frames, in the spectrogram, and $D_{STFT}$ denoting the number of frequency bins. The output should be, as mentioned previously, a labelling of this input sequence, having a size of $(T \times C)$, where $T$ is the same sequence length as the input sequence, and $C$ denoting the number of classes, equal to the number of drum instruments.
+
+The spectrograms we are working with are logarithimically filtered log-magnitude spectrograms with 12 normalized logarithmically spaced filters per octave from 20 to 20,000H. This results in $D_{STFT} = 84$ frequency bins. Our intention is to train a model suitable at predicting the largest common vocabulary in \gls{ADT}, namely the 5-class vocabulary consisting of \acrfull{KD}, \acrfull{SD}, \acrfull{TT}, \acrfull{HH}, \acrfull{CC+RC}~\cite{zehren2024analyzingreducingsynthetictorealtransfer}. In other words, we have that $C = 5$.
+Although the sequence length $T$ is an important shape, determining temporal resolution of the input and output, it has the unique ability to vary, allowing for differently sized inputs and outputs on the same models. For all intents and purposes however, this thesis fixes $T = 400$, representing 4 seconds of 10ms sized frames.
+
+In summary, we want our models to have an input size of $(T \times 84)$, and an output size of $(T \times 5)$, where $T$ could vary.
 
 \section{Recurrent Neural Network}
 

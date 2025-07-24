@@ -24,8 +24,9 @@ Thus sound can be described as the propogation and perception of waves. Mathemat
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.35]{figures/waveform}
-    \caption{Soundwave to waveform relationship. The waveform represents the pressure of the air molecules in the soundwave at a given time. Higher and lower pressure in the soundwaves gives respective \textit{peaks} and \textit{troughs} in the waveform.}
+    %\includegraphics[scale=0.35]{figures/waveform}
+    \input{tikz/waveform.tex}
+    \caption{The sound wave to waveform relationship. The waveform represents the pressure of the air molecules in the sound wave at a given time. Higher and lower pressure in the sound waves gives respective \textit{peaks} and \textit{troughs} in the waveform.}
     \label{WaveformFigure}
 \end{figure}
 
@@ -217,7 +218,7 @@ The peak-picking algorithm, introduced in its current form by Böck et al.~\cite
     n &\ge n_\text{last onset} + w.
 \end{align*}
 
-For appropriately trained deep learning models, Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription} showed that the peak-picking parameters which gave the best results were $m = a = w = 2$ and $\delta = 0.1$.
+For appropriately trained deep learning models, Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription} showed that the peak-picking parameters which gave the best results were $m = a = w = 2$ and $\delta = 0.1$. Consequently, these same parameter values are applied for this thesis.
 
 
 \section{Automatic Drum Transcription}

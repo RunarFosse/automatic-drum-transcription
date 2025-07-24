@@ -6,6 +6,14 @@ In the first study we trained and compared the performance of five deep learning
 
 In the second study we explored how combining datasets of different characteristics influences a model's generalization ability. We found out that combining datasets substantially improves both on- and \acrfull{OOD} performance. However, we also identified that carefully constructing these datasets is vital, but that an increase in data amount generally leads to better performance.
 
+Reflecting back on the questions raised in the introduction.
+\begin{enumerate}
+    \item \textbf{Which deep learning architecture is the best suited for solving a task like \gls{DTM}?} 
+    \par The Convolutional Recurrent Neural Network consistently achieves superior performance on different \gls{ADT} and \gls{DTM} datasets.
+    \item \textbf{What makes a \gls{ADT} dataset optimal by making models generalize for \gls{DTM}?} 
+    \par Training models on large, \gls{DTM} datasets, covering a wide spectrum of musical characteristics is the most important factor of generalizability when used to train a model suitable for \gls{ADT} and \gls{DTM}.
+\end{enumerate}
+
 This thesis contributes not only by comparing different architectural choices for \gls{DTM} tasks, but also through evaluating different \gls{ADT} datasets' affection on model generalization, this on both public datasets, and on a novel dataset composed and transcribed for this thesis, SADTP. These contributions could give valuable insight into \gls{ADT} by emphasizing both choices on deep learning architectures as well as construction of datasets.
 
 Future work should expand upon this research by performing rigorous architecture analyses over larger datasets, as well as optionally inspecting how the different number of drum instrument classes both affect and perform over these different datasets.
