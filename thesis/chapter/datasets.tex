@@ -6,13 +6,13 @@ The ENST-Drums dataset by Gillet and Richard~\cite{gillet2006enst} has been one 
 
 As this dataset contains separate audio files for performance and accompaniement, we additively combine them to create a singular respective mixture track. There exist many recordings from differently placed microphones of a single performance, however in this thesis, we solely selected the \textit{"wet mix"} due to it being a combined recording of all other microphone recordings, and its \textit{mix} showing resembelance of a polished performance track.
 
-ENST-Drums contains 1.02 hours of music over 64 tracks.
+ENST-Drums contains 1.02 hours of music over 64 tracks, and was accessed through Zenodo~\cite{gillet_2006_7432188}.
 
 Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB (MDB) dataset~\cite{bittner2014medleydb}, but re-annotated and specialized for \gls{ADT} related tasks. This dataset is, similar to ENST-Drums, also split into different stem tracks, such as isolated drum recordings and accompaniement. However, they also contain already-mixed \textit{full mix} tracks, which are the ones we use in this thesis.
 
 Tracks in MDB-Drums come transcribed in two different granularities. First, a \textit{class} file, split into 6 larger drum classes, and a \textit{subclass} file, containing a more specific 21 drum instruments. Although the 6-class transcriptions may seem closer to a 5-instrument vocabulary, the 21 gave better control over which specific instruments coincided with which in the 5-instrument vocabulary. Therefore, these subclass transcriptions are utilized as annotations.
 
-MDB-Drums contains 0.35 hours of music over 23 tracks.
+MDB-Drums contains 0.35 hours of music over 23 tracks, and was accessed through GitHub~\cite{southall_mdbdrums_2017}.
 
 Both of these datasets distributes their audio in waveform files, and their annotations in text files. Annotations are formatted by onset time and instrument label. They are also relatively small, and contain thorough, real, annotated data. Due to these similarities, in this thesis they are combined together into a slightly larger ENST+MDB dataset.
 
@@ -52,7 +52,7 @@ GMD was created through recording human performances in MIDI format through a Ro
 
 In contrast to the other dataset's utilized in this thesis, this dataset is not created for a \gls{DTM} task, but rather a \gls{DTD} task. This is due to all recordings containing solo, drum-only performances. In addition, as this data is recorded from human performances in a semi-manual nature, there exist some errors from the recording process \textit{"that resulted in unusable tracks."}~\cite{callender2020improvingperceptualqualitydrum}. The magnitude of these errors are not stated, however other authors propose that it might be as high as 20.5\% of the tracks with varying amounts of discrepancies~\cite{holz2021automatic}.
 
-This dataset contains 444.5 hours of audio recordings, from 1,059 unique drum performances resampled to 45,537 MIDI sequences.
+This dataset contains 444.5 hours of audio recordings, from 1,059 unique drum performances resampled to 45,537 MIDI sequences, accessed through Zenodo~\cite{callender_2020_4300943}.
 
 \subsection{Mapping}
 
@@ -89,7 +89,7 @@ As mentioned, this dataset contains more instruments than just the drumset, such
 The original Slakh dataset was found to have data leakage between the different splits, and it is therefore recommended for transcription tasks to use a smaller subset, Slakh2100-redux, where this issue has been solved. Therefore, this is the dataset used for this thesis.
 \textcolor{red}{Needs citation, other than the github and zenodo? \\ \url{https://github.com/ethman/slakh-utils}, \url{https://zenodo.org/records/4599666}}
 
-This dataset contains 115 hours of audio recordings over 1709 different songs.
+This dataset contains 115 hours of audio recordings over 1709 different songs, accessed through Zenodo~\cite{manilow_2019_4599666}.
 
 \subsection{Mapping}
 
@@ -120,7 +120,7 @@ Contrary to the other datasets, this one is distributed in prepackaged TensorFlo
 In their original paper, "High-Quality and Reproducible Automatic Drum Transcription From Crowdsourced Data", they state that their spectrograms are stored as log-magnitude, log-frequency spectrograms~\cite{signals4040042}. This contradicts information from where they distribute their dataset, where they state that \textit{"The data as mel-scale spectrograms."}~\cite{zehren_2023_10084511}. Through manual verification and approximation of the original waveforms, we propose that this latter information is an error, and confirms that the spectrograms are indeed stored as logarithmically filtered spectrograms, following the same format used by Vogl et. al~\cite{Vogl2017DrumTV} and what is otherwise used in this thesis.
 \textcolor{red}{Is this enough justification? Should I provide more information? If so, what exactly?}
 
-The dataset contains 245 hours of music over 2924 tracks.
+The dataset contains 245 hours of music over 2924 tracks, and was accessed through Zenodo~\cite{zehren_2023_10084511}.
 
 \subsection{Mapping}
 
@@ -134,7 +134,7 @@ The \textit{performance} name alludes to the transcription being recorded live w
 
 This dataset stands out, as it is the only one in this thesis not used for training. Its sole purpose is for cross-dataset evaluation, and to provide information on the generalization ability for models trained on data from other sources.
 
-The dataset contains 1.08 hours of music, which can be split into 977 non-overlapping 4 second datapoints (includes zero padding certain pieces for even partitioning).
+The dataset contains 1.08 hours of music, which can be split into 977 non-overlapping 4 second datapoints (includes zero padding certain pieces for even partitioning), accessed through GitHub~\cite{fosse_sadtp_2025}.
 
 \subsection{Mapping}
 

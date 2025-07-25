@@ -18,7 +18,7 @@ The fundamental building block for \glspl{RNN} is the \textit{recurrent unit}. I
 \begin{figure}[H]
     \centering
     \input{tikz/rnnspectrogram}
-    \caption{An example of how bidirectional \glspl{RNN} allow for adjacent timesteps to influence the prediction of the current timestep. The background is a spectrogram, and the red boxes represent influence in the middle timeframe. The height of the box help visualize influence strength.}
+    \caption{An example of how bidirectional \glspl{RNN} allow for adjacent timesteps to influence the prediction of the current timestep. The background is a spectrogram, and the red boxes represent influence on the middle timeframe. The height of the box help visualize influence strength.}
     \label{RNNInfluenceFigure}
 \end{figure}
 
@@ -57,7 +57,7 @@ We've mentioned that spectrograms can be treated as images. Therefore it would m
 \begin{figure}[H]
     \centering
     \input{tikz/cnnspectrogram}
-    \caption{An example of how \glspl{CNN} allow for a fixed context of influence from neighbouring timesteps when predicting each timestep. The background is a spectrogram, and the red boxes represent influence in the middle timeframe, being described by the red shaded region.}
+    \caption{An example of how \glspl{CNN} allow for a fixed context of influence, also known as its receptive field, from neighbouring timesteps when predicting each timestep. The background is a spectrogram, and the red boxes represent influence on the middle timeframe, being described by the red shaded region.}
     \label{CNNInfluenceFigure}
 \end{figure}
 
@@ -126,7 +126,7 @@ As mentioned, the \gls{RNN} displays difficulty in sustaining long range depende
 \begin{figure}[H]
     \centering
     \input{tikz/ctspectrogram}
-    \caption{An example of how attention layers allow for attentive influence from from other timeframes spanning large distances. The background is a spectrogram, and the red boxes represent influence in the middle timeframe. The height of the box help visualize influence strength.}
+    \caption{An example of how attention layers allow for attentive influence from from other timeframes spanning large distances. The background is a spectrogram, and the red boxes represent influence on the middle timeframe. The height of the box help visualize influence strength.}
     \label{CTInfluenceFigure}
 \end{figure}
 
