@@ -1,3 +1,63 @@
+# Mention explicit 'Transfer Gap' in OOD datasets
+
+# Ensure Dataset summary matches everything
+
+# Fix 'activations' plot !!!!! IMPORTANT
+
+# Thesis:
+     - Sustain instead of duration (Introduction)
+
+     - Discretely-sampled, not valued (Background)
+     - Aliasing figure, add "redundantly sufficient"
+     - FFT, add "Regardless of a realistic sampling rate"
+     - STFT, add "granularity" when talking about hop length
+     - Loudness, remove "Similar to pitch", as it is not explained yet
+     - Pitch filters, explain what a filter actually is
+     - Sheet music, say that rest marks are "fixed-time pauses"
+
+     - Replace, "inputs and outputs" with "inputs, and thus outputs" (Architecture)
+     - Fix C in convolutional to other (it already means classes), could be set to K
+     - Replace, "Deeper into the convolutional blocks we go.." with "the deeper we go with more convolutional blocks"
+     - Replace, "Fixed size convolutional block" with "a fixed number of convolutional blocks"
+     - Mention pretraining on large datasets for Vision Transformer
+     - Mention that a patch embedding is not a sequence, only each element of this sequence
+     
+     - Fix "MedleyDB Drums" to "MDB Drums" (Datasets)
+     - First state dataset name short, and long in parantheses if they exist
+     - Mention more specifically that there might be some errors in SADTP
+
+     - Change "transformation" to "transformation scheme" (Methodology)
+     - Add missing "optimizer" in "With the choice by what to use"
+     - For peak picking, mention where "the model relatively is most confident"
+     - Remove mention of instrumentwise F1-score
+     - Explicitly mention RayTune trials as being 1 model per 1 dataset
+
+     - Mention generalization, thats what I am looking for (Architecture Study)
+     - For CNN, mention explicitly that performance is moderate objectively, but poor relatively/comparatively
+     - Better summary in discussion, or a bit longer at least
+     - Also mention a bit of future steps here, maybe a bit deep too
+
+     - Replace "both datasets" with "all datasets" (Dataset Study)
+     - Instead of evaluation on "remaining dataset", specify "test splits of all datasets"
+     - Possibly add a figure, but this has to be last
+     - Mention "transfer gap"
+     - Fix a bit of E-GMD, notably OOD on E-GMD now being "easier" than previously
+     - Mention how E-GMD is also distinctly and uniquely best when trained only on itsel
+     - Replace MT3's "Offset F1" with "Onset F1", that is more correct
+     - For comparison discussion, also name now E-GMD, newly added
+     - Also mention how supplementing with other datasets increases on-distribution performance
+
+     - Mention generalization! (Conclusion)
+
+    - MDB Drums, not MDB-Drums (Appendix)
+
+
+
+
+     
+
+
+
 # Problem to discuss:
     - Offset predictions, hallucinations (like the tapping in etæk 'n),
     - Location variance (Different prediction depending on start timeframe, i.e. snare prediction on frame 20 if starting prediction from 5, not 10)
