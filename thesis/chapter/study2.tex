@@ -42,17 +42,17 @@ To get a comprehensive overview over how the different datasets could complement
     \begin{tabular}{l|cccc}
         Model & ENST+MDB & E-GMD & Slakh & ADTOF-YT      \\
         \hline
-        Slakh + ADTOF-YT & \cellcolor{blue!10} 0.86	& \cellcolor{blue!10} 0.72 & \textbf{0.90}	& \textbf{0.97} \\
-        ENST+MDB + Slakh + ADTOF-YT & \textbf{0.88}	& 0.74 & \cellcolor{blue!10} 0.89	& 0.95 \\
-        E-GMD + Slakh + ADTOF-YT & \cellcolor{blue!10} 0.85 & \textbf{0.90} & 0.89 & 0.93 \\
+        Slakh + ADTOF-YT & \cellcolor{blue!5} 0.86	& \cellcolor{blue!5} 0.72 & \textbf{0.90}	& \textbf{0.97} \\
+        ENST+MDB + Slakh + ADTOF-YT & \textbf{0.88}	& 0.74 & \cellcolor{blue!5} 0.89	& 0.95 \\
+        E-GMD + Slakh + ADTOF-YT & \cellcolor{blue!5} 0.85 & \textbf{0.90} & 0.89 & 0.93 \\
         \hline
-        OaF-Drums~\cite{callender2020improvingperceptualqualitydrum} & \cellcolor{blue!10} 0.77/$\times$* & 0.83 & $\times$ & $\times$ \\
+        OaF-Drums~\cite{callender2020improvingperceptualqualitydrum} & \cellcolor{blue!5} 0.77/$\times$* & 0.83 & $\times$ & $\times$ \\
         \hline
         MT3 (mixture)~\cite{gardner2022mt3multitaskmultitrackmusic} & $\times$ & $\times$ & 0.76 & $\times$ \\
         \hline
         YPTF.MoE+M~\cite{chang2024yourmt3+} & 0.87/$\times$** & $\times$ & 0.85 & $\times$ \\
         \hline
-        ADTOF-RGW + ADTOF-YT~\cite{signals4040042} & \cellcolor{blue!10}0.78/0.81*** & $\times$ & $\times$ & 0.85 \\
+        ADTOF-RGW + ADTOF-YT~\cite{signals4040042} & \cellcolor{blue!5}0.78/0.81*** & $\times$ & $\times$ & 0.85 \\
     \end{tabular}
     \caption{The Micro F1-score of selectively chosen convolutional recurrent neural networks from this dataset study, compared with best performing models from other literature over the different test sets. The performances which are \textbf{bolded} represent the highest overall F1-score for the given dataset for all compared models. Cells which are \colorbox{blue!10}{coloured light blue} represent \gls{OOD} evaluations.
     (*) Callender et. al only tests ENST-Drums, and strictly on isolated drum stems handling it as a \gls{DTD} task, on a different test split than ours~\cite{callender2020improvingperceptualqualitydrum}.
