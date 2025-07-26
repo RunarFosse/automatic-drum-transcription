@@ -51,12 +51,7 @@
 
     - MDB Drums, not MDB-Drums (Appendix)
 
-
-
-
-     
-
-
+# Add GitHub repository to Methodology
 
 # Problem to discuss:
     - Offset predictions, hallucinations (like the tapping in etæk 'n),
