@@ -1,8 +1,9 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-from load import readAudio, readMidi
 from pathlib import Path
 import argparse
+
+from load import readAudio, readMidi
 from mapping import ROLAND_MIDI_MAPPING
 
 """ Run this file to turn SADTP into a stored PyTorch dataset """

@@ -1,8 +1,9 @@
 import torch
 from torch.utils.data import TensorDataset, DataLoader, random_split
-from load import readAudio, readAnnotations
 from pathlib import Path
 import argparse
+
+from load import readAudio, readAnnotations
 from mapping import ENST_MAPPING, MDB_MAPPING
 
 """ Run this file to turn ENST-Drums into a stored PyTorch dataset """

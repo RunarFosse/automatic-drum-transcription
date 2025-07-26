@@ -1,16 +1,17 @@
+import yaml
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-from load import readAudio, readMidi
 from pathlib import Path
-import yaml
 import argparse
+
+from load import readAudio, readMidi
 from mapping import MIDI_MAPPING
 
 """ Run this file to turn Slakh2100-redux into a stored PyTorch dataset """
 
 # Declare an argument parser for this file
 parser = argparse.ArgumentParser("convert_slakh.py")
-parser.add_argument("--directory", help="The outer directory for the Slakh dataset", required=False, default="slakh2100_flac_redux")
+parser.add_argument("--directory", help="The outer directory name for the Slakh dataset", required=False, default="slakh2100_flac_redux")
 args = parser.parse_args()
 
 vocabulary = set()

@@ -1,9 +1,10 @@
 import torch
-from torch.utils.data import TensorDataset, DataLoader
-from load import readAudio, readMidi
-from pathlib import Path
 import pandas as pd
+from torch.utils.data import TensorDataset, DataLoader
+from pathlib import Path
 import argparse
+
+from load import readAudio, readMidi
 from mapping import ROLAND_MIDI_MAPPING
 
 """ Run this file to turn E-GMD into a stored PyTorch dataset """
