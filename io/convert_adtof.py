@@ -3,13 +3,18 @@ import numpy as np
 import tensorflow as tf
 from torch.utils.data import DataLoader, TensorDataset
 from pathlib import Path
+import argparse
 
 """ Run this file to turn a stored Tensorflow dataset into a stored PyTorch dataset """
 
+# Declare an argument parser for this file
+parser = argparse.ArgumentParser("convert_adtof.py")
+parser.add_argument("--directory", help="The outer directory for the ADTOF-YT dataset", required=False, default="adtof")
+args = parser.parse_args()
 
 if __name__ == "__main__":
     # Declare the path to the dataset directory
-    path = Path(__file__).resolve().parent.parent / "data" / "adtof"
+    path = Path(__file__).resolve().parent.parent / "data" / args.directory
 
     # Split into Train, Validation, Test
     for split in ["train", "validation", "test"]:

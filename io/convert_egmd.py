@@ -3,15 +3,21 @@ from torch.utils.data import TensorDataset, DataLoader
 from load import readAudio, readMidi
 from pathlib import Path
 import pandas as pd
+import argparse
 from mapping import ROLAND_MIDI_MAPPING
 
 """ Run this file to turn E-GMD into a stored PyTorch dataset """
 
 vocabulary = set()
 
+# Declare an argument parser for this file
+parser = argparse.ArgumentParser("convert_egmd.py")
+parser.add_argument("--directory", help="The outer directory for the E-GMD dataset", required=False, default="e-gmd-v1.0.0")
+args = parser.parse_args()
+
 if __name__ == "__main__":
     # Declare the path to the dataset directory
-    path = Path(__file__).resolve().parent.parent / "data" / "e-gmd-v1.0.0"
+    path = Path(__file__).resolve().parent.parent / "data" / args.directory
 
     # Load the CSV
     csv = pd.read_csv(path / "e-gmd-v1.0.0.csv")

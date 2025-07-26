@@ -2,9 +2,16 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader, random_split
 from load import readAudio, readAnnotations
 from pathlib import Path
+import argparse
 from mapping import ENST_MAPPING, MDB_MAPPING
 
 """ Run this file to turn ENST-Drums into a stored PyTorch dataset """
+
+# Declare an argument parser for this file
+parser = argparse.ArgumentParser("convert_enst+mdb.py")
+parser.add_argument("--directory_enst", help="The outer directory for the ENST-Drums dataset", required=False, default="ENST-drums-public")
+parser.add_argument("--directory_mdb", help="The outer directory for the MDB Drums dataset", required=False, default="MDBDrums-master/MDB Drums")
+args = parser.parse_args()
 
 # Splits from ADTOF-github (https://github.com/MZehren/ADTOF/blob/master/adtof/ressources/splits.py)
 # Originally from Vogl et al.
@@ -126,9 +133,9 @@ if __name__ == "__main__":
     test_data, test_labels = [], []
     for drummer in range(3):
         for i, piece in enumerate(ENST_SPLITS[drummer]):
-            audio_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "audio" / "wet_mix" / piece).with_suffix(".wav")
-            accompaniment_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "audio" / "accompaniment" / piece).with_suffix(".wav")
-            annotation_path = (path / "ENST-drums-public" / f"drummer_{drummer+1}" / "annotation" / piece).with_suffix(".txt")
+            audio_path = (path / args.directory_enst / f"drummer_{drummer+1}" / "audio" / "wet_mix" / piece).with_suffix(".wav")
+            accompaniment_path = (path / args.directory_enst / f"drummer_{drummer+1}" / "audio" / "accompaniment" / piece).with_suffix(".wav")
+            annotation_path = (path / args.directory_enst / f"drummer_{drummer+1}" / "annotation" / piece).with_suffix(".txt")
 
             spectrogram = readAudio(audio_path, accompaniment_path)
             timesteps = spectrogram.shape[0]
@@ -146,8 +153,8 @@ if __name__ == "__main__":
                 test_labels += list(label.tensor_split(partitions, dim=0))
 
         for i, piece in enumerate(MDB_SPLITS[drummer]):
-            audio_path = (path / "MDBDrums-master" / "MDB Drums" / "audio" / "full_mix" / f"{piece}_MIX").with_suffix(".wav")
-            annotation_path = (path / "MDBDrums-master" / "MDB Drums" / "annotations" / "subclass" / f"{piece}_subclass").with_suffix(".txt")
+            audio_path = (path / args.directory_mdb / "audio" / "full_mix" / f"{piece}_MIX").with_suffix(".wav")
+            annotation_path = (path / args.directory_mdb / "annotations" / "subclass" / f"{piece}_subclass").with_suffix(".txt")
             
             spectrogram = readAudio(audio_path)
             timesteps = spectrogram.shape[0]
