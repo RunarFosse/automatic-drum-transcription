@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader, random_split
 from load import readAudio, readAnnotations
 from pathlib import Path
+from mapping import ENST_MAPPING, MDB_MAPPING
 
 """ Run this file to turn ENST-Drums into a stored PyTorch dataset """
 
@@ -110,63 +111,6 @@ MDB_SPLITS = [
         "MusicDelta_Hendrix",
     ],
 ]
-
-# 5-drum mapping for ENST and MDB, from ADTOF
-ENST_MAPPING = {
-    "bd": 0,
-
-    "sd": 1,
-    "sd-": 1,
-    "sweep": 1,
-    "rs": 1,
-    "sticks": 1,
-    "cs": 1,
-
-    "mt": 2,
-    "mtr": 2,
-    "lmt": 2,
-    "lt": 2,
-    "ltr": 2,
-    "lft": 2,
-
-    "chh": 3,
-    "ohh": 3,
-
-    "cr": 4,
-    "spl": 4,
-    "ch": 4,
-    "rc": 4,
-    "c": 4,
-    "cb": 4,
-}
-
-MDB_MAPPING = {
-    "KD": 0, #'kick drum'
-
-    "SD": 1, #'snare drum',
-    "SDB": 1, #'snare drum: brush',
-    "SDD": 1, #'snare drum: drag',
-    "SDF": 1, #'snare drum: flam',
-    "SDG": 1, #'snare drum: ghost note',
-    "SDNS": 1, #'snare drum: no snare',
-    "SST": 1, #'side stick',
-
-    "HIT": 2, #'high tom',
-    "MHT": 2, #'high-mid tom',
-    "HFT": 2, #'high floor tom',
-    "LFT": 2, #'low floor tom',
-
-    "CHH": 3, #'hi-hat: closed',
-    "OHH": 3, #'hi-hat: open',
-    "PHH": 3, #'hi-hat: pedal',
-    "TMB": 3, #'tambourine',
-
-    "RDC": 4, #'ride cymbal',
-    "RDB": 4, #'ride cymbal: bell',
-    "CRC": 4, #'crash cymbal',
-    "CHC": 4, #'china cymbal',
-    "SPC": 4, #'splash cymbal',
-}
 
 # Set a seed for predictable splitting
 seed = 100
