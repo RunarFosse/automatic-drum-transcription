@@ -12,7 +12,7 @@ Relating this to a common deep learning task, this could be described as a multi
 \begin{figure}[H]
     \centering
     \input{tikz/amt.tex}
-    \caption{An abstract visualization of the \acrfull{AMT} process using deep learning. Music is input into a deep learning pipeline, e.g. a neural network, which processes it, and returns a finished transcription.}
+    \caption{An abstract visualization of the \acrfull{AMT} process using deep learning. Music is input, processed by a neural network, and ultimately converted into a symbolic transcription.}
     \label{AMTFigure}
 \end{figure}
 
@@ -24,9 +24,8 @@ Thus sound can be described as the propogation and perception of waves. Mathemat
 
 \begin{figure}[H]
     \centering
-    %\includegraphics[scale=0.35]{figures/waveform}
     \input{tikz/waveform.tex}
-    \caption{The sound wave to waveform relationship. The waveform represents the pressure of the air molecules in the sound wave at a given time. Higher and lower pressure in the sound waves gives respective \textit{peaks} and \textit{troughs} in the waveform.}
+    \caption{The relationship between an acoustic sound wave and its corresponding digital waveform. The waveform represents variations in the air pressure over time. Regions of higher and lower pressure in the sound wave correspond to \textit{peaks} and \textit{troughs} in the waveform, respectively.}
     \label{WaveformFigure}
 \end{figure}
 
@@ -47,7 +46,7 @@ By doing such a transform we turn our temporal data, like a waveform, into spect
         \node at (0, 0) {\includegraphics[scale=0.8]{figures/fouriertransform}};
         \draw[->] (-1, 0) -- (1.75, 0) node[above, midway, font=\footnotesize] {Fourier Transform};
     \end{tikzpicture}
-    \caption{Applying the Fourier Transform deconstructs a wave into its respective frequency components. The waveform on the left (time-domain) is measured in amplitude, where a high amplitude denotes a high pressure level. The spectrum on the right (frequency-domain) is also measured in amplitude, but represents the strength of different frequencies in the original signal.}
+    \caption{The Fourier Transform decomposes a waveform into its frequency components. The time-domain waveform signal on the left is measured in amplitude, where higher amplitudes correspond to higher sound wave air pressure levels. The frequency-domain spectrum on the right displays the amplitude of each frequency, indicating its contribution to the original signal.}
     \label{FTFigure}
 \end{figure}
 
@@ -61,51 +60,54 @@ To extract frequency values from these signals, we instead have to use the \gls{
 
 \subsection{Nyquist frequency}
 
-When we discretize a signal, e.g. when going from continuous audio waves in the air to discrete audio signals on a computer, we could lose some information. The discrete representation of the signal is an \textit{approximation} which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approxmation.
+When a continuous signal, such as an audio wave traveling through the air, is discritized by recording it on a computer, some information may be lost in the process. The discrete representation of the signal is an \textit{approximation} which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approxmation.
 
-\textit{Aliasing} is the phenomena where new frequencies seem to emerge in undersampled signals. For a given discrete signal, the \textit{Nyquist frequency}, equal to half the sampling rate, is the maximum frequency a signal accurately can represent. Thus to prevent aliasing, one would need to store a signal with a sampling rate of at least double the maximum frequency.
+\textit{Aliasing} is the phenomenon where new, incorrect frequencies emerge in undersampled signals. The \textit{Nyquist frequency}, defined as half the sampling rate, represents the highest frequency that can be accurately captured by a discrete signal. Thus to prevent aliasing, the sampling rate must be at least twice the maximum frequency present in the original signal.
 
 \begin{figure}[H]
     \centering
     \input{tikz/aliasing}
-    \caption{Example of aliasing in an undersampled signal. The original signal has a frequency of 9Hz. Above, when sampled at a sufficient sampling rate of 45Hz we perceive the signal at its actual frequency. However below, when sampled with a sampling rate of 7Hz, we instead incorrectly perceive the signal as having a frequency of 2Hz.}
+    \caption{Example of aliasing due to undersampling. The original signal has a true frequency of 9~Hz. In the upper plot, sampling at a sufficiently high rate of 45~Hz allows the signal to be perceived and reconstructed accurately. In the lower plot, however, a lower sampling rate of 7~Hz causes aliasing, and the signal is incorrectly perceived as having a frequency of 2~Hz.}
     \label{AliasingFigure}
 \end{figure}
 
-Regarding the \gls{DFT}, it here directly follows that the maximum frequency we accurately could extract information about is proportional to the sampling rate of the signal, that being it is equal to the nyquist frequency of the signal.
+In the case of the \gls{DFT}, it directly follows that the maximum frequency from which accurate information can be extracted is proportional to the signal's sampling rate. Specifically, it is equal to the signal's Nyquist frequency.
 
 \subsection{Fast Fourier Transform}
 
-Keen-eyed computer scientists may have spotted that the \gls{DFT} runs in $\mathcal{O}(n^2)$ time as we, for every frequency in the range $[0, N]$ have to sum over $N$ different values. In other words, the \gls{DFT} algorithm scales quite poorly. Take into account that the standard sampling rate for audio is $44.1 \text{kHz}$, i.e. $44100 \text{Hz}$, then we can see that the \gls{DFT} could be inefficient.~\cite{pras2010sampling}
+Keen-eyed computer scientists may note that the \gls{DFT} has a time complexity of $\mathcal{O}(n^2)$, since it requires summing over $N$ values for each of the $N$ different frequencies. As a result, the \gls{DFT} scales poorly in regards to input size. For instance, given that the standard audio sampling rate is $44.1 \text{kHz}$, the computational cost becomes significant, making the \gls{DFT} impractical for real-time or large-scale signal analysis~\cite{pras2010sampling}.
 
-The \gls{FFT} is an algorithm which solves this problem, and instead computes the \gls{DFT} of a signal within $\mathcal{O}(n\log{n})$ time. Described by Gilbert Strang as \textit{"the most important numerical algorithm of our lifetime"}~\cite{strang1993wavelet}, this practically solves our scaling problem, and allows us to efficiently extract spectral information from a signal regardless of sampling rate.
+The \gls{FFT} algorithm addresses this limitation by computing the same result as the \gls{DFT}, but with a time complexity of $\mathcal{O}(n\log{n})$ instead. Described by Gilbert Strang as \textit{"the most important numerical algorithm of our lifetime"}~\cite{strang1993wavelet}, the \gls{FFT} effectively solves the prior scaling problem, allowing us to efficiently extract spectral information from a signal even at high sampling rates.
 
-There exist many different implementations of the \gls{FFT}. However the Cooley-Tukey algorithm is by far the most used \gls{FFT} and optimizes calculations through a \textit{divide and conquer} approach, utilizing prior calculations to compute others.~\cite{d3ea2d52-5ab2-3128-8b80-efb85267295d}
+There exist several different implementations of the \gls{FFT}. Among them, the Cooley-Tukey algorithm is by far the most widely used, and optimizes its calculations through a \textit{divide and conquer} approach, reducing redundant computation by reusing intermediate results~\cite{d3ea2d52-5ab2-3128-8b80-efb85267295d}.
 
 \subsection{Short-time Fourier Transform}
 
-The Fourier Transform comes with some drawbacks, notably how by moving from time space into frequency space, we lose temporal information. For certain tasks this might be sufficient, but the temporal dimension is vital when working with transcriptions and \gls{ADT} tasks. We've seen how the Fourier Transform computes the frequencies of a signal, but what happens if we had applied the same transform to smaller, \textit{partitions} of a signal.
+The Fourier Transform comes with certain limitations; most notably in how, by transforming a signal into the frequency domain, we lose its temporal structure. Although this loss of time information may be acceptable for certain tasks, it poses a challenge for applications like music transcription and \gls{ADT} where timing of different events are vital. So far, we've seen how the Fourier Transform unravels the frequency content of a signal as a whole. But what happens if we had applied it to smaller, localized partitions of the signal instead?
 
-This leads us to the \gls{STFT}. By instead of transforming the whole signal, we transform smaller \textit{windows}, we could gain insight into the frequency space while keeping temporal information relatively intact. This turns our data from being one-dimensional into two-dimensional, giving us insight into the intensities of different frequencies, along different timesteps.
+This leads us to the \gls{STFT}. Rather than transforming the entire signal at once, the \gls{STFT} applies the Fourier Transform to smaller, overlapping \textit{windows} of the signal. This allows us to extract frequency information while preserving much of its temporal resolution. The result is a two-dimensional representation, revealing the intensity of different frequencies over time.
 
 \begin{figure}[H]
     \centering
-    %\includegraphics[scale=0.4]{figures/stft}
     \input{tikz/stft.tex}
-    \caption{The application of the \gls{STFT} on a signal. We partition the original signal into different signal windows by multiplying it with multiple, differently offset window functions. We apply the \gls{FFT} on each of these signal partitions seperately to obtain several frequency spectra.}
+    \caption{Application of the \gls{STFT} to a signal. The original waveform is multiplied by multiple differently offset window functions, producing a set of overlapping signal partitions. The \gls{FFT} is then applied to each partition individually, resulting in a sequence of frequency spectra that preserve localized time-frequency information.}
     \label{STFTFigure}
 \end{figure}
 
-The \gls{STFT} comes with several parameters which affect the output format, most importantly the \textit{window function}, \textit{window length} and \textit{hop length}. Due to a phenomena called \textit{spectral leakage}, where spectral information spread larger than a window bleeds into other frequencies, a windowing function is applied per window. A usual function for this is the "Hann window", as seen in figure \ref{HannWindowFigure}. The window length is crucial regarding the time-frequency resolution, where a larger window length provides better frequency resolution, but a worse time resolution. This because it decides how much of the original signal each window \gls{FFT} should cover. By making each window larger, one is able to more accurately compute each frequency's magnitudes, but this comes at the cost of covering and overlapping more with other windows. Intuitively, smaller windows blur frequential information where as larger windows blur temporal information; a tradeoff described as the \textit{time-frequency tradeoff}. The last, hop length, also affects the temporal resolution, by deciding how many windows the signal should be partitioned into. This can also be used to give each window a temporal index. By using a lower hop length, each window would represent a smaller time window, but would require a higher number of \glspl{FFT} due to increasing the number of windows.
+The \gls{STFT} has several parameters that affect the structure and resolution of its output; most notably the \textit{window function}, \textit{window length} and \textit{hop length}. Due to a phenomenon called \textit{spectral leakage}, where spectral information bleeds into other frequncies, a windowing function is applied to each partitioned segment. A common choice is the \textit{Hann Window}, illustrated in Figure~\ref{HannWindowFigure}.
+
+The window length plays a crucial role in determining the time-frequency resolution. A longer window improves the frequency resolution, allowing for more precise magnitude estimation of each frequency component, but comes at the cost of a reduced time resolution. This is because a large window spans a longer segment of the signal, causing individual windows to overlap more and blur timing information. On the contrary, shorter windows improve temporal precision but blur frequency content, due to each window consequently consisting of fewer samples. This duality is known as the \textit{time-frequency tradeoff}.
+
+The hop length determines how far the window shifts between each segment and directly affects the temporal granularity of the output. A smaller hop length results in more overlap and a finer temporal resolution, but also increases the computational cost by requiring more \glspl{FFT}. Additionally, the hop length defines the time step between frames, and can be used to assign each window a corresponding temporal index.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.8]{figures/hann}
-    \caption{The Hann window function, a function applied to each partition during the \gls{STFT} to lessen the effects of spectral leakage. It achieves this by scaling the amplitude of a partition's signal down towards the edges. This window has a window length of 2048 samples.}
+    \caption{The Hann window function, commonly applied to each partition during the \gls{STFT} to reduce the effects of spectral leakage. It does so by scaling the amplitude of a the signal down toward zero at the window's edges. This example shows a window length of 2048 samples.}
     \label{HannWindowFigure}
 \end{figure}
 
-For \gls{ADT}, a common approach is to use the previously mentioned Hann-window, along with a window size of 2048 input samples, and a hop length representing 10ms, equal to the sampling rate divided by 100~\cite{8350302, vogl2016recurrent,vogl2018multiinstrumentdrumtranscription, signals4040042}.
+For \gls{ADT}, a common configuration is to use the Hann window, with a window size of 2048 samples and a hop length corresponding to 10~ms, i.e., the sampling rate divided by 100~\cite{8350302, vogl2016recurrent,vogl2018multiinstrumentdrumtranscription, signals4040042}.
 
 \subsection{Spectrogram}
 
