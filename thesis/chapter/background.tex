@@ -150,21 +150,21 @@ To better reflect this, we apply a set of \textit{filters}, each emphasizing a c
 
 \subsubsection{Mel Spectrograms}
 
-The mel scale, introduced by Stevens, Volkmann, and Newmann in 1937, transforms the frequency axis into a perceptual pitch scale where equal steps correspond to equal perceived pitch differences. In other words, a linear difference in mels is perceived as a linear difference in pitch. Applying a set of triangular mel-filters results in a \textit{mel spectrogram}, a representation widely used in audio-related machine learning tasks. Mel spectrograms have shown successful application in \gls{AMT}.~\cite{gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3+, gong2021astaudiospectrogramtransformer, wolfmonheim2024spectralrhythmfeaturesaudio, 8350302}
+The Mel scale, introduced by Stevens, Volkmann, and Newmann in 1937, transforms the frequency axis into a perceptual pitch scale where equal steps correspond to equal perceived pitch differences. In other words, a linear difference in mels is perceived as a linear difference in pitch. Applying a set of triangular Mel-filters results in a \textit{Mel spectrogram}, a representation widely used in audio-related machine learning tasks. Mel spectrograms have shown successful application in \gls{AMT}.~\cite{gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3+, gong2021astaudiospectrogramtransformer, wolfmonheim2024spectralrhythmfeaturesaudio, 8350302}
 
 \subsubsection{Logarithmic Filters}
 
-While the mel scale was designed to reflect how humans perceive pitch, a different trend has emerged within \acrfull{ADT}. Rather than using perceptual spacing, many recent \gls{ADT} approaches apply \textit{logarithmically spaced filters}, centered on the note $\text{A}_4$ (440~Hz), resulting in what is referred to in this thesis as a \textit{logarithmically filtered spectrogram}. 
+While the Mel scale was designed to reflect how humans perceive pitch, a different trend has emerged within \acrfull{ADT}. Rather than using perceptual spacing, many recent \gls{ADT} approaches apply \textit{logarithmically spaced filters}, centered on the note $\text{A}_4$ (440~Hz), resulting in what is referred to in this thesis as a \textit{logarithmically filtered spectrogram}. 
 
 This approach does not attempt to mimic human perception directly, but instead reshapes the frequency axis to reflect musical structure, spacing filters uniformly on a logarithmic scale, with 12 filters per octave to match the 12 semitones in Western music. The filters are designed to cover the human hearing range, from 20~Hz to 20,000~Hz, resulting in a filterbank with 84 frequency bins. Each filter is triangular and area-normalized, such that the area under each filter curve equals 1.
 
-This representation has been adopted in several recent \gls{ADT} studies, particularly by Vogl et al., and is often preferred when preserving musical relationships is important. Compared to mel spectrograms, it provides a harmonically consistent frequency resolution across octaves, while also reducing input dimensionality~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, jia2019deep, signals4040042, zehren2024analyzingreducingsynthetictorealtransfer}.
+This representation has been adopted in several recent \gls{ADT} studies, particularly by Vogl et al., and is often preferred when preserving musical relationships is important. Compared to Mel spectrograms, it provides a harmonically consistent frequency resolution across octaves, while also reducing input dimensionality~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, jia2019deep, signals4040042, zehren2024analyzingreducingsynthetictorealtransfer}.
 
 \begin{figure}[H]
     \centering
     \hspace*{-0.6cm}
     \includegraphics[scale=0.9]{figures/allspectrograms}
-    \caption{Comparison between a full spectrogram, a mel spectrogram, and a log-filtered spectrogram. All are presented on a log-magnitude scale. Both the mel and log-filtered spectrograms apply 84 area-normalized filters, resulting in a non-linear frequency axis. While the mel spectrogram emphasizes perceptual resolution, with greater detail in lower frequencies, the log-filtered spectrogram maintains uniform resolution across octaves, aligning with musical intervals.}
+    \caption{Comparison between a full spectrogram, a Mel spectrogram, and a log-filtered spectrogram. All are presented on a log-magnitude scale. Both the Mel and log-filtered spectrograms apply 84 area-normalized filters, resulting in a non-linear frequency axis. While the Mel spectrogram emphasizes perceptual resolution, with greater detail in lower frequencies, the log-filtered spectrogram maintains uniform resolution across octaves, aligning with musical intervals.}
     \label{AllSpectrogramFigure}
 \end{figure}
 
@@ -187,47 +187,48 @@ Sheet music written in this notation is typically highly descriptive, containing
     \label{DrumsheetFigure}
 \end{figure}
 
-Note that rest marks such as \HaPa, \ViPa, \AcPa, and \SePa ~may appear in notation transcriptions. These indicate brief silences or pauses in the music. Although they may appear inline with other onset events, they do not represent instrument activity and should not be interpreted as onsets.
+Note that rest marks such as $\HaPa$, $\ViPa$, $\AcPa$, and $\SePa$ may appear in notation transcriptions. These indicate brief silences or pauses in the music. Although they may appear inline with other onset events, they do not represent instrument activity and should not be interpreted as onsets.
 
 \subsection{MIDI Annotations}
 
-\gls{MIDI} is the industry standard for handling music digitally. It is a binary format, containing sequences of commands that allow digital interfaces to \textit{synthesize} music. As it is binary, it is unreadable to us humans without translating it into another format. When computers play \gls{MIDI} arrangements, the \gls{MIDI} sequences are parsed at a constant speed, playing different sounds through \textit{note on}/\textit{note off} events, delayed by time \textit{deltas}. Similar to sheet music, \gls{MIDI} is also very descriptive. And one could say that, intuitively, \gls{MIDI} is to a computer what sheet music is to a musician.
+\gls{MIDI} is the industry standard for representing and controlling digital music. It is an event-based protocol, encoding sequences of commands used to synthesize or trigger musical sounds. As it is stored in a binary format, \gls{MIDI} is not directly readable to humans without translating it into a more interpretable representation. 
 
-Recently, outputting transcriptions in a \gls{MIDI}-like format has been attempted in \gls{DTM}, and has shown to be promising. Utilizing a sequence-to-sequence \gls{NLP} approach, Gardner et al. presented MT3~\cite{gardner2022mt3multitaskmultitrackmusic}, a model inputting spectrograms and outputting \gls{MIDI} events autoregressively. This format was expanded on by Chang et al.'s YourMT3+~\cite{chang2024yourmt3+}, using a \gls{LLM} instead.
+When computers play \gls{MIDI} sequences, the events are parsed in order at a fixed rate, using \textit{note on}/\textit{note off} messages seperated by time deltas. Similar to sheet music, \gls{MIDI} is highly descriptive, capturing information such as pitch, velocity and timing. Intuitively, one might think of \gls{MIDI} as serving the same role for computers as sheet music does for musicians.
+
+Recently, several works in \gls{AMT} have explored generating transcriptions in a \gls{MIDI}-like format, with promising results. Using an \acrshort{NLP} approach, Gardner et al. introduced MT3~\cite{gardner2022mt3multitaskmultitrackmusic}, a model that takes log-Mel spectrograms as input and autoregressively predicts \gls{MIDI} events. This format was further developed by Chang et al. in YourMT3+~\cite{chang2024yourmt3+}, utilizing an \acrshort{LLM} instead.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.65, trim={0 0 13.8cm 0},clip]{figures/midi}
-    \caption{Example MIDI arrangement in text format. The first lines contain meta data. Afterwards follow lines with note on/off events, with temporal information start and delta, with the instrument and sound being decided by channel, key and velocity information~\cite{starostenko2019}.}
+    \caption{Example MIDI arrangement in text format. The first lines contain metadata, followed by note on/off events. Each event includes temporal information (start, delta), as well as musical attributes such as channel, key, and velocity, which determine the instrument and sound ~\cite{starostenko2019}.}
     \label{MIDIFigure}
 \end{figure}
 
 \subsection{Activation Functions}
 
-In machine learning, the task of detecting instrument onsets could be described as a multi-label sequence labeling task. This involves, for each timeframe in a sequence, predicting a probability, or rather confidence value, that a certain instrument onset happens. In the domain of \gls{MIR} and \gls{AMT}, it has become common place to describe these confidence distributions as \textit{activation functions}; not to be confused with the general deep learning term, activation functions like ReLU or sigmoid.~\cite{8350302, Southall2016AutomaticDT, vogl2018multiinstrumentdrumtranscription}
+In machine learning, the task of detecting instrument onsets can be framed as a multi-label sequence labeling problem. For each time frame in a sequence, the model predicts a confidence value (which can be interpreted as a probability), that a given instrument onset occurs at that moment. In the context of \gls{MIR} and \gls{AMT}, it has become common practice to describe these confidence distributions over time as \textit{activation functions} (not to be confused with the activation functions used within neural networks, such as \acrshort{ReLU} or sigmoid)~\cite{schluter2014improved, bock2016joint, Southall2016AutomaticDT, 8350302, vogl2018multiinstrumentdrumtranscription}.
 
-This way of frame-level prediction is extensively used within onset detection in \gls{ADT} and is the approach we will be taking in this thesis. When predicting these activation functions, we concatenate each activation function distribution rowwise onto a matrix format, based on each instrument.
+Frame-level prediction of activation functions is a common approach in onset detection for \gls{ADT}, and is the format adopted in this thesis. Each drum instrument's activation function forms a row in a matrix, with time progressing along the columns.
 
 \begin{figure}[H]
     \centering
     \hspace*{-0.5cm}
     \input{tikz/activations.tex}
-    \caption{The activation function representation for a 5-instrument \gls{ADT} task of a piece written in drum notation. Note how the value of each respective activation function is zero everywhere, except at its onsets, where it is one. The $\SePa$ symbol represents a short, 16th note rest in the \gls{KD} instrument, not an onset.}
+    \caption{Activation function representation for a 5-instrument \gls{ADT} task, corresponding to a drum pattern written in standard staff notation. Each activation function is zero throughout, except at onset positions, where it takes a value of one. The $\SePa$ symbol indicates a sixteenth-note rest in the \gls{KD} instrument, and should not be interpreted as an onset.}
     \label{ActivationsFigure}
 \end{figure}
 
 \subsubsection{Peak-picking}
 
-When predicting activation functions, we need a separate post-processing step to turn these confidence distributions into onset events. By utilizing a standard \textit{peak-picking} algorithm, we can isolate and enhance peaks in these activation functions, and go from a continuous distribution to a collection of discrete events.
+When predicting activation functions, a separate post-processing step is required to convert the continuous confidence distributions into discrete onset events. This is commonly achieved using a standard \textit{peak-picking} algorithm, which isolates and enhances peaks in the activation functions.
 
-The peak-picking algorithm, introduced in its current form by Böck et al.~\cite{Bck2012EvaluatingTO}, defines that a prediction $\hat{y}_n$ at timeframe $n$ is a \textit{peak} if it fulfills the three conditions:
+The peak-picking algorithm, introduced in its current form by Böck et al.~\cite{Bck2012EvaluatingTO}, defines an onset at time frame $n$ if the predicted activation $\hat{y}_n$ satisfies the following three conditions:
 \begin{align*} 
-    \hat{y}_n &= \text{max}(\hat{y}_{n - m}, ..., \hat{y}_n, ... \hat{y}_{n + m}), \\ 
-    \hat{y}_n &\ge \text{mean}(\hat{y}_{n - a}, ..., \hat{y}_n, ... \hat{y}_{n + a}) + \delta, \\
+    \hat{y}_n &= \max(\hat{y}_{n - m}, \dots \hat{y}_n, \dots \hat{y}_{n + m}), \\ 
+    \hat{y}_n &\ge \text{mean}(\hat{y}_{n - a}, \dots \hat{y}_n, \dots \hat{y}_{n + a}) + \delta, \\
     n &\ge n_\text{last onset} + w.
 \end{align*}
-
-For appropriately trained deep learning models, Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription} showed that the peak-picking parameters which gave the best results were $m = a = w = 2$ and $\delta = 0.1$. Consequently, these same parameter values are applied for this thesis.
+Here, $m$ defines the local window size for detecting peaks, $a$ controls how much context is used when averaging surrounding values, $\delta$ sets how far above the average the peak must be, and $w$ defines the minimum spacing between two detected onsets. For appropriately trained deep learning models, Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription} found that the peak-picking parameters that gave the best results were $m = a = w = 2$ and $\delta = 0.1$. Consequently, these parameter values are also adopted in this thesis.
 
 
 \section{Automatic Drum Transcription}
