@@ -154,39 +154,40 @@ The mel scale, introduced by Stevens, Volkmann, and Newmann in 1937, transforms 
 
 \subsubsection{Logarithmic Filters}
 
-While the mel scale was designed to mimic human auditory perception, a different trend has emerged within \acrfull{ADT}. Instead of using perceptual spacing, many recent \gls{ADT} approaches apply \textit{logarithmically spaced filters} centered on the note $\text{A}_4$ (440~Hz), resulting in what is referred to in this thesis as a \textit{logarithmically filtered spectrogram}. 
+While the mel scale was designed to reflect how humans perceive pitch, a different trend has emerged within \acrfull{ADT}. Rather than using perceptual spacing, many recent \gls{ADT} approaches apply \textit{logarithmically spaced filters}, centered on the note $\text{A}_4$ (440~Hz), resulting in what is referred to in this thesis as a \textit{logarithmically filtered spectrogram}. 
 
-Unlike mel filters, which are based on models of human hearing, this approach preserves musical structure by spacing filters uniformly on a log-frequency axis. Specifically, it uses 12 filters per octave, corresponding to the 12 semitones in Western music. The filterbank spans the human hearing range, from 20~Hz to 20,000~Hz, and produces a total of 84 frequency bins. Each filter is triangular and area-normalized, meaning that the area under each filter curve equals 1.
+This approach does not attempt to mimic human perception directly, but instead reshapes the frequency axis to reflect musical structure, spacing filters uniformly on a logarithmic scale, with 12 filters per octave to match the 12 semitones in Western music. The filters are designed to cover the human hearing range, from 20~Hz to 20,000~Hz, resulting in a filterbank with 84 frequency bins. Each filter is triangular and area-normalized, such that the area under each filter curve equals 1.
 
-This method has been used in several recent \gls{ADT} approaches, particularly by Vogl et al., and has gained traction due to its ability to preserve musically relevant structure while also reducing input dimensionality. It is often favored over mel spectrograms because of its harmonically consistent frequency resolution across octaves~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, jia2019deep, signals4040042, zehren2024analyzingreducingsynthetictorealtransfer}.
+This representation has been adopted in several recent \gls{ADT} studies, particularly by Vogl et al., and is often preferred when preserving musical relationships is important. Compared to mel spectrograms, it provides a harmonically consistent frequency resolution across octaves, while also reducing input dimensionality~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, jia2019deep, signals4040042, zehren2024analyzingreducingsynthetictorealtransfer}.
 
 \begin{figure}[H]
     \centering
     \hspace*{-0.6cm}
     \includegraphics[scale=0.9]{figures/allspectrograms}
-    \caption{Comparison between a full log-magnitude spectrogram, a log-magnitude mel spectrogram, and a log-magnitude log-filtered spectrogram. Both the mel and log-filtered spectrograms apply 84 area-normalized filters, resulting in a non-linear frequency axis. While the mel spectrogram emphasizes perceptual resolution with more detail in lower frequencies, the log-filtered spectrogram exhibits uniform resolution across octaves, aligning with musical intervals.}
+    \caption{Comparison between a full spectrogram, a mel spectrogram, and a log-filtered spectrogram. All are presented on a log-magnitude scale. Both the mel and log-filtered spectrograms apply 84 area-normalized filters, resulting in a non-linear frequency axis. While the mel spectrogram emphasizes perceptual resolution, with greater detail in lower frequencies, the log-filtered spectrogram maintains uniform resolution across octaves, aligning with musical intervals.}
     \label{AllSpectrogramFigure}
 \end{figure}
 
 
-\section{Transcription}
+\section{Transcription Formats}
 
-Transcription refers to a process in which we convert information from an audible format, like music, to another medium. This medium then contains a \textit{description} of said audio. As we focus on a musical context, there are a few notable such mediums.
+\textcolor{red}{WIP, rephrase afterwards}.
+This medium then contains a \textit{description} of said audio. As we focus on a musical context, there are a few notable such mediums.
 
 \subsection{Music Notation}
 
-Modern staff notation is a written transcription for a given instrument, that contains the \textit{recipe} for a musician to play parts of the original recording. This has become the standard way of noting down music, and is used by musicians of many different genres all throughout the world.
+Modern staff notation is a symbolic transcription systen that provides a structured set of instructions for a musician to reproduce a performance. It has become the standard way of documenting music and is widely used by musicians across many different genres and instruments.
 
-Sheet music with this notation is typically descriptively exhaustive, and contain information about musical properties like instrument onsets, tempo, velocity, etc. When reading it, time moves horizontally from left-to-right. Each note represents an onset, where the onset's pitch (for melodic instruments) or percussion (for percussive instruments, like the drum set) is denoted by the note's vertical position. The duration or time segment of a given onset is denoted by the form of the note-head or note-stem.
+Sheet music written in this notation is typically highly descriptive, containing information such as note onsets, pitch (for pitched instruments), instrument type, velocity, and tempo. Time is represented horizontally from left to right, while pitch or instrument assignment is encoded vertically. For pitched instruments, the vertical position of the note corresponds to its pitch, while for instruments like percussion, the vertical position indicates the specific drum instruments. The duration of the note is denoted through the shape of the notehead, stem, or additional note decorations.
 
 \begin{figure}[H]
     \centering
     \input{tikz/drumsheet}
-    \caption{An example drum sheet containing all instruments of a 5-instrument \gls{ADT} task. The instrument in each respective row is shown on the left. From the bottom they are the \acrfull{KD}, \acrfull{TT}, \acrfull{SD}, \acrfull{HH}, and \acrfull{CC+RC}.}
+    \caption{An example drum sheet containing all instruments used in a 5-instrument \gls{ADT} task. The instrument associated with each row is shown on the left. From bottom to top, they are the \acrfull{KD}, \acrfull{TT}, \acrfull{SD}, \acrfull{HH}, and \acrfull{CC+RC}.}
     \label{DrumsheetFigure}
 \end{figure}
 
-Note that rest marks, like \HaPa, \ViPa, \AcPa, or \SePa, might appear in notation transcriptions. These are symbols which indicate silence or pauses in the music. Although these might appear inline with the instrument onsets, one should not expect an onset at their respective timing, rather it indicating a short break.
+Note that rest marks such as \HaPa, \ViPa, \AcPa, and \SePa ~may appear in notation transcriptions. These indicate brief silences or pauses in the music. Although they may appear inline with other onset events, they do not represent instrument activity and should not be interpreted as onsets.
 
 \subsection{MIDI Annotations}
 
