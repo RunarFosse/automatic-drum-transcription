@@ -232,88 +232,88 @@ Here, $m$ defines the local window size for detecting peaks, $a$ controls how mu
 
 \section{Automatic Drum Transcription}
 
-\textcolor{red}{This whole section and the two other following need to be rewritten after moving them. Shouldn't be too big of an issue.}
+As mentioned, \acrfull{ADT} refers to the task of transcribing symbolic drum notation from audio recordings. More specifically, the field can be divided into several subtasks, ordered from simpler to more complex settings~\cite{8350302}. These include:
+\begin{itemize}
+    \item \acrshort{DSC}: Drum sound classification, which involves identifying the instrument class of isolated, single-event drum recordings.
+    \item \acrshort{DTD}: Drum transcription from recordings containing only drum instruments.
+    \item \acrshort{DTP}: Drum transcription with percussive accompaniment, where the model must transcribe the drum instruments while ignoring non-drum percussion.
+    \item \acrshort{DTM}: Drum transcription from full musical mixtures, where both melodic and percussive instruments are present and only drum onsets should be transcribed.
+\end{itemize}
 
-As mentioned, \gls{ADT} describes the task of transcribing symbolic notation for drums from audio. To be even more descriptive, \gls{ADT} can be split into further tasks. From least to most complex we have: \gls{DSC}, where we classify drum instruments from isolated single event recordings. \gls{DTD}, where we transcribe audio containing exclusively drum instruments. \gls{DTP}, where we transcribe audio containing drum instruments, and additional percussive instruments which the transcription should exclude. Finally, we have \gls{DTM}, which describes the task of drum transcription with audio containing both drum, and melodic instruments.~\cite{8350302}
+This thesis focuses on the most complex of these tasks, namely \acrfull{DTM}. Intuitively, the goal is to develop a deep learning model that, given input audio in the form of music containing both drums and melodic instruments, can detect and classify drum instrument onsets while selectively ignoring unrelated melodic content. This setting introduces challenges not present in the simpler variants. As Zehren et al.~\cite{signals4040042} note, \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
 
-As mentioned, this thesis will focus on the most complex of these, namely \gls{DTM}. Intuitively, we want to develop a deep learning model which, given input audio, has the ability to detect and classify different drum instrument onsets (events), while selectively ignoring unrelated, melodic instruments.
+Deep learning has proven to be an effective approach for \gls{DTM}, and a range of architectures have been explored with promising results. Vogl et al.~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription} achieved strong results using both convolutional and convolutional-recurrent networks. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} emphasized the importance of dataset size and quality, showing that both are critical to achieving strong performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} proposed an autoregressive language-model approach for multi-instrument transcription (\gls{AMT}), with competitive results on \gls{DTM}.
 
-This task comes with difficulties not seen in the less complex tasks. Zehren et al.~\cite{signals4040042} describes one example, in where \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
+These works highlight that multiple modeling directions remain viable and that further improvements in \gls{ADT} and \gls{DTM} performance are still possible.
 
-Deep learning has shown to be a promising method to solve such a task, and several different approaches have been tried, many with great success. Vogl et al.~\cite{vogl2018multiinstrumentdrumtranscription, Vogl2017DrumTV} displayed good results with both a convolutional, and a convolutional-recurrent neural network. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} focused on datasets, showing that the amount of data and quality of data are equally important to get good performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} explored an autoregressive, language model approach. This approach explored multi-instrument transcriptions, but their results regarding \gls{DTM} were notable.
+\subsection{The Drum Set}
 
-This reinforces the fact that there still exist many approaches to attempt, which could lead to a general improvement for both general \gls{ADT} and \gls{DTM} models.
-
-\section{The Drum Set}
-
-The drum set is a collection of percussive instruments like different drums, cymbals, and possibly different auxillary percussions. A drum set can vary in what it is composed of, however a standard kit usually consists of a \gls{SD}, a \gls{KD}, one or more \glspl{TT} (toms), one or more cymbals (\gls{CC} and \gls{RC}), and a \gls{HH} cymbal~\cite{TheDrumHandbook2003}.
+A drum set is a collection of percussive instruments, typically including drums, cymbals, and possibly different auxiliary percussion. While the exact configuration can vary, a standard drum kit typically includes a \gls{SD}, a \gls{KD}, one or more \glspl{TT} (toms), one or more cymbals (\gls{CC} and \gls{RC}), and a \gls{HH} cymbal~\cite{TheDrumHandbook2003}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.7, trim={0 1cm 0 0},clip]{figures/drumset}
-    \caption{Example of the different instruments that make up the full standard drum set. They are the \acrfull{KD}, \acrfull{SD}, \acrfull{HH}, \acrfull{CC}, \acrfull{RC}, \acrfull{HT}, \acrfull{MT}, \acrfull{LT}~\cite{8350302}.}
+    \caption{The standard drum set configuration, including the \acrfull{KD}, \acrfull{SD}, \acrfull{HH}, \acrfull{CC}, \acrfull{RC}, \acrfull{HT}, \acrfull{MT}, \acrfull{LT}~\cite{8350302}.}
     \label{DrumsetFigure}
 \end{figure}
 
-As mentioned, percussion like the drum set, stands in contrast to other musical instruments in that the different ways of playing the same instrument often differ a lot in their \textit{"audible footprint"}. The snare drum, bass drum and hi-hat all have quite different timbres, frequency span, volume, and all in all fundamentally are different instruments.
+Percussion instruments like those in a drum set stand apart from melodic instruments in that different components, such as the snare, kick, and hi-hat, produce distinctly different acoustic signatures. Even within a single drum, variations in playing technique can significantly affect the resulting sound or \textit{"audible footprint"}. The snare drum, kick drum, and hi-hat differ significantly in timbre, frequency range, loudness, and function, making them acoustically and musically distinct.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.6, trim={0 1cm 0 0},clip]{figures/drumsettimbre}
-    \caption{Example of the different audible footprint for drum set percussion. Plotted are the waveforms of three different drum instruments played at different speeds, together with its corresponding spectrogram. The panels show each instrument's time-domain waveform signal, with a corresponding spectrogram below. As we can see, each instrument's event differ in how they look and affect both the waveform and spectrogram~\cite{8350302}.}
+    \caption{Examples of the different audible footprints of drum set components. Plotted are the waveforms of three drum instruments played at varying patterns, each paired with a corresponding spectrogram. The panels highlight how each instrument's events produce distinct patterns in both the time and frequency domains~\cite{8350302}.}
     \label{DrumsetTimbreFigure}
 \end{figure}
 
-\section{Transcription Task}
+\subsection{Transcription Task}
 
-Understand the pipeline for a transcription task, specifically \gls{ADT}, is crucial for this thesis. It all starts with an initial audio waveform representing the audio track we want to transcribe, usually split into smaller non-overlapping partitions~\cite{vogl2018multiinstrumentdrumtranscription, gardner2022mt3multitaskmultitrackmusic}. This is parsed into a spectrogram, which unravels the frequencies of the audio wave while condensing information across time, making the input features easier for a model to handle and interpret. The spectrogram is then input into an \gls{ADT} model, such as a \gls{DNN}, which reads this input spectrogram and for each timeframe predicts the probability that a certain instrument is played. These continuous likelihood predictions are then postprocessed into a more readable and intended format, such as drum notation.
+Understanding the transcription pipeline, specifically in the context of \gls{ADT}, is essential for this thesis. The process begins with a raw audio waveform representing the musical recording to be transcribed, typically segmented into smaller, non-overlapping partitions~\cite{vogl2018multiinstrumentdrumtranscription, gardner2022mt3multitaskmultitrackmusic}. Each segment is transformed into a spectrogram, which captures the frequency content over time while reducing temporal resolution, making it easier for models to interpret. 
+
+The spectrogram is then passed into an \gls{ADT} model, such as a \gls{DNN}, which predicts, for each time frame, the likelihood that a given drum instrument is played. These continuous probability estimates, commonly referred to as activation functions, are then post-processed into a more interpretable format, such as discrete onsets or drum notation.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.7]{figures/adtpipeline.png}
-    \caption{Example of what the prediction pipeline of an \gls{ADT} model could look like. Given an input spectrogram, a model predicts a likelihood distribution of each instrument appearing (called the activation functions), which then is quantized into drum onsets and sheet music notation~\cite{Southall2016AutomaticDT}.}
+    \caption{Example of a typical \gls{ADT} pipeline. Given an input spectrogram, the model predicts activation functions for each instrument, which are then quantized into drum onsets and converted into symbolic sheet music~\cite{Southall2016AutomaticDT}.}
     \label{ADTFigure}
 \end{figure}
 
-Following this pipeline there are certain parameters which need to be kept in mind when constructing the \gls{DNN}, namely: what does the input and ouput of model look like? The input is given as a spectrogram, but these can vary in size and format based different parameters. These will be discussed further in a later section. The output of the model has a sequence size based on the input spectrogram, but also based on the number of instruments we want to transcribe.
+Designing such a pipeline involves several key choices. For instance: How are the input and output of a model structured? While the input here is always a spectrogram, its size and structure can vary depending on parameters such as window length, hop length, and number of frequency bins, as discussed previously. The model's output is also structured as a sequence, with length tied to the input's time resolution and dimensionality determined by the number of instruments being transcribed.
 
-Early \gls{ADT} literature used a 3-instrument approach, predicting the basic \acrfull{KD}, \acrfull{SD} and \acrfull{HH}~\cite{vogl2016recurrent}. These give a useful basis in investigating wether \gls{ADT} problems are solvable using deep learning methods, but are too sparse as this leaves out instruments crucial to the basic drum set. To address this, we expand to a 5-instrument approach, including cymbals (capturing both \acrfull{CC} and \acrfull{RC}) and \acrfull{TT} (capturing all toms) in addition to the three prior instruments. This makes the problem slightly more complex, but allows for denser coverage by representing the standard, full drum set.
+Early work in \gls{ADT} often adopted a 3-instrument setup, predicting only the \acrfull{KD}, \acrfull{SD} and \acrfull{HH}~\cite{vogl2016recurrent}. While this configuration offered a useful proof-of-concept for early model development, it omits essential components of the drum set. To better capture realistic use cases, I instead use a 5-instrument setup, which also includes cymbals (combining both \acrfull{CC} and \acrfull{RC}) and \acrfull{TT} (covering all toms). This adds complexity to the problem but allows the system to represent the full standard drum kit.
 
 
 \section{Performance Measure}
 
 \subsection{Correct Predictions}
 
-Our machine learning models predict instrument onset events on a frame-level basis. In other words, are predictions are very granular, and we need some way to decide when a prediction is correct versus incorrect. In \gls{ADT}, a standard has become to allow a \textit{tolerance window} where event predictions are correct if they lie within a certain time window, often between $25\text{ms}$ and $50\text{ms}$. A side effect of this is that, by shifting our focus to predicted events, we lose information about \textit{not} predicting any events~\cite{vogl2016recurrent}.
+\gls{ADT} models predict instrument onsets on a frame-level basis. To account for slight misalignments between predicted and ground truth events, evaluation is typically performed using a \textit{tolerance window}, where a prediction is considered correct if it falls within a fixed time window around the reference onset, commonly between 25~ms and 50~ms~\cite{vogl2016recurrent}. This approach shifts the evaluation focus from framewise labels to discrete event matching and introduces challenges when defining standard classification metrics.
 
 \subsection{Accuracy}
 
-For classification tasks, a standard performance measure would be \textit{accuracy}: \[ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}.\] Summing up correct predictions, \gls{TP} and \gls{TN}, and dividing by total number of predictions, sum of \gls{TP}, \gls{TN}, \gls{FP} and \gls{FN}, we find a model's probability of having a correct prediction.
-
-This performance measure falls short in that it is very susceptible to imbalanced datasets. In \gls{ADT}, most timeframes contain no onset, meaning a naïve predictor would get a high accuracy by never predicting any onsets. Another problem with accuracy is that, due to our tolerance window approach we do not necessarily have quantities for \gls{TN}, such that the standard accuracy computation would be incomputable.
+Although accuracy is a widely used performance measure in classification, it is ill-suited for \gls{ADT}. Most frames contain no onsets, creating a heavy class imbalance that allows a naïve model to achieve high accuracy by simply predicting silence. Moreover, due to the event-based evaluation and tolerance window, the number of \glspl{TN} are generally undefined, rendering the standard accuracy formula:\[ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}},\] inapplicable in practice.
 
 \subsection{F1-score}
 
-Mentioned above are some of the reasons why \textit{F1-score} has become the typical performance measure within \gls{ADT}. F1-score combines and tries to maximize two different performance measures, namely \textit{precision}; \[ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \] and \textit{recall}; \[ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}. \]
+Due to the issues outlined above, the \textit{F1-score} has become the standard evaluation metric in \gls{ADT}. It balances two competing objectives: \textit{precision}, which measures the proportion of correct predictions among all predicted events; \[ \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}},\] and \textit{recall}, which measures the proportion of correctly predicted events among all actual events; \[ \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}. \]
 
-The precision of a model can tell us how good it is at \textit{hitting} predictions. \textit{Perfect precision} happens when a model has no \gls{FP}, i.e. never predicting an event where one doesn't happen. Recall is similar, but represents the other end of the stick. It tells us how good a model is at \textit{not missing} predictions. \textit{Perfect recall} happens when a model has no \gls{FN}, i.e. never \textit{not} predicting an event where one does happen.
-
-As mentioned, F1-score combines these two measures in an aggregate performance measure by computing their harmonic mean: $$ \text{F1-score} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}. $$ By maximizing F1, we simultaneously maximize both precision and recall as well, reaping all their benefits.
+High precision indicates that the model rarely produces \glspl{FP} (i.e., it predicts an onset only when there truly is one), while high recall indicates that the model rarely produces \glspl{FN} (i.e., it doesn't predict an onset only if there truly isn't one). The F1-score captures both by computing their harmonic mean: \[ \text{F1-score} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}. \] This encourages a balance between precision and recall and is particularly well-suited for onset detection tasks, where both types of error (misses and false alarms) are critical.
 
 \subsection{Micro vs. Macro}
 
-There are different ways of computing and combining F1-score on multi-label data. Even though they might seem similar, they fundamentally represent different information, and thus the choice in which one to select is crucial.
+In multi-label tasks like \gls{ADT}, there are multiple ways to aggregate per-class F1-scores into a single performance metric. Although they may appear similar, the distinction between \textit{macro} and \textit{micro} F1-score has important implications for model evaluation.
 
-\textit{Macro F1-score} is computed through the arithmetic mean of the classwise computed F1-scores. Finding a model which maximizes this measure would be similar to finding the model which performes best on each of the separate classes, preventing a class from taking priority due to imbalanced datasets. Relating this to \gls{ADT}, it would mean focusing on transcribing each instrument equally well.
+\textit{Macro F1-score} is computed as the unweighted arithmetic mean of F1-scores for each class. It treats all classes equally, regardless of their frequency in the dataset. In the context of \gls{ADT}, this means emphasizing balanced transcription performance across all instruments, including those that occur infrequently, such as toms or cymbals.
 
-\textit{Micro F1-score} is computed through finding the F1-score with global \gls{TP}, \gls{FP}, \gls{FN} values. Maximizing this would mean prioritizing classes that occur more frequently in the datasets. Such as in \gls{ADT}, this would mean focusing on transcribing instruments which appear often, like the snare or base drum, over rarer instruments like the toms.
+\textit{Micro F1-score}, by contrast, is computed using global counts of \glspl{TP}, \glspl{FP}, and \glspl{FN}, effectively weighting each class according to its frequency. This tends to favor models that perform well on common instruments like the snare drum or bass drum, even if their performance on rarer instruments is weaker.
 
-For \gls{ADT}, the trend has been to select Micro F1-score as the main performance measure, due to its ability to show a model's \textit{general} performance on musical pieces. We want our model to maximize their ability to transcribe music, not maximize their ability to transcribe each instrument in said music. \gls{ADT}, prioritizing frequent instruments is relevant. As mentioned previously, the more frequent instruments lay the ground work for the fundamentals, and could be said to be more important than scarcely occuring ones.
+For \gls{ADT}, micro F1-score is often preferred, as it better reflects a model's overall transcription ability on real-world music. In practice, frequent instruments form the backbone of a drum performance, and prioritizing their transcription tends to align better with musical utility. While macro F1-score offers useful diagnostic insight, especially for evaluating per-instrument weaknesses; micro F1 is typically used as the main evaluation criterion.
 
 \begin{figure}[H]
     \centering
     \hspace*{-0.5cm}
     \input{tikz/f1.tex}
-    \caption{Example of computing the different F1-scores of from a true and predicted \gls{ADT} transcription. The \HaPa, \ViPa, or \AcPa symbols represent pauses, and not instrument onsets. Note how the Macro F1 better represents the F1-score of all individual instruments, where as Micro F1 better represents the F1-score of the transcription as a whole. For readability, F1-scores are written with a precision of two decimals.}
+    \caption{Illustration of micro and macro F1-score computation for an example \gls{ADT} transcription. Symbols such as \HaPa, \ViPa, and \AcPa denote pauses, and not onsets. Macro F1 reflects the average performance across individual instruments, while micro F1 captures the overall transcription quality across the entire sequence. For clarity, F1-scores are reported with two decimal places.}
     \label{F1Figure}
 \end{figure}
