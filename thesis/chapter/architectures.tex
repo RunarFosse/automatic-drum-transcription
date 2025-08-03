@@ -1,39 +1,40 @@
 \chapter{Architectures}\label{Architectures}
 
-Finding a suitable architecture is a vital step in creating a well-performant deep learning model. By leveraging different techniques, we balance introduction of inductive biases and possibility for complexity, which hopefully can help us end up with a generalizing model.
+Choosing an suitable architecture is crucial for achieving strong performance in deep learning. The choice of model defines not only the capacity for learning complex patterns, but also the inductive biases that guide generalization. In the context of \gls{ADT}, these models must operate on time-frequency representations of audio and produce accuracte, frame-level onset predictions.
 
-The models using these architectures will be applied onto spectrograms. These spectrograms have a size $(T \times D_{STFT})$, where $T$ is the sequence length, or number of frames, in the spectrogram, and $D_{STFT}$ denoting the number of frequency bins. The output should be, as mentioned previously, a labelling of this input sequence, having a size of $(T \times C)$, where $T$ is the same sequence length as the input sequence, and $C$ denoting the number of classes, equal to the number of drum instruments.
+Each input to the model is a spectrogram of shape $(T \times D_{STFT})$, where $T$ is the sequence length (i.e., number of frames) and $D_{STFT}$ is the number of frequency bins. The corresponding output is a matrix of shape $(T \times C)$, where $C$ is the number of drum instruments being predicted.
 
-The spectrograms we are working with are logarithimically filtered log-magnitude spectrograms with 12 normalized logarithmically spaced filters per octave from 20 to 20,000H. This results in $D_{STFT} = 84$ frequency bins. Our intention is to train a model suitable at predicting the largest common vocabulary in \gls{ADT}, namely the 5-class vocabulary consisting of \acrfull{KD}, \acrfull{SD}, \acrfull{TT}, \acrfull{HH}, \acrfull{CC+RC}~\cite{zehren2024analyzingreducingsynthetictorealtransfer}. In other words, we have that $C = 5$.
-Although the sequence length $T$ is an important shape, determining temporal resolution of the input and output, it has the unique ability to vary, allowing for differently sized inputs and outputs on the same models. For all intents and purposes however, this thesis fixes $T = 400$, representing 4 seconds of 10ms sized frames.
+In this thesis, I use log-magnitude spectrograms filtered with 12 logarithmically spaced, area-normalized filters per octave, spanning 20~Hz to 20,000~Hz. This results in $D_{STFT} = 84$ frequency bins. The task is to predict a common 5 class drum vocabulary, consisting of \acrfull{KD}, \acrfull{SD}, \acrfull{TT}, \acrfull{HH}, and \acrfull{CC+RC}, giving $C = 5$~\cite{zehren2024analyzingreducingsynthetictorealtransfer}.
 
-In summary, we want our models to have an input size of $(T \times 84)$, and an output size of $(T \times 5)$, where $T$ could vary.
+While the input sequence length $T$ may vary, it is fixed to $T = 400$ for all experiments in this thesis, corresponding to 4 seconds of audio with 10~ms hop length. Thus, the models considered in this chapter operate with input and output shapes of $(T \times 84)$ and $(T \times 5)$, respectively.
 
 \section{Recurrent Neural Network}
 
-The \gls{RNN} is a standard architecture when it comes prediction on sequence data. It has been tried and tested, showing promising results for audio tasks.
+\glspl{RNN} are a foundational architecture for modeling sequential data and have demonstrated promising results on a wide range of audio-related tasks. Their core component is the \textit{recurrent unit}, which processes an input sequence one frame at a time while maintaining a hidden state that carries information from previous timesteps. This enables the model to capture temporal dependencies within the input.
 
-The fundamental building block for \glspl{RNN} is the \textit{recurrent unit}. It iterates the whole input sequence, storing information from previous timesteps in a form of memory, through maintenance of a \textit{hidden state}. This can be extended to gaining information about future timesteps by using \textit{bidirectional} versions. In this way, prediction on current timesteps are affected by the information from surrounding timesteps. This is relevant in tasks such as \gls{ADT} as auditory information usually spreads over several timesteps, e.g. the timbre of an instrument event lingering after onset.
+To include information from both past and future frames, \glspl{RNN} can be extended to their \textit{bidirectional} variant, where one recurrent layer processes the sequence forward in time and another in reverse. This is particularly useful in tasks such as \gls{ADT}, where relevant auditory information may span multiple frames; for example, due to instrument timbre persisting after onset.
 
 \begin{figure}[H]
     \centering
     \input{tikz/rnnspectrogram}
-    \caption{An example of how bidirectional \glspl{RNN} allow for adjacent timesteps to influence the prediction of the current timestep. The background is a spectrogram, and the red boxes represent influence on the middle timeframe. The height of the box help visualize influence strength.}
+    \caption{Illustration of how bidirectional \glspl{RNN} include information from surrounding timesteps when predicting the current frame. The background represents a mock spectrogram of shape $(T \times D_{STFT})$, and the red boxes indicate the relative temporal influence on the middle frame. Box height reflects influence strength, gradually tapering off as distance from the center sequentially increases.}
     \label{RNNInfluenceFigure}
 \end{figure}
 
-However, traditional \glspl{RNN} suffer from the \textit{vanishing gradient problem} due to a timestep's influence diminishing with distance, making \textit{long range dependencies} harder to learn. Different architectures have been developed to try to overcome these issues, such as the \gls{GRU} by Cho et al.~\cite{DBLP:conf/emnlp/ChoMGBBSB14}, and \gls{LSTM} by Hochreiter and Schmidhuber~\cite{10.1162/neco.1997.9.8.1735}.
+Despite their effectiveness, traditional \glspl{RNN} suffer from the \textit{vanishing gradient problem}, which limits their ability to learn long-range dependencies. To address this, more advanced variants have been proposed, including the \gls{GRU} by Cho et al.~\cite{DBLP:conf/emnlp/ChoMGBBSB14} and the \gls{LSTM} by Hochreiter and Schmidhuber~\cite{10.1162/neco.1997.9.8.1735}.
 
-It has been shown that \glspl{GRU} and \glspl{LSTM} are capable of learning \gls{ADT} related tasks, and is therefore in interest to comparatively measure how their efficiency stands in regards to other architectures~\cite{Southall2016AutomaticDT, vogl2016recurrent, Vogl2017DrumTV, signals4040042}.
+Both \glspl{GRU} and \glspl{LSTM} have been successfully applied to \gls{ADT}-related tasks~\cite{Southall2016AutomaticDT, vogl2016recurrent, Vogl2017DrumTV, signals4040042}.
 
 \subsection{Implementation}
 
-Our \gls{RNN} architecture consists of several bidirectional recurrent units, ending in a framewise linear layer. For the \gls{BiRU}, we train either a \gls{GRU} or an \gls{LSTM} model as hyperparameters, in addition to search over number of layers $L$ and hidden size $H$, selecting the one with best performance. At last, we have a linear layer, outputting onset probabilities for each of the drums per timeframe.
+I implemented the \gls{RNN} architecture using a stack of \glspl{BiRU}, followed by a framewise linear projection. These bidirectional recurrent layers extract and combine local temporal features at each time frame, allowing the model to consider both past and future context. The final linear layer then maps each resulting hidden state to onset probabilities for each of the five drum instruments. 
+
+As part of the model search, I experimented with both bidirectional \glspl{GRU} and \glspl{LSTM} as the recurrent unit, treating this choice as a tunable hyperparameter. I also varied the number of layers $L$ and the hidden size $H$.
 
 \begin{figure}[H]
     \centering
     \input{tikz/rnn}
-    \caption{RNN architecture structure.}
+    \caption{Model architecture of the \acrlong{RNN} used in this thesis.}
     \label{RNNFigure}
 \end{figure}
 
@@ -46,31 +47,37 @@ Our \gls{RNN} architecture consists of several bidirectional recurrent units, en
         $H$ & Hidden size      & \{72, 144, 288, 576\} \\
         \gls{BiRU} & \acrlong{BiRU} & \{\gls{GRU}, \gls{LSTM}\}\\
     \end{tabular}
-    \caption{The different hyperparameters and their respective values tuned to train the Recurrent Neural Network.}
+    \caption{Hyperparameters and their corresponding search spaces for training the \acrlong{RNN}.}
     \label{RNNHyperparams}
 \end{table}
 
 \section{Convolutional Neural Network}
 
-We've mentioned that spectrograms can be treated as images. Therefore it would make sense to try an image focused approach, by utilizing \textit{convolutions}. By applying convolutional layers, each timestep gets access to information around itself, a \textit{context}. These convolutional layers make up the primary building blocks for the \gls{CNN}.
+Although spectrograms are often processed as time sequences, we've seen that they also naturally resemble images, with time and frequency forming the horizontal and vertical axes. This makes them well-suited for \glspl{CNN}, which are designed to extract local patterns in data.
+
+A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, across the input. These filters aggregate spatially local information, allowing each output unit to incorporate context from its surrounding region. When applied to spectrograms, convolutional layers enable the model to detect patterns in time-frequency space. This makes them a strong candidate for tasks like \gls{ADT}, where relevant features often span multiple adjacent time frames and frequency bins.
+
+\glspl{CNN} have also been shown to perform well in \gls{ADT}, likely because this contextual information helps the model more easily learn the characteristics of instrument onsets. They are also relatively efficient to train and run, which may also help explain their reasonable performance~\cite{Vogl2017DrumTV}.
 
 \begin{figure}[H]
     \centering
     \input{tikz/cnnspectrogram}
-    \caption{An example of how \glspl{CNN} allow for a fixed context of influence, also known as its receptive field, from neighbouring timesteps when predicting each timestep. The background is a spectrogram, and the red boxes represent influence on the middle timeframe, being described by the red shaded region.}
+    \caption{Illustration of how \glspl{CNN} use a fixed-size receptive field to incorporate local context from surrounding time frames. The background represents a mock spectrogram. The red shaded region marks the center time frame being predicted, and the red boxes indicate the receptive field, the neighboring frames that influence the prediction.}
     \label{CNNInfluenceFigure}
 \end{figure}
 
-\glspl{CNN} have been shown to give reasonable performance within \gls{ADT}. This could be due to contextual information being important for identifying instrument onsets, and making learning easier for our models~\cite{Vogl2017DrumTV}.
-
 \subsection{Implementation}
 
-Our \gls{CNN} architecure consists of $I$ initial convolutional blocks. Inside this block, convolutional layers have an increasing number of kernels $C = \{32, 64, 96\}$, intuitively leading to an increase in complexity along with depth. Note that this is not a hyperparameter, but just denotes that we increase the amount of kernels the deeper into the convolutional block we go. Then we have a varying amount of fully connected layers $L$, projecting into a latent space sized $H$. Both the convolutional and fully connected layers are followed by a \gls{ReLU} activation function. Lastly, an output layer computed each instrument's onset probabilities.
+My \gls{CNN} architecure begins with $I$ initial convolutional blocks, each designed to preserve the temporal resolution of the input, ensuring that the output retains the same sequence length $T$. Within these blocks, the number of kernels $K_i$ increases with block depth $i$, using $K = \{32, 64, 96\}$ to enable deeper layers to capture more complex time–frequency ptterns. This kernel progression is fixed (i.e., not treated as a hyperparameter), and follows a common design convention of increasing the filter count with depth~\cite{simonyan2014very}.
+
+These convolutional blocks iteratively combine local features from the spectrogram, forming a richer internal representation of the input. This representation is then passed through $L$ fully connected layers, which project the features into an $H$-dimensional latent space for final interpretation. 
+
+Each convolutional and fully connected layer is followed by a \gls{ReLU} activation function. Finally, an output layer computes onset probabilities for each of the five drum instruments.
 
 \begin{figure}[H]
     \centering
     \input{tikz/cnn}
-    \caption{CNN architecture structure.}
+    \caption{Model architecture of the \acrlong{CNN} used in this thesis.}
     \label{CNNFigure}
 \end{figure}
 
@@ -83,24 +90,26 @@ Our \gls{CNN} architecure consists of $I$ initial convolutional blocks. Inside t
         $L$ & Number of layers      & \{2, 3, 4\} \\
         $H$ & Hidden size      & \{72, 144, 288, 576\} \\
     \end{tabular}
-    \caption{The different hyperparameters and their respective values tuned to train the Convolutional Neural Network.}
+    \caption{Hyperparameters and their corresponding search spaces for training the \acrlong{CNN}.}
     \label{CNNHyperparams}
 \end{table}
 
 \section[Convolutional RNN]{Convolutional Recurrent Neural Network}
 
-The previous features, recurrent layers and convolutions, are not mutually exclusive. Theoretically they can harmonize together, complementing eachother for easier learning. This results in the \gls{CRNN} architecture.
+The strengths of the recurrent layers and convolutions are not mutually exclusive. Theoretically, they can harmonize when combined into a unified architecture, the \gls{CRNN}, where each component complements the other.
 
-Intuitively, the \glspl{CNN} ability to process images like the spectrogram, together with the \glspl{RNN} ability to understand temporal sequence data should prove beneficial for \gls{ADT} tasks. And indeed, this combination of cross-timestep memory and contextual data representation has shown to be insightful~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, signals4040042}.
+Intuitively, the ability of \glspl{CNN} to extract local time–frequency patterns from spectrograms, together with the ability of \glspl{RNN} to model temporal dependencies, makes this combination particularly well-suited for \gls{ADT}. This merging of contextual representation and cross-timestep memory has shown promising results in prior work~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription, signals4040042}.
 
 \subsection{Implementation}
 
-We begin with a fixed-size convolutional block with $I = 2$, as used by several \gls{ADT} authors~\cite{Vogl2017DrumTV, signals4040042}. Following the \gls{CNN}, it has an increasing number of kernels $C = \{32, 64\}$ the deeper into the convolutions we go. We then, similar to the \gls{RNN}, have a \gls{BiRU} layer of either a \gls{GRU} or \gls{LSTM}, with number of layers $L \in \{2, 3, 4, 5\}$ and hidden size $H \in \{72, 144, 288\}$. Output probabilities are then computed through the final linear layer.
+I implemented the \gls{CRNN} using a fixed stack of $I = 2$ initial convolutional blocks, a setup inspired by prior work in \gls{ADT}~\cite{Vogl2017DrumTV, signals4040042}. These convolutional blocks use an increasing number of kernels $K = \{32, 64\}$, allowing deeper layers to extract more complex time–frequency patterns. As with the pure \gls{CNN}, the convolutions preserve the input's temporal resolution.
+
+The resulting convolutional output is passed to a \gls{BiRU}, which models temporal dependencies across frames. As in the \gls{RNN} architecture, I experimented with both \glspl{GRU} and \glspl{LSTM}. Each timestep's hidden state is then passed into the final linear layer, which computes and outputs onset probabilities for each of the five drum instruments.
 
 \begin{figure}[H]
     \centering
     \input{tikz/crnn}
-    \caption{Convolutional RNN architecture structure.}
+    \caption{Model architecture of the \acrlong{CRNN} used in this thesis.}
     \label{CRNNFigure}
 \end{figure}
 
@@ -113,7 +122,7 @@ We begin with a fixed-size convolutional block with $I = 2$, as used by several 
         $H$ & Hidden size      & \{72, 144, 288, 576\} \\
         \gls{BiRU} & \acrlong{BiRU} & \{\gls{GRU}, \gls{LSTM}\}\\
     \end{tabular}
-    \caption{The different hyperparameters and their respective values tuned to train the Convolutional Recurrent Neural Network.}
+    \caption{Hyperparameters and their corresponding search spaces for training the \acrlong{CRNN}.}
     \label{CRNNHyperparams}
 \end{table}
 
@@ -144,7 +153,7 @@ Following this, the model contains $L$ standard pre-layer normalization transfor
 \begin{figure}[H]
     \centering
     \input{tikz/ct}
-    \caption{Convolutional Transformer architecture structure.}
+    \caption{Model architecture of the Convolutional Transformer used in this thesis.}
     \label{CTFigure}
 \end{figure}
 
@@ -157,7 +166,7 @@ Following this, the model contains $L$ standard pre-layer normalization transfor
         $L$ & Number of layers      & \{2, 4, 6, 8, 10\} \\
         $D_e$ & Embedding dimension      & \{72, 144, 288, 576\} \\
     \end{tabular}
-    \caption{The different hyperparameters and their respective values tuned to train the Convolutional Transformer.}
+    \caption{Hyperparameters and their corresponding search spaces for training the Convolutional Transformer.}
     \label{CTHyperparams}
 \end{table}
 
@@ -199,7 +208,7 @@ Afterwards, we combine it with a sinusoidal positional encoding, and successivel
     \hspace*{-0.5cm}
     \centering
     \input{tikz/vit}
-    \caption{Vision Transformer architecture structure.}
+    \caption{Model architecture of the Vision Transformer used in this thesis.}
     \label{ViTFigure}
 \end{figure}
 
@@ -213,6 +222,6 @@ Afterwards, we combine it with a sinusoidal positional encoding, and successivel
         $L$ & Number of layers      & \{2, 4, 6, 8, 10\} \\
         $D_e$ & Embedding dimension      & \{72, 144, 288, 576\} \\
     \end{tabular}
-    \caption{The different hyperparameters and their respective values tuned to train the Vision Transformer.}
+    \caption{Hyperparameters and their corresponding search spaces for training the Vision Transformer.}
     \label{ViTHyperparams}
 \end{table}
