@@ -2,19 +2,7 @@
 
 # Ensure Dataset summary matches everything
 
-# Fix 'activations' plot !!!!! IMPORTANT
-
 # Thesis:
-     - Sustain instead of duration (Introduction)
-
-     - Discretely-sampled, not valued (Background)
-     - Aliasing figure, add "redundantly sufficient"
-     - FFT, add "Regardless of a realistic sampling rate"
-     - STFT, add "granularity" when talking about hop length
-     - Loudness, remove "Similar to pitch", as it is not explained yet
-     - Pitch filters, explain what a filter actually is
-     - Sheet music, say that rest marks are "fixed-time pauses"
-
      - Replace, "inputs and outputs" with "inputs, and thus outputs" (Architecture)
      - Fix C in convolutional to other (it already means classes), could be set to K
      - Replace, "Deeper into the convolutional blocks we go.." with "the deeper we go with more convolutional blocks"
@@ -33,16 +21,18 @@
      - Explicitly mention RayTune trials as being 1 model per 1 dataset
 
      - Mention generalization, thats what I am looking for (Architecture Study)
+     - Show an example prediction on each dataset for CRNN, and discuss it.
      - For CNN, mention explicitly that performance is moderate objectively, but poor relatively/comparatively
      - Better summary in discussion, or a bit longer at least
      - Also mention a bit of future steps here, maybe a bit deep too
 
      - Replace "both datasets" with "all datasets" (Dataset Study)
      - Instead of evaluation on "remaining dataset", specify "test splits of all datasets"
-     - Possibly add a figure, but this has to be last
+     - Possibly add a figure, but this has to be last: Yes, specifically 2 bar charts
      - Mention "transfer gap"
      - Fix a bit of E-GMD, notably OOD on E-GMD now being "easier" than previously
-     - Mention how E-GMD is also distinctly and uniquely best when trained only on itsel
+     - Mention how E-GMD is also distinctly and uniquely best when trained only on itself
+     - Mention the heterogenouity of ADTOF-YT, and how that  could make it perform better on SADTP
      - Replace MT3's "Offset F1" with "Onset F1", that is more correct
      - For comparison discussion, also name now E-GMD, newly added
      - Also mention how supplementing with other datasets increases on-distribution performance
@@ -59,29 +49,14 @@
 
 # Todos for thesis: 
 
-    # Mention that we do 5 instrument transcription. I'm not sure if this is mentioned but this is really important. !! Important
-
     # Explicit layer norm in transformer architecures.
 
     # Correctively distinguish the usage of "WE" and "I". !! Important
-    
-    # Maybe cite Zenodo for where to download each dataset?
 
     ---
     Remember to distinguish what has been done before.
     Be clear when saying "I've combined these techniques which have been done before".
     Distinguish own novel contributions with previous ones.
-
-    Background should include a lot more information from methodology.
-        - The task should be explained here
-        - Explaining the spectrogram/mel-spectrogram, input data and labels
-        - The postprocessing, peak-picking algorithm should be here
-        - Everything about performance measures should be here
-        - Maybe something about previous architectures here aswell
     
     Methods should explain what I've done, not necessarily why or where stuff comes from.
     
-    - Mention the size of each of the data
-        - I.e. Waveform = (1, sr * seconds)
-               Spectrogram = (frequencies, sr * second / hop_length)
-               etc.
