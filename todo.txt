@@ -3,13 +3,6 @@
 # Ensure Dataset summary matches everything
 
 # Thesis:
-     - Replace, "inputs and outputs" with "inputs, and thus outputs" (Architecture)
-     - Fix C in convolutional to other (it already means classes), could be set to K
-     - Replace, "Deeper into the convolutional blocks we go.." with "the deeper we go with more convolutional blocks"
-     - Replace, "Fixed size convolutional block" with "a fixed number of convolutional blocks"
-     - Mention pretraining on large datasets for Vision Transformer
-     - Mention that a patch embedding is not a sequence, only each element of this sequence
-     
      - Fix "MedleyDB Drums" to "MDB Drums" (Datasets)
      - First state dataset name short, and long in parantheses if they exist
      - Mention more specifically that there might be some errors in SADTP
@@ -40,6 +33,10 @@
      - Mention generalization! (Conclusion)
 
     - MDB Drums, not MDB-Drums (Appendix)
+
+# After rephrasing:
+    - Figure 2.15, Pipeline example: Make my own
+    - Figure 3.1, 3.3 and 3.6 could be remade, and simpler
 
 # Add GitHub repository to Methodology
 
