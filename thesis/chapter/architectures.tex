@@ -128,27 +128,30 @@ The resulting convolutional output is passed to a \gls{BiRU}, which models tempo
 
 \section{Convolutional Transformer}
 
-Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243} made headway in regards to sequence prediction. It introduced the \textit{Attention} layer, making a model capable of learning to \textit{attend} to different elements in a sequence, and learning the relationship between them. Models dropping the recurrent units in favour of blocks containing attention layers (so-called transformer blocks) are called \textit{transformers}.
+While \glspl{CRNN} have proven effective in combining local time–frequency pattern extraction with temporal modeling, their ability to capture long-range dependencies still remain limited. Recurrent layers often struggle to maintain distant information through their hidden states, and convolutional layers are constrained by the size of their fixed receptive field.
 
-As mentioned, the \gls{RNN} displays difficulty in sustaining long range dependencies through its hidden state, and information further away tends to become attenuated. The attention layer solves this by allowing each element to individually attend to each other element in the sequence separately. Intuitively, it allows each element to \textit{"intelligently"} pick and choose where it wants to look, and what elements it wants to be influenced by. This stands in contrast to the recurrent units, where each element has to learn and predict what information about itself other elements could find useful, and \textit{"remembering"} that, adding it to the hidden state.
+To address these limitations, a major architectural shift was instigated, most notably with the introduction of the \textit{attention} mechanism in Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243}. This mechanism allows models to dynamically focus, or \textit{attend}, to different parts of an input sequence by learning relationships between its elements. Replacing recurrent layers with stacks of attention-based blocks gave rise to a new class of models: the \textit{transformers}.
+
+Unlike recurrent units, which propagate information sequentially through hidden states, attention layers allow each timestep to directly access information from every other timestep in the sequence. This gives the model a more flexible way to capture a global context. Intuitively, it enables each element to \textit{"intelligently"} decide which other parts of the sequence it wants to focus on, rather than depending on neighbouring timesteps to pass information forward.
 
 \begin{figure}[H]
     \centering
     \input{tikz/ctspectrogram}
-    \caption{An example of how attention layers allow for attentive influence from from other timeframes spanning large distances. The background is a spectrogram, and the red boxes represent influence on the middle timeframe. The height of the box help visualize influence strength.}
+    \caption{Ilustration of how attention layers enable influence from time frames across the entire sequence. The background represents a mock spectrogram, and the red boxes indicate the time frames influencing the prediction on the middle frame. Box height reflects the reltive influence strength, as determined by attention weights.}
     \label{CTInfluenceFigure}
 \end{figure}
 
-
-Recently, the attention layers have shown great success in \gls{AMT} and \gls{ADT} tasks, in some cases proving superior to the \gls{RNN}~\cite{gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3+, zehren2024analyzingreducingsynthetictorealtransfer}.
-
-Simply replacing the recurrent layers with transformer blocks could allow our model to reap the reward by increasing its ability to understand sequences, while keeping the previously gotten gains from the convolutional layer. Both inside and outside of \gls{ADT}, combining convolutional layers with transformers has seemed beneficial~\cite{zehren2024analyzingreducingsynthetictorealtransfer, gulati2020conformerconvolutionaugmentedtransformerspeech}.
+Attention mechanisms have recently shown strong performance in both \gls{AMT} and \gls{ADT}, in some cases outperforming \glspl{RNN}. Replacing recurrent layers with transformer blocks may therefore improve the model's ability to capture long-range dependencies, particularly when combined with convolutional layers that extract local time–frequency patterns~\cite{9747048, gardner2022mt3multitaskmultitrackmusic, signals4040042, chang2024yourmt3+, zehren2024analyzingreducingsynthetictorealtransfer}.
 
 \subsection{Implementation}
 
-Similar to the \gls{CRNN}, an initial fixed-size convolutional block with $I = 2$ is used, with an increasing number of kernels $C = \{32, 64\}$. Then, we project the resulting latent space into a separate, lower dimensional embedding space with dimension $D_e$, before combining it with a sinusoidal positional encoding. 
+I implemented the convolutional transformer architecture using an initial fixed stack of $I = 2$ convolutional blocks, following the same configuration as in the \gls{CRNN}. These blocks use an increasing number of kernels $K = \{32, 64\}$, as in the \gls{CRNN} setup. 
 
-Following this, the model contains $L$ standard pre-layer normalization transformer block, as these recently have been shown to be more stable during learning than the post-layer versions~\cite{pmlr-v119-xiong20b}. These transformer blocks contain multi-head self-attention layers with $H$ number of heads. Note that the first layer of the feedforward layer inside these transformer blocks uses the \gls{GELU} activation function due to it being the standard within transformers and for its possible performance improvements over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. Lastly, the linear layer outputs onset probabilities.
+The convolutional output is then projected into a lower-dimensional embedding space if size $D_e$, which reduces computational load and acts as input to the transformer blocks. A sinusoidal positional encoding is added to this embedding to provide the model with temporal ordering information, compensating for the transformer's lack of inherent sequence structure. 
+
+The core of the model consists of $L$ transformer block with pre-layer normalization, a design shown to improve training stability compared to post-layer normalization~\cite{pmlr-v119-xiong20b}. Each block contains multi-head self-attention with $H$ heads, enabling the model to capture global dependencies across the input sequence. The first layer of each block's feedforward component uses the \gls{GELU} activation function, which is standard in transformer-based models and has shown improved performance over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. 
+
+Finally, a linear output layer computes onset probabilities for each of the five drum instruments.
 
 \begin{figure}[H]
     \centering
@@ -172,37 +175,41 @@ Following this, the model contains $L$ standard pre-layer normalization transfor
 
 \section{Vision Transformer}
 
-Introducing the Transformer raises a question. Would it be possible for an architecture to be comprised of solely attention layers, removing convolutions and breaking this need for a mixed convolutional-transformer architecture. This question was answered by Google's "An Image Is Worth 16x16 Words"~\cite{dosovitskiy2021imageworth16x16words}, introducing the Vision Transformer.
+The introducing of the transformer naturally raises a question: is it possible to build an architecture composed solely of attention layers, eliminating convolutions and removing the need for hybrid convolutional-transformer designs? This question was explored in Google's "An Image Is Worth 16x16 Words"~\cite{dosovitskiy2021imageworth16x16words}, which introduced the \gls{ViT}.
 
-The Vision Transformer was created to tackle image recognition tasks, though it has been applied to audio classification, displaying great performance on both~\cite{dosovitskiy2021imageworth16x16words, gong2021astaudiospectrogramtransformer}. However, application of the Vision Transformer on an \gls{ADT} task is a novel approach.
+Originally developed for image recognition tasks, the Vision Transformer has since been applied to audio-based problems as well, demonstrating strong performance in both domains~\cite{dosovitskiy2021imageworth16x16words, gong2021astaudiospectrogramtransformer}. However, to the best of my knowledge, its application to \gls{ADT} remains unexplored, making it a novel approach evaluated in this thesis.
 
-It is worth to note that Vision Transformers have been shown to display excellent performance, however they usually need more significantly more data than other architectures to function optimally~\cite{dosovitskiy2021imageworth16x16words}.
+While Vision Transformers have shown excellent performance, they typically require substantially more data, or benefit heavily from large-scale pre-training, to reach their full potential.~\cite{dosovitskiy2021imageworth16x16words}.
 
 \subsection{Patch Embedding}
 
-A key component of the Vision Transformer is the creation of a patch embedding. First, we split the input image into different non-overlapping patches, and flatten them. These patches are linearly projected into a latent space, and a positional encoding is added to retain positional information. This resulting sequence of patches is what is referred to as a patch embedding.
+A key component of the Vision Transformer is the use of patch embeddings. The input image is first divided into patches, each of which is flattened and linearly projected into a latent vector. These latent vectors, known as patch embeddings, together form a sequence that represents the entire input image. To retain spatial information, a positional encoding is added to each vector, often implemented as a learnable embedding.
 
-We usually say that patch embeddings eliminate the use of convolutions in the Vision Transformer. However, the actual implementation of splitting the image into patches and linearly projecting each patch are usually implemented with a single 2D convolutional layer. Note that it is a linear projection, meaning the convolutional layer is absent of an activation function.
+Although Vision Transformers are often described as convolution–free, patch embeddings are typically implemented using a single 2D convolutional layer with a kernel size and stride equal to the patch size (assuming non-overlapping patches). This acts as a linear projection over each patch and does not involve any activation function.
 
 \begin{figure}[H]
     \centering
     %\input{tikz/patchembedding}
     \includegraphics[trim=0 0 0 116, clip, scale=0.7]{figures/patchembedding.png}
-    \caption{The creation of a sequence of patch embeddings from an input spectrogram. The spectrogram is split into several overlapping or non-overlapping patches. These are linearly projected into a sequence of 1 dimensional patch embeddings. Each patch embedding also has a learnable positional embedding added to it. Here it is also represented with an initial \acrfull{CLS}, which often is the case for image classification tasks~\cite{gong2021astaudiospectrogramtransformer}.}
+    \caption{Creation of a sequence of patch embeddings from an input spectrogram. The spectrogram is split into overlapping patches, each of which is linearly projected into a one-dimensional embedding vector. A learnable positional embedding is then added to each patch embedding. An initial \acrfull{CLS} is also included, as is common in classification tasks~\cite{gong2021astaudiospectrogramtransformer}.}
     \label{PatchEmbeddingFigure}
 \end{figure}
 
 \subsection{Architecture Modifications}
 
-Originally, the Vision Transformer has been used on classification tasks where the output is not a sequence. \gls{ADT} is a sequence labeling task, and requires that the output is a sequence, where the time dimension matches the size of the input.
+The original Vision Transformer was designed for classification tasks, where the output is a single vector rather than a sequence. In contrast, \gls{ADT} is a sequence labeling task, requiring an output sequence whose temporal resolution matches that of the input.
 
-This can be solved by treating a group of patches from the patch embedding together as a timeframe, as long as we ensure that there the number of timeframes are a factor of the number of patches. Then the output of the Vision Transformer could be construed to match our intended output sequence. This also voids the need of an additional \gls{CLS}, which in classification tasks is transformed to represent the whole input image, later being used to output the class prediction~\cite{dosovitskiy2021imageworth16x16words}
+To accommodate this, we reinterpret groups of patch embeddings as representing individual time frames. This is feasible as long as the number of timesteps divides evenly into the total number of patches, allowing the output to be reshaped to match the desired sequence length.
+
+Since we do not perform classification, the additional \gls{CLS} typically used to summarize the input for class prediction is unnecessary and thus omitted~\cite{dosovitskiy2021imageworth16x16words}.
 
 \subsection{Implementation}
 
-Initally, we transform the input spectrogram into a ($T \times D_e$) patch embedding. The Convolutional layer splits the spectrogram into ($T \times D_e / P \times P$) different patches. Added to these are a ($D_e / P \times P$) learnable positional embedding, providing positional information to each patch. These are then permuted and flattened, transforming them into our final patch embedding.
+I implemented the Vision Transformer by first converting the input spectrogram into a sequence of patch embeddings with shape $(T \times D_e)$. This is done using a 2D convolutional layer with kernel size and stride equal to the patch size $(1 \times P)$, where $P$ is the patch height. This value is chosen such that the spectrogram's 84 frequency bins can be evenly divided into $n_P = \frac{84}{P}$ patches. To control the output embedding dimensionality $D_e$, the convolution uses $\frac{D_e}{n_P}$ kernels.
 
-Afterwards, we combine it with a sinusoidal positional encoding, and successively apply $L$ transformer blocks with number of heads $H$, identical in structure with those used in the Convolutional Transformer. Lastly, the linear layer outputs onset probabilities.
+Since each patch has a width of 1, it retains information only about the frequencies within its own time frame, helping preserve the temporal resolution of the input spectrogram. A learnable positional embedding of shape $(\frac{D_e}{n_P} \times n_P)$ is then added to each patch to encode spectral position and kernel identity. These patches are then permuted and flattened into a sequence, forming the final patch embedding representation.
+
+While each patch embedding encodes its relative position within a time frame, it lacks information about which time frame it belongs to. To introduce this temporal ordering, I add a sinusoidal positional encoding across the time dimension. The resulting sequence is then passed through $L$ transformer blocks with pre-layer normalization and multi-head self-attention using $H$ heads, following the same design as in the convolutional transformer. Finally, a linear output layer computes onset probabilities for each of the five drum instruments.
 
 \begin{figure}[H]
     \hspace*{-0.5cm}
