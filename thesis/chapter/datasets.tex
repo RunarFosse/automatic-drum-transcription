@@ -2,29 +2,29 @@
 
 \section{ENST+MDB}
 
-The ENST-Drums dataset by Gillet and Richard~\cite{gillet2006enst} has been one of the most commonly used \gls{ADT} datasets~\cite{8350302}. It features thorougly annotated drum samples by three drummers over different musical genres. Most of the tracks contain drum-only recordings, except the \textit{minus-one} subset, which is played together with a music accompaniement. As this thesis attends to \gls{DTM} tasks, we isolate our focus to this subset of tracks.
+The ENST-Drums dataset by Gillet and Richard~\cite{gillet2006enst} is one of the most commonly used \gls{ADT} datasets~\cite{8350302}. It features thoroughly annotated, real drum recordings performed by three drummers across various musical genres. Most tracks are drum-only, except for the \textit{minus-one} subset, which includes accompaniment. Since this thesis focuses on \gls{DTM}, I limit my use to subset.
 
-As this dataset contains separate audio files for performance and accompaniement, we additively combine them to create a singular respective mixture track. There exist many recordings from differently placed microphones of a single performance, however in this thesis, we solely selected the \textit{"wet mix"} due to it being a combined recording of all other microphone recordings, and its \textit{mix} showing resembelance of a polished performance track.
+The dataset provides separate audio files for the drum performance and the accompaniment. I additively combine these to form a single mixture track. Although multiple microphone recordings from different spatial positions are available for each performance, I exclusively use the \textit{"wet mix"} as it combines the individual channels into a polished recording that closely resembles a professionally mixed track.
 
-ENST-Drums contains 1.02 hours of music over 64 tracks, and was accessed through Zenodo~\cite{gillet_2006_7432188}.
+ENST-Drums contains 1.02 hours of music across 64 tracks and was accessed via Zenodo~\cite{gillet_2006_7432188}.
 
-Another well-known MedleyDB Drums dataset, from Southall et al.~\cite{southall2017mdb}. This dataset is built on top of Bittner et al.'s MedleyDB (MDB) dataset~\cite{bittner2014medleydb}, but re-annotated and specialized for \gls{ADT} related tasks. This dataset is, similar to ENST-Drums, also split into different stem tracks, such as isolated drum recordings and accompaniement. However, they also contain already-mixed \textit{full mix} tracks, which are the ones we use in this thesis.
+The MDB Drums dataset by Southall et al.~\cite{southall2017mdb} is another well-known dataset used for \gls{ADT}. It is built on Bittner et al.'s MedleyDB (MDB) dataset~\cite{bittner2014medleydb}, but has been re-annotated and specifically adapted for \gls{ADT}-related transcription tasks. Like ENST-Drums, it is split into different stem tracks, including isolated drum recordings and accompaniement. However, it also provides pre-mixed \textit{full mix} tracks, which I use in this thesis.
 
-Tracks in MDB-Drums come transcribed in two different granularities. First, a \textit{class} file, split into 6 larger drum classes, and a \textit{subclass} file, containing a more specific 21 drum instruments. Although the 6-class transcriptions may seem closer to a 5-instrument vocabulary, the 21 gave better control over which specific instruments coincided with which in the 5-instrument vocabulary. Therefore, these subclass transcriptions are utilized as annotations.
+MDB Drums include transcriptions at two levels of granularity: a \textit{class} file with 6 broad drum classes, and a \textit{subclass} file with 21 more specific drum instruments. While the 6-class transcriptions may seem more aligned with a 5-instrument setup, as used in this thesis, I found that the 21-class transcriptions offered more precise control over mapping specific instruments into the 5-instrument vocabulary. Therefore, I use the 21-instrument subclass transcriptions as annotations.
 
-MDB-Drums contains 0.35 hours of music over 23 tracks, and was accessed through GitHub~\cite{southall_mdbdrums_2017}.
+MDB Drums contains 0.35 hours of music across 23 tracks and was accessed via GitHub~\cite{southall_mdbdrums_2017}.
 
-Both of these datasets distributes their audio in waveform files, and their annotations in text files. Annotations are formatted by onset time and instrument label. They are also relatively small, and contain thorough, real, annotated data. Due to these similarities, in this thesis they are combined together into a slightly larger ENST+MDB dataset.
+Both datasets distribute their audio as waveform files and their annotations as plain text files, formatted by onset time and instrument label. They are also relatively small in size and contain real, thoroughly annotated data. Due to these similarities, I combine them into a single, slightly larger dataset referred to as ENST+MDB.
 
-In total, this dataset contains 1.37 hours of music over 87 tracks, split into 896, 236 and 152 respective training, validation and test sequences.
+In total, ENST+MDB contains 1.37 hours of music across 87 tracks, split into 896, 236, and 152 respective training, validation and test sequences.
 
 \subsection{Splits}
 
-These two datasets do not have predefined train/validation/test splits, such that we decided to construct our own splits. From ENST-Drums, \textit{drummer1} and \textit{drummer2} make our training split. The remaining drummer, \textit{drummer3} is split in half, each for validation and test respectively. From MDB-Drums we do not have different explicit drummers, but instead split on specific genres. The different splits are specified in Appendix \ref{appendix-a}.
+Neither dataset comes with predefined train/validation/test splits, such I construct my own. From ENST-Drums, I use recordings from \textit{drummer1} and \textit{drummer2} for training. The remaining drummer, \textit{drummer3}, is split evenly between validation and test sets. Since MDB Drums does not include explicit drummers, I instead split the data by musical genre. Full details of the splits are provided in Appendix~\ref{appendix-a}.
 
 \subsection{Mapping}
 
-The ENST-Drums and MDB-Drums datasets are transcribed with 20 and 21 respective instruments. This does not match our models' vocabulary of 5. To utilize as much data as we can, we apply a mapping for each of the original instruments to one in our 5-instrument vocabulary. Table \ref{ENSTMDBMapping} shows the mapping for the ENST+MDB dataset.
+The ENST-Drums and MDB Drums datasets contain transcriptions of 20 and 21 distinct drum instruments, respectively. This does not align with the 5-instrument vocabulary used in this thesis. To utilize all the available annotations, I apply a mapping from each original annotated instrument to one of the five target classes. Table~\ref{ENSTMDBMapping} shows the mapping used for the combined ENST+MDB dataset.
 
 \begin{table}[H]
     \centering
@@ -38,11 +38,11 @@ The ENST-Drums and MDB-Drums datasets are transcribed with 20 and 21 respective 
         \acrfull{HH} & \textit{chh}, \textit{ohh} & \textit{CHH}, \textit{OHH}, \textit{PHH}, \textit{TMB} \\
         \acrfull{CC+RC} & \textit{cr}, \textit{spl}, \textit{ch}, \textit{rc}, \textit{c}, \textit{cb} & \textit{RDC}, \textit{RDB}, \textit{CRC}, \textit{CHC}, \textit{SPC} \\
     \end{tabular}
-    \caption{The mapping for each of the original transcribed instruments in ENST-Drums and MDB-Drums, onto the 5-instrument vocabulary used in this thesis. The description of each of the original annotated instruments can be found in their respective papers.~\cite{gillet2006enst, southall2017mdb}}
+    \caption{Mapping from the original instrument annotations in ENST-Drums and MDB Drums to the 5-instrument vocabulary used in this thesis. Description of the original instruments are available in their respective source papers~\cite{gillet2006enst, southall2017mdb}.}
     \label{ENSTMDBMapping}
 \end{table}
 
-It should be noted that ENST-Drums come with more specific annotations, with some instruments ending with a number (e.g. \textit{"rc3"}) informing that the drumset played on contains several of that instrument, with the number specifying which of these the current onset was made on. It also contains a few specific \textit{"sd-"} annotation, meaning that the respective snare drum onset is a softer \textit{ghost note} hit~\cite{gillet2006enst}. Aligning with the general \gls{ADT} practice and other datasets, these suffixes are ignored and onsets are recognized as their original instruments.
+It should be noted that ENST-Drums includes more specific instrument annotations, where some instrument labels end with a number (e.g., \textit{"rc3"}) to indicate that multiple instances of the same instrument were present in the drum set, with the number specifying which was played. Additionally, certain snare drum events end with a hyphenated suffix (e.g., \textit{"sd-"}), indicating that the onset corresponds to a softer \textit{ghost note} hit~\cite{gillet2006enst}. Following general \gls{ADT} practice and for consistency with other datasets, I ignore these suffixes and treat such events as standard onsets for their respective instruments.
 
 \section{E-GMD}
 
