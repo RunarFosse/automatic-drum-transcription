@@ -1,34 +1,11 @@
-# Mention explicit 'Transfer Gap' in OOD datasets
+# Update GitHub repository with changed URL (!IMPORTANT FIX)
 
 # Thesis:
-     - Change "transformation" to "transformation scheme" (Methodology)
-     - Add missing "optimizer" in "With the choice by what to use"
-     - For peak picking, mention where "the model relatively is most confident"
-     - Remove mention of instrumentwise F1-score
-     - Explicitly mention RayTune trials as being 1 model per 1 dataset
-
-     - Mention generalization, thats what I am looking for (Architecture Study)
-     - Show an example prediction on each dataset for CRNN, and discuss it.
-     - For CNN, mention explicitly that performance is moderate objectively, but poor relatively/comparatively
-     - Better summary in discussion, or a bit longer at least
-     - Also mention a bit of future steps here, maybe a bit deep too
-
-     - Replace "both datasets" with "all datasets" (Dataset Study)
-     - Instead of evaluation on "remaining dataset", specify "test splits of all datasets"
-     - Possibly add a figure, but this has to be last: Yes, specifically 2 bar charts
-     - Mention "transfer gap"
-     - Fix a bit of E-GMD, notably OOD on E-GMD now being "easier" than previously
-     - Mention how E-GMD is also distinctly and uniquely best when trained only on itself
-     - Mention the heterogenouity of ADTOF-YT, and how that  could make it perform better on SADTP
-     - Replace MT3's "Offset F1" with "Onset F1", that is more correct
-     - For comparison discussion, also name now E-GMD, newly added
-     - Also mention how supplementing with other datasets increases on-distribution performance
-
      - Mention generalization! (Conclusion)
 
-    - MDB Drums, not MDB-Drums (Appendix)
 
 # After rephrasing:
+    - Possibly add a figure, in Dataset study: specifically 2 bar charts
     - Figure 2.15, Pipeline example: Make my own
     - Figure 3.1, 3.3 and 3.6 could be remade, and simpler
 
