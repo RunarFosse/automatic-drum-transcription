@@ -16,20 +16,20 @@
 % False Positives
 \node[
     anchor=north,
-    label={[label distance=0.49cm]north:{\normalsize{\acrfull{FP}}}},
+    label={[label distance=0.49cm]north:{\normalsize{\acrfullpl{FP}}}},
 ] (fp) at (0, -3cm) {\includegraphics[scale=1.2]{lilypond/example_fp.cropped.pdf}};
 
 % True Positives
 \node[
     anchor=north,
-    label=north:{\normalsize{\acrfull{TP}}},
+    label=north:{\normalsize{\acrfullpl{TP}}},
     left=0.25cm of fp
 ] {\includegraphics[scale=1.2]{lilypond/example_tp.cropped.pdf}};
     
 % False Negatives
 \node[
     anchor=north,
-    label={[label distance=0.49cm]north:{\normalsize{\acrfull{FN}}}},
+    label={[label distance=0.49cm]north:{\normalsize{\acrfullpl{FN}}}},
     right=0.25cm of fp
 ] {\includegraphics[scale=1.2]{lilypond/example_fn.cropped.pdf}};
 

@@ -1,10 +1,12 @@
 \chapter{Architecture Study}\label{Study1}
 
-This study's main purpose is to figure out how suited each architecture is for \acrfull{ADT}, more specifically \acrfull{DTM} tasks. This could help us figure out which architecture is superior for \gls{ADT}, if there are any similarities between architectures who perform similarly well, or if there are any architectures who perform poorly.
+The primary objective of this study is to evaluate how well different neural network architectures perform on the task of \acrfull{ADT}, with a specific focus on \acrfull{DTM}. The goal is to identify which architectures are most effective for this task, to observe possible common patterns among high-performing models, and to determine whether certain architectural designs consistently underperform. These findings will help assess which architectures are best suited for complex \gls{ADT} tasks and how architecture choice may influence a model's ability to generalize.
 
 \section{Methodology}
 
-For each of the different datasets, we train several different models on the respective training dataset, and model select the best performing model on the respective validation dataset. At last we test said selected model on that dataset's respective test split. As a result, we are left with performance measures on unseen data from the same distribution as those each model was trained on. In other words, the model evaluated on a test split is strictly trained on that dataset's respective train split. This will give us a good intuition into each architecture's ability to learn the task of \gls{ADT} and could help us estimate their generalization ability.
+To effectively assess the strengths and weaknesses of each architecture within-domain across all datasets, I conduct an experiment for each architecture/dataset combination. For each combination, I train multiple models (either 15 or 25) and select the best-performing one based on validation performance. The selected model is then evaluated on the test split of the same dataset it was trained on. As a result, all reported performance metrics reflect performance on unseen data drawn from the same distribution as the training set. 
+
+Each model is trained and validated exclusively on one dataset, and evaluated only on its corresponding test set. This approach provides insight into each architecture's ability to learn the \gls{ADT} task and serves as a basis for comparing their generalization performance within-domain.
 
 \section{Results}	
 
@@ -21,7 +23,7 @@ For each of the different datasets, we train several different models on the res
         Vision Transformer	& 0.54 &	0.89 &	0.88 &	\textbf{0.96} \\
         
     \end{tabular}
-    \caption{The test Micro F1-score for each architecture, strictly trained and tested on that same dataset. The performances which are \textbf{bolded} represent the highest F1-score, and thus best performance, for that respective dataset.}
+    \caption{Test micro F1-score for each architecture, trained and evaluated on splits of the same dataset. \textbf{Bold} values represent the highest score achieved for that dataset.}
     \label{ArchitectureResultsTable}
 \end{table}
 
@@ -30,7 +32,7 @@ For each of the different datasets, we train several different models on the res
     \centering
     \hspace*{-0.8cm}
     \includegraphics[scale=0.8]{figures/architectureperformancearchitecture.png}
-    \caption{Comparison of test Micro F1-scores for each dataset across the different architectures. Bars marked with a ($\star$) indicate the best performing architecture for each respective dataset.}
+    \caption{Test micro F1-scores per dataset, grouped by architecture. Bars marked with a ($\star$) indicate the best-performing architecture for each dataset.}
     \label{ArchitectureResultsArchitectureFigure}
 \end{figure}
 
@@ -38,17 +40,65 @@ For each of the different datasets, we train several different models on the res
     \centering
     \hspace*{-0.8cm}
     \includegraphics[scale=0.8]{figures/architectureperformancedataset.png}
-    \caption{Comparison of test Micro F1-scores for each architectures across the different dataset. Bars marked with a ($\star$) indicate the best performing architecture for each respective dataset.}
+    \caption{Test micro F1-scores per architecture, grouped by dataset. Bars marked with a ($\star$) indicate the best-performing architecture for each dataset.}
     \label{ArchitectureResultsDatasetFigure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+    \matrix[label=north:{\acrshort{CRNN} — ENST+MDB Sample}] {
+        \node[label=west:{Target Sequence}] {\includegraphics[scale=1.0]{lilypond/predictions/enst+mdb.cropped.pdf}}; \\
+        \node[label=west:{Predicted Sequence}] {\includegraphics[scale=0.94]{lilypond/predictions/enst+mdb_prediction.cropped.pdf}}; \\};
+    \end{tikzpicture}
+    \caption{Prediction example from the \acrfull{CRNN} on a randomly selected sequence from the ENST+MDB test split. This is a complex drum pattern, but the transcription is generally accurate. Most onsets are correctly placed and labeled, although several \acrfullpl{FP} and \acrfullpl{FN} occur.}
+    \label{ArchitecturePredictionComparisonENST+MDBFigure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+    \matrix[label=north:{\acrshort{CRNN} — E-GMD Sample}] {
+        \node[label=west:{Target Sequence}] {\includegraphics[scale=0.9]{lilypond/predictions/egmd.cropped.pdf}}; \\
+        \node[label=west:{Predicted Sequence}] {\includegraphics[scale=0.9]{lilypond/predictions/egmd_prediction.cropped.pdf}}; \\};
+    \end{tikzpicture}
+    \caption{Prediction example from the \acrfull{CRNN} on a randomly selected sequence from the E-GMD test split. The drum pattern is moderately complex, but the model transcribed it with high accuracy. Only two \acrfullpl{FN} are present, and the prediction aligns closely with the target sequence. Note that E-GMD is a \gls{DTD} dataset without melodic accompaniment, which may make the transcription task slightly easier.}
+    \label{ArchitecturePredictionComparisonEGMDFigure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+    \matrix[label=north:{\acrshort{CRNN} — Slakh Sample}] {
+        \node[label=west:{Target Sequence}] {\includegraphics[scale=1.2]{lilypond/predictions/slakh.cropped.pdf}}; \\
+        \node[label=west:{Predicted Sequence}] {\includegraphics[scale=1.2]{lilypond/predictions/slakh_prediction.cropped.pdf}}; \\};
+    \end{tikzpicture}
+    \caption{Prediction example from the \acrfull{CRNN} on a randomly selected sequence from the Slakh test split. The drum pattern is relatively simple, and the model produces a perfect transcription with all onsets correctly placed and labeled.}
+    \label{ArchitecturePredictionComparisonSlakhFigure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+    \matrix[label=north:{\acrshort{CRNN} — ADTOF-YT Sample}] {
+        \node[label=west:{Target Sequence}] {\includegraphics[scale=0.7]{lilypond/predictions/adtof_yt.cropped.pdf}}; \\
+        \node[label=west:{Predicted Sequence}] {\includegraphics[scale=0.7]{lilypond/predictions/adtof_yt_prediction.cropped.pdf}}; \\};
+    \end{tikzpicture}
+    \caption{Prediction example from the \acrfull{CRNN} on a randomly selected sequence from the ADTOF-YT test split. The pattern is dense, originating from a metal track, yet the model performs remarkably well. Only a single \acrfull{FP} is present, with all other onsets accurately transcribed.}
+    \label{ArchitecturePredictionComparisonADTOF-YTFigure}
 \end{figure}
 
 \section{Discussion}
 
-The results from the architecture study, summarized in Table \ref{ArchitectureResultsTable} and Figures \ref{ArchitectureResultsArchitectureFigure} and \ref{ArchitectureResultsDatasetFigure}, indicate that there is no single superior architecture for \gls{ADT}. Instead, performance is variant on the properties of each dataset, as well as the inherent inductive biases of each architecture.
+The results from the architecture study, summarized in Table~\ref{ArchitectureResultsTable} and Figures~\ref{ArchitectureResultsArchitectureFigure} and~\ref{ArchitectureResultsDatasetFigure}, indicate that there is no single architecture that consistently outperforms the others for \gls{ADT}. Instead, performance varies depending on the characteristics of each dataset and the inductive biases inherent to each architectural design.
 
-Firstly, it is evident that there does not seem to be one superior architecture when it comes to \gls{ADT}. There does not exist a single architecture outperforming the others across all the datasets, and the different architectures often share similarly high performances on most of the datasets. 
+Firstly, while multiple architectures perform well across different datasets, none emerge as universally superiour. No single architecture consistently outperforms the others on all the datasets, several architectures exhibit similarly strong results depending on the dataset. 
 
-However, the convolutional recurrent neural network demonstrates the highest Micro F1-score on three of the four datasets (namely ENST+MDB, E-GMD and Slakh). It also provides a high, but not exceptional F1-score on the fourth (ADTOF-YT). The consistency of its high performance across the different characteristics of each dataset suggests that it is able to handle a wide variety of \gls{ADT} tasks, and that its performance may be high independent on the training dataset's size and complexity. In other words, it displays properties of being a architecture highly suitable for \gls{ADT} tasks. One could speculate that this suitability is provided by the strong inductive bias from the combination of convolutions and recurrent units, allowing for both initial spatial feature extraction as well as short-range temporal modelling.
+However, the convolutional recurrent neural network demonstrates the highest micro F1-score on three of the four datasets (namely ENST+MDB, E-GMD and Slakh). It also performs strongly, but not exceptionally, on the fourth (ADTOF-YT). The consistency of its high performance across datasets with differing characteristics suggests that it is capable of handling a wide variety of \gls{ADT} tasks. This robustness appears to hold relatively independently of dataset size or complexity. 
+
+One possible explanation for this is the architectural synergy between the convolutional and recurrent layers. The convolutional blocks provide a strong spatial feature extraction over local time–frequency patches, while the recurrent layers enable short-range temporal modeling. Together, these inductive biases may make the \gls{CRNN} especially well-suited for the challenges of \gls{ADT}.
+
+--
 
 The convolutional neural network displays a moderate performance across all datasets. It shows adequate performance on the smallest dataset (ENST+MDB), having the second highest F1-score. However, across all others (E-GMD, Slakh and ADTOF-YT) it displays the lowest. This relatively poor overall performance seems to indicate that the convolutional neural network currently is an inferior architecture for \gls{ADT} tasks, unless dataset size is limited, in which it could provide a viable architecture. It also shows the importance of explicitly leveraging the temporal dependencies within \gls{ADT}, as solely relying on the inductive bias of the convolutions didn't prove sufficient here.
 
