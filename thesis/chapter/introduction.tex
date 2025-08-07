@@ -1,36 +1,40 @@
 \chapter{Introduction}
 
-Within the field of \gls{MIR}, the task of \gls{AMT} is considered to be a challenging research problem. It describes the process of generating symbolic music notation from audio. The majority of instruments are melodic, where key information for transcription would be to discern pitch, onset time, and note duration. This stands in contrast to percussive instruments, where instead of pitch and duration one would focus on instrument classification and onset detection. This sets the stage for \gls{ADT}, a subfield of \gls{AMT} specifically focusing on transcribing drums and percussive instruments~\cite{8350302}. Specifically, this thesis will focus on \gls{DTM}, the hardest subtask of \gls{ADT}.
+Within the field of \gls{MIR}, the task of \gls{AMT}, automatically generating symbolic music notation from audio, is widely regarded as a challenging research problem. Most musical instruments are melodic, requiring transcription systems to detect pitch, onset time, and note duration. Percussive instruments, by contrast, require a different focus: pitch is typically absent or uninformative, and the goal shifts to accurate onset detection and instrument classification. This distinction defines the subtask of \gls{ADT}, which is concerned specifically with transcribing drums and other percussive instruments. This thesis focuses on the most difficult form of \gls{ADT}, known as \gls{DTM}, where drum events must be transcribed from within full polyphonic musical mixtures~\cite{8350302}.
 
-Previously, a popular approach to \gls{ADT} was using signal processing, later developing into using classical machine learning methods~\cite{8350302}. In later years however, the standard has evolved into utilizing deep learning, showing to be quite effective. Therefore, the recent focus of most authors has been to find the best performing deep learning approaches by either; constructing and analysing different deep learning model architectures, striving to find a best performer, or by creating datasets which, when trained on, allow models to heighten their generalization ability~\cite{signals4040042}.
+Earlier approaches to \gls{ADT} relied heavily on signal processing techniques and classical machine learning methods~\cite{8350302}. However, in recent years, deep learning has become the standard, offering significant improvements in transcription performance. As a result, current research has shifted toward understanding how to best apply deep learning to this problem, either by developing or analysing new neural network architectures, or by constructing datasets that help models generalize more effectively~\cite{signals4040042}.
 
 \section{Thesis statement}
 
-This leads us to my two primary questions. 
+This thesis addresses two primary research questions:
+
 \begin{enumerate}
     \item Which deep learning architecture is best suited for solving a task like \gls{ADT}?
     \item What makes an \gls{ADT} dataset optimal for training models to generalize on \gls{DTM}?
 \end{enumerate}
-I will tackle both of these questions through two different studies performed in this thesis.
 
-For the former, we will train several different model architectures on different, well-known \gls{ADT} datasets. These different architectures are specifically, the recurrent neural network, the convolutional neural network, the convolutional-recurrent neural network, the convolutional transformers and, novel to the field of \gls{ADT}, the Vision Transformer. By comparing their performances we will be able to gauge which of these are the best suited for the \gls{ADT} task, specifically \gls{DTM}. 
+To answer these, I divide the thesis into two main studies.
 
-For the latter we will select the best performing model architecture from the first question and train it over several different combinations of the \gls{ADT} datasets. For this I also introduce SADTP, a novel \gls{ADT} dataset solely used for \gls{OOD} evaluation purposes. By performing cross-dataset evaluations we could analyse and figure out what makes a good \gls{ADT}, dataset and how it would enhance a suitable, well-selected model architecture. I will also compare my best performing models with models from those from other literature, giving a comparative analysis which will strengthen and increase the robustness of my final conclusion.
+For the first, I train and compare several neural network architectures on established \gls{ADT} datasets. The evaluated architectures include a \acrlong{RNN}, a \acrlong{CNN}, a \acrlong{CRNN}, a Convolutional Transformer,  and, novel to the field of \gls{ADT}, the \acrlong{ViT}. By comparing their performances, I aim to identify which architectural designs are most effective for the \gls{ADT} task, with a focus on \gls{DTM}.
+
+For the second study, I take the best-performing architecture from the first and train it across multiple combinations of existing \gls{ADT} datasets. To support \acrfull{OOD} evaluation, I also introduce SADTP, a novel \gls{DTM} dataset created specifically for this thesis. Through systematic cross-dataset evaluation, I analyze what makes a dataset effective for improving generalization and how training data can enhance the performance of a well-chosen architecture.
+
+Finally, I compare my top-performing models with results from existing literature, offering a broader perspective on performance and robustness across the field. This comparative analysis strengthens the conclusion and helps situate my findings within the current state of \gls{ADT} research.
 
 \section{Thesis Outline}
 
 The remainder of this thesis is organized as follows:
 
-\noindent \hyperref[Background]{\textbf{Chapter 2: Background}} — Covers information needed to fully understand the \gls{ADT} training and inference pipeline. Specifically it will give a thorough understanding into \gls{AMT} and \gls{ADT}, how audio is transformed and represented for deep learning, what the outputs of an \gls{ADT} pipeline look like, and which performance measures that best describe a well-performing \gls{ADT} model.
+\noindent \hyperref[Background]{\textbf{Chapter 2: Background}} — Provides the foundational concepts necessary to understand the \gls{ADT} training and inference pipeline. This includes an overview of \gls{AMT} and \gls{ADT}, how audio is transformed and represented for deep learning, what the outputs of an \gls{ADT} system look like, and which evaluation metrics best capture model performance.
 
-\noindent \hyperref[Architectures]{\textbf{Chapter 3: Architectures}} — Presents and goes in-depth into each of the different deep learning architectures which are utilized in this thesis, specifically for the first study. 
+\noindent \hyperref[Architectures]{\textbf{Chapter 3: Architectures}} — Describes and analyses the deep learning architectures used in this thesis, particularly in the first study.
 
-\noindent \hyperref[Datasets]{\textbf{Chapter 4: Datasets}} — Presents each of the different datasets trained on within this thesis, as well as comparing their characteristics. In addition, I introduce the novel, \gls{DTM}, test-only dataset, SADTP.
+\noindent \hyperref[Datasets]{\textbf{Chapter 4: Datasets}} — Presents the datasets used for training and evaluation, compares their characteristics, and introduces SADTP, a novel \gls{DTM} test-only dataset developed for this thesis.
 
-\noindent \hyperref[Methodology]{\textbf{Chapter 5: Methodology}} — Covers the specific methodology used in this thesis by explaining how each dataset is prepared, what pre- and postprocessing are techniques are used, and how the hyperparameter tuning, model selection and training procedure is implemented.
+\noindent \hyperref[Methodology]{\textbf{Chapter 5: Methodology}} — Details the overall experimental methodology, including data preprocessing, training procedures, output postprocessing, model selection, and hyperparameter tuning.
 
-\noindent \hyperref[Study1]{\textbf{Chapter 6: Architecture Study}} — Trains and compares the performances different deep learning architectures trained over each dataset, discusses the different results and concludes by selecting the best performing one.
+\noindent \hyperref[Study1]{\textbf{Chapter 6: Architecture Study}} — Compares the performance of various architectures trained separately on each dataset. Results are analyzed to determine the best-performing model for \gls{ADT}.
 
-\noindent \hyperref[Study2]{\textbf{Chapter 7: Dataset Study}} — Trains and compares the best performing model from the previous study trained over several different combinations of multiple datasets, and discusses evaluation results through both on- and \gls{OOD} evaluation.
+\noindent \hyperref[Study2]{\textbf{Chapter 7: Dataset Study}} — Uses the selected architecture from the previous chapter to evaluate how training on different dataset combinations affects generalization, with a focus on both within-domain and \acrfull{OOD} performance.
 
-\noindent \hyperref[Conclusion]{\textbf{Chapter 8: Conclusion}} — Concludes this thesis by reflecting on the results of the different studies, as well as giving an outlook into what should be covered in future work.
+\noindent \hyperref[Conclusion]{\textbf{Chapter 8: Conclusion}} — Summarizes the findings of both studies, revisits the research questions, and offers suggestions for future work.

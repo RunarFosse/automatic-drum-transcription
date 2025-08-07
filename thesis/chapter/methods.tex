@@ -104,7 +104,7 @@ In this thesis, I utilize RayTune's implementation of \texttt{OptunaSearch}, whi
 
 \subsection{Hyperparameters}
 
-RayTune allows me to define the search space for each hyperparameter in a straightforward and flexible manner. All architecture-specific hyperparameters are sampled from discrete sets using random categorical choices. In addition, the optimizer-specific hyperparameters, learning rate and weight decay, are sampled using a logarithmically uniform distribution, enabling exploration across several orders of magnitude. The specific search spaces used in this thesis are listed in Table~\ref{MethodHyperparams}.
+RayTune allows me to define the search space for each hyperparameter in a straightforward and flexible manner. All architecture-specific hyperparameters are sampled from discrete sets using random categorical choices. These sets are carefully constructed to ensure that each architecture operates within a comparable computational budget. This helps prevent any model from over- or underperforming due to discrepancies in parameter count or search space flexibility. Additionally, the optimizer-specific hyperparameters, learning rate and weight decay, are sampled using a logarithmically uniform distribution, enabling exploration across several orders of magnitude. The specific search spaces used in this thesis are listed in Table~\ref{MethodHyperparams}.
 
 \begin{table}[H]
     \centering
