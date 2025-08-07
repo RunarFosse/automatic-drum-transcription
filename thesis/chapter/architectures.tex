@@ -68,7 +68,7 @@ A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, acr
 
 \subsection{Implementation}
 
-My \gls{CNN} architecure begins with $I$ initial convolutional blocks, each designed to preserve the temporal resolution of the input, ensuring that the output retains the same sequence length $T$. Within these blocks, the number of kernels $K_i$ increases with block depth $i$, using $K = \{32, 64, 96\}$ to enable deeper layers to capture more complex time–frequency ptterns. This kernel progression is fixed (i.e., not treated as a hyperparameter), and follows a common design convention of increasing the filter count with depth~\cite{simonyan2014very}.
+My \gls{CNN} architecture begins with $I$ initial convolutional blocks, each designed to preserve the temporal resolution of the input, ensuring that the output retains the same sequence length $T$. Within these blocks, the number of kernels $K_i$ increases with block depth $i$, using $K = \{32, 64, 96\}$ to enable deeper layers to capture more complex time–frequency ptterns. This kernel progression is fixed (i.e., not treated as a hyperparameter), and follows a common design convention of increasing the filter count with depth~\cite{simonyan2014very}.
 
 These convolutional blocks iteratively combine local features from the spectrogram, forming a richer internal representation of the input. This representation is then passed through $L$ fully connected layers, which project the features into an $H$-dimensional latent space for final interpretation. 
 

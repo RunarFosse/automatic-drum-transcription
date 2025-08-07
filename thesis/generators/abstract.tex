@@ -2,7 +2,13 @@
 
 \begin{abstract}
 
-\noindent \acrfull{ADT} remains a challenging task within the field of \acrfull{MIR}, especially when drum sounds are mixed with melodic instruments, otherwise called \acrfull{DTM}. The current standard methodology for solving such tasks is through deep learning. This thesis investigates how different architectures and dataset composition affect \acrshort{ADT} performance. Two studies were conducted: one comparing the performances of five different neural network architectures over four standard \acrshort{ADT} datasets, and another evaluating how training models on different dataset combinations impacts their generalization ability both on- and \acrfull{OOD}. A novel dataset, SADTP, is introduced for this latter study is utilized for \acrshort{OOD} evaluation. The first study concluded convolutional recurrent architectures perform the best across datasets, however strictly recurrent architectures and the Vision Transformer show promising performance on larger datasets. The second study shows that training on large and diverse datasets from multiple sources could improve both on- and \acrfull{OOD} generalization. These findings offer insight into how architecural and dataset choices influence generalization for \acrshort{ADT}.
+\noindent \acrfull{ADT}, particularly in the form of \acrfull{DTM}, remains a challenging task within the field of \acrfull{MIR} due to the complexity of recognizing and isolating drum events from polyphonic mixtures. Deep learning is the current approach for tackling this problem, but the roles of architectural design and dataset composition in supporting generalization remain underexplored.
+
+This thesis investigates how different neural network architectures and dataset configurations affect \acrshort{ADT} performance, both within-domain and under \acrfull{OOD} conditions. Two studies are presented. The first evaluates five architectures: \acrlong{RNN}, \acrlong{CNN}, \acrlong{CRNN}, Convolutional Transformer, and \acrlong{ViT}, across four public \acrshort{ADT} datasets. Results show that the \acrfull{CRNN} achieves the strongest overall performance, though the \acrlong{RNN} and \acrlong{ViT} also perform competitively on larger datasets, warranting further investigation.
+
+The second study examines how combining datasets with varying properties influences generalization. Models trained on diverse, especially crowdsourced, datasets exhibit stronger performance both within-domain and \acrshort{OOD}. A novel evaluation dataset, SADTP, is introduced to support realistic zero-shot testing.
+
+Together, these findings provide valuable insight for building generalizable \acrshort{ADT} models. They highlight the importance of selecting robust architectures and constructing heterogeneous, task-aligned datasets to support strong transcription performance across real-world audio conditions.
 
 \end{abstract}
 

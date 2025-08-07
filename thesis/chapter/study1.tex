@@ -98,7 +98,7 @@ However, the convolutional recurrent neural network demonstrates the highest mic
 
 One possible explanation for this is the architectural synergy between the convolutional and recurrent layers. The convolutional blocks provide a strong spatial feature extraction over local time–frequency patches, while the recurrent layers enable short-range temporal modeling. Together, these inductive biases may make the \gls{CRNN} especially well-suited for the challenges of \gls{ADT}.
 
-The \acrfull{CNN} demonstrates moderate performances across all datasets. It performs adequate performance on the smallest dataset, ENST+MDB, achieving the second-highest F1-score. However, on E-GMD, Slakh and ADTOF-YT, it yields the lowest scores among the architectures, though thhough the relative performance gap in E-GMD is minor. 
+The \acrfull{CNN} demonstrates moderate performances across all datasets. It performs adequate performance on the smallest dataset, ENST+MDB, achieving the second-highest F1-score. However, on E-GMD, Slakh and ADTOF-YT, it yields the lowest scores among the architectures, though the relative performance gap in E-GMD is minor. 
 
 In terms of absolute F1-scores, the \gls{CNN} performs reasonably well across all datasets. Nonetheless, it consistently trails behind the other architectures, particularly on the complex and larger datasets like Slakh and ADTOF-YT. The results suggest that the \gls{CNN} is a less optimal choice for \gls{ADT}, except perhaps in scenarios with limited data or when applied on simpler tasks, such as \gls{DTD} or \acrfull{DSC}. 
 
