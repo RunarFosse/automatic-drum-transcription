@@ -1,30 +1,16 @@
 # Update GitHub repository with changed URL (!IMPORTANT FIX)
+# Also fix thesis name in SADTP repository
 
-# Thesis:
-     - Mention generalization! (Conclusion)
+# Directly point to figures (The RNN architecture, as seen in Figure X.XX)
 
+# Added "(adapted from [XX])" for figures taken from other sources.
+
+# Possibly go through and rephrase initial start of background
 
 # After rephrasing:
     - Possibly add a figure, in Dataset study: specifically 2 bar charts
     - Figure 2.15, Pipeline example: Make my own
     - Figure 3.1, 3.3 and 3.6 could be remade, and simpler
 
-# Add GitHub repository to Methodology
-
-# Problem to discuss:
-    - Offset predictions, hallucinations (like the tapping in etæk 'n),
-    - Location variance (Different prediction depending on start timeframe, i.e. snare prediction on frame 20 if starting prediction from 5, not 10)
-
 # Todos for thesis: 
-
     # Explicit layer norm in transformer architecures.
-
-    # Correctively distinguish the usage of "WE" and "I". !! Important
-
-    ---
-    Remember to distinguish what has been done before.
-    Be clear when saying "I've combined these techniques which have been done before".
-    Distinguish own novel contributions with previous ones.
-    
-    Methods should explain what I've done, not necessarily why or where stuff comes from.
-    
