@@ -7,7 +7,7 @@ In general, transcription refers to the process of retrieving information from a
 \subsection{Transcription using Deep learning}
 Currently, the majority of state-of-the-art models within \gls{AMT} utilize deep learning~\cite{8350302, signals4040042, jamshidi2024machine}. With enough data one can train a \gls{DNN} to, given an input sequence of music, automatically output a transcribed sequence representing musical notation. Musical notation such as this could be extensive in their information, but by far the most important parts could be reduced down to \textit{"which instruments are playing"} and \textit{"when are they playing"}.
 
-Relating this to a common deep learning task, this could be described as a multi-label sequence tagging/sequence labelling task. For each element in an input sequence output a combination of one or more labels. Each element within this sequence represents a timestep in the audio recording, with a combination of labels representing one or more instruments being played. This constitutes the most basic form of \gls{AMT}.
+Relating this to a common deep learning task, it could be described as a multi-label sequence tagging/sequence labeling task. For each element in an input sequence, output a combination of one or more labels. Each element of this output sequence represents a timestep in the input audio recording, consisting of a combination of labels, each representing an instrument being played. This constitutes the most basic form of \gls{AMT}. Figure~\ref{AMTFigure} illustrates an abstract \gls{AMT} pipeline.
 
 \begin{figure}[H]
     \centering
@@ -20,7 +20,7 @@ Relating this to a common deep learning task, this could be described as a multi
 
 Sound is described by \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear."}~\cite{1953fundamentals}. In short, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
 
-Thus sound can be described as the propogation and perception of waves. Mathematically, waves can be studied as signals~\cite{8454362}. To represent these sounds digitally, as \textit{audio}, one can express these waves as a signal, giving rise to the \textit{waveform}. The waveform is a timewise representation of a signal as a graph, charting the amplitude, or strength of the signal, over time.
+Thus sound can be described as the propogation and perception of waves. Mathematically, waves can be studied as signals~\cite{8454362}. To represent these sounds digitally, as \textit{audio}, one can express these waves as a signal, giving rise to the \textit{waveform}. The waveform is a timewise representation of a signal as a graph, charting the amplitude, or strength of the signal, over time. This sound wave to waveform relationship is visualized in Figure~\ref{WaveformFigure}.
 
 \begin{figure}[H]
     \centering
@@ -37,7 +37,7 @@ The Fourier Transform is a mathematical transformation which, given a signal and
 
 The fourier transform is a complex transformation. Specifically given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number on the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{(\frac{b}{a})}$, adjusted for the right quadrant, computes the phase of the respective frequency in the original signal $f$. Frequencies with higher amplitudes play a more prominent role in shaping the original sequence, indicating a greater significance. This information is what allow us to figure out which frequencies a signal is made out of and how each frequency contributes. 
 
-By doing such a transform we turn our temporal data, like a waveform, into spectral data, its \textit{spectrum}. This inuitively \textit{untangles} our signal into its respective base frequencies. By ridding our data with the highly dense temporal aspect, replacing it with a more informationally independent and sparse spectral representation, a transformation such as this could lessen the complexity of the task, making the audio easier to \textit{understand}; in a metaphorical sense.
+By doing such a transform (seen in Figure~\ref{FTFigure}) we turn our temporal data, like a waveform, into spectral data, its \textit{spectrum}. This inuitively \textit{untangles} our signal into its respective base frequencies. By ridding our data with the highly dense temporal aspect, replacing it with a more informationally independent and sparse spectral representation, a transformation such as this could lessen the complexity of the task, making the audio easier to \textit{understand}; in a metaphorical sense.
 
 \begin{figure}[H]
     \centering
@@ -62,7 +62,7 @@ To extract frequency values from these signals, we instead have to use the \gls{
 
 When a continuous signal, such as an audio wave traveling through the air, is discritized by recording it on a computer, some information may be lost in the process. The discrete representation of the signal is an \textit{approximation} which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approxmation.
 
-\textit{Aliasing} is the phenomenon where new, incorrect frequencies emerge in undersampled signals. The \textit{Nyquist frequency}, defined as half the sampling rate, represents the highest frequency that can be accurately captured by a discrete signal. Thus to prevent aliasing, the sampling rate must be at least twice the maximum frequency present in the original signal.
+\textit{Aliasing} is the phenomenon where new, incorrect frequencies emerge in undersampled signals (illustrated in Figure~\ref{AliasingFigure}). The \textit{Nyquist frequency}, defined as half the sampling rate, represents the highest frequency that can be accurately captured by a discrete signal. Thus to prevent aliasing, the sampling rate must be at least twice the maximum frequency present in the original signal.
 
 \begin{figure}[H]
     \centering
@@ -85,7 +85,7 @@ There exist several different implementations of the \gls{FFT}. Among them, the 
 
 The Fourier Transform comes with certain limitations; most notably in how, by transforming a signal into the frequency domain, we lose its temporal structure. Although this loss of time information may be acceptable for certain tasks, it poses a challenge for applications like music transcription and \gls{ADT} where timing of events is vital. So far, we've seen how the Fourier Transform unravels the frequency content of a signal as a whole. But what happens if we had applied it to smaller, localized partitions of the signal instead?
 
-This leads us to the \gls{STFT}. Rather than transforming the entire signal at once, the \gls{STFT} applies the Fourier Transform to smaller, overlapping \textit{windows} of the signal. This allows us to extract frequency information while preserving much of its temporal resolution. The result is a two-dimensional representation, revealing the intensity of different frequencies over time.
+This leads us to the \gls{STFT}. Rather than transforming the entire signal at once, the \gls{STFT} applies the Fourier Transform to smaller, overlapping \textit{windows} of the signal. This allows us to extract frequency information while preserving much of its temporal resolution. The result is a two-dimensional representation, revealing the intensity of different frequencies over time. An example showing this application of the \gls{STFT} is shown in Figure~\ref{STFTFigure}.
 
 \begin{figure}[H]
     \centering
@@ -113,7 +113,7 @@ For \gls{ADT}, a common configuration is to use the Hann window, with a window s
 
 The \gls{STFT}, like the standard Fourier Transform, produces complex-valued output. To convert this into strictly real-valued data without discarding meaningful information, we compute the \textit{spectrogram}. Specifically, a magnitude spectrogram is obtained by taking the absolute value of each complex result from the \gls{STFT}.
 
-The result is a two-dimensional, real-valued representation of the signal, where one axis corresponds to time and the other to frequency. While this representation can be modeled as a time series, it is also structurally equivalent to an image. As such, spectrograms are often visualized as heatmaps, offering an intuitive way to observe how frequency information evolves over time.
+The result is a two-dimensional, real-valued representation of the signal, where one axis corresponds to time and the other to frequency. While this representation can be modeled as a time series, it is also structurally equivalent to an image. As such, spectrograms are often visualized as heatmaps, as seen in Figure~\ref{SpectrogramFigure}, offering an intuitive way to observe how frequency information evolves over time.
 
 \begin{figure}[H]
     \centering
@@ -132,7 +132,7 @@ The human perception of loudness is approximately logarithmic. A soundwave that 
 
 This relationship has two major consequences. First, the magnitude scale used in standard spectrograms does not align with human perception of loudness; quiet and loud signals may differ significantly in magnitude, even if they perceptually seem close. Second, this mismatch causes the standard (linear) spectrogram to be highly variable in its magnitude representation, often making it difficult to identify quieter frequency components among louder ones.
 
-To address this, a log-magnitude spectrogram is often used (as in Figure \ref{SpectrogramFigure}), which applies a logarithmic transformation to the magnitudes. This logarithm is typically base 10, aligning with the \acrlong{dB} scale and better reflecting human auditory perception.
+To address this, a log-magnitude spectrogram is often used, which applies a logarithmic transformation to the magnitudes. This logarithm is typically base 10, aligning with the \acrlong{dB} scale and better reflecting human auditory perception. A comparison between a magnitude spectrogram and a log-magnitude one can be seen in Figure~\ref{SpectrogramLogspectrogramFigure}.
 
 \begin{figure}[H]
     \centering
@@ -164,10 +164,11 @@ This representation has been adopted in several recent \gls{ADT} studies, partic
     \centering
     \hspace*{-0.6cm}
     \includegraphics[scale=0.9]{figures/allspectrograms}
-    \caption{Comparison between a full spectrogram, a Mel spectrogram, and a log-filtered spectrogram. All are presented on a log-magnitude scale. Both the Mel and log-filtered spectrograms apply 84 area-normalized filters, resulting in a non-linear frequency axis. While the Mel spectrogram emphasizes perceptual resolution, with greater detail in lower frequencies, the log-filtered spectrogram maintains uniform resolution across octaves, aligning with musical intervals.}
+    \caption{Comparison between a normal spectrogram, a Mel spectrogram, and a log-filtered spectrogram. All are presented on a log-magnitude scale. Both the Mel and log-filtered spectrograms apply 84 area-normalized filters, resulting in a non-linear frequency axis. While the Mel spectrogram emphasizes perceptual resolution, with greater detail in lower frequencies, the log-filtered spectrogram maintains uniform resolution across octaves, aligning with musical intervals.}
     \label{AllSpectrogramFigure}
 \end{figure}
 
+Figure~\ref{AllSpectrogramFigure} compares the normal, Mel, and logarithmically filtered spectrogram (all with log-magnitude scaling). Both of the latter two reshape the frequency axis, but in different ways.
 
 \section{Transcription}
 
@@ -186,11 +187,11 @@ Sheet music written in this notation is typically highly descriptive, containing
     \label{DrumsheetFigure}
 \end{figure}
 
-Note that rest marks such as $\HaPa$, $\ViPa$, $\AcPa$, and $\SePa$ may appear in notation transcriptions. These indicate brief silences or pauses in the music. Although they may appear inline with other onset events, they do not represent instrument activity and should not be interpreted as onsets.
+Figure~\ref{DrumsheetFigure} illustrates a simple drum pattern using staff notation. As mentioned, each note's instrument is given by its vertical position, here labeled explicitly on the left. Note that rest marks such as $\HaPa$, $\ViPa$, $\AcPa$, and $\SePa$ may appear in notation transcriptions. These indicate brief silences or pauses in the music. Although they may appear inline with other onset events, they do not represent instrument activity and should not be interpreted as onsets.
 
 \subsection{MIDI Annotations}
 
-\gls{MIDI} is the industry standard for representing and controlling digital music. It is an event-based protocol, encoding sequences of commands used to synthesize or trigger musical sounds. As it is stored in a binary format, \gls{MIDI} is not directly readable to humans without translating it into a more interpretable representation. 
+\gls{MIDI} is the industry standard for representing and controlling digital music. It is an event-based protocol, encoding sequences of commands used to synthesize or trigger musical sounds. As it is stored in a binary format, \gls{MIDI} is not directly readable to humans without translating it into a more interpretable representation. Figure~\ref{MIDIFigure} illustrates a list of MIDI events written out in text format.
 
 When computers play \gls{MIDI} sequences, the events are parsed in order at a fixed rate, using \textit{note on}/\textit{note off} messages seperated by time deltas. Similar to sheet music, \gls{MIDI} is highly descriptive, capturing information such as pitch, velocity and timing. Intuitively, one might think of \gls{MIDI} as serving the same role for computers as sheet music does for musicians.
 
@@ -205,7 +206,7 @@ Recently, several works in \gls{AMT} have explored generating transcriptions in 
 
 \subsection{Activation Functions}
 
-In machine learning, the task of detecting instrument onsets can be framed as a multi-label sequence labeling problem. For each time frame in a sequence, the model predicts a confidence value (which can be interpreted as a probability), that a given instrument onset occurs at that moment. In the context of \gls{MIR} and \gls{AMT}, it has become common practice to describe these confidence distributions over time as \textit{activation functions} (not to be confused with the activation functions used within neural networks, such as \acrshort{ReLU} or sigmoid)~\cite{schluter2014improved, bock2016joint, Southall2016AutomaticDT, 8350302, vogl2018multiinstrumentdrumtranscription}.
+In machine learning, the task of detecting instrument onsets can be framed as a multi-label sequence labeling problem. For each time frame in a sequence, the model predicts a confidence value (which can be interpreted as a probability), that a given instrument onset occurs at that moment. In the context of \gls{MIR} and \gls{AMT}, it has become common practice to describe these confidence distributions over time as \textit{activation functions} (not to be confused with the activation functions used within neural networks, such as \acrshort{ReLU} or sigmoid). Figure~\ref{ActivationsFigure} illustrates how a drum pattern in staff notation can be represented using these activation functions.~\cite{schluter2014improved, bock2016joint, Southall2016AutomaticDT, 8350302, vogl2018multiinstrumentdrumtranscription}.
 
 Frame-level prediction of activation functions is a common approach in onset detection for \gls{ADT}, and is the format adopted in this thesis. Each drum instrument's activation function forms a row in a matrix, with time progressing along the columns.
 
@@ -257,7 +258,7 @@ A drum set is a collection of percussive instruments, typically including drums,
     \label{DrumsetFigure}
 \end{figure}
 
-Percussion instruments like those in a drum set stand apart from melodic instruments in that different components, such as the snare, kick, and hi-hat, produce distinctly different acoustic signatures. Even within a single drum, variations in playing technique can significantly affect the resulting sound or \textit{"audible footprint"}. The snare drum, kick drum, and hi-hat differ significantly in timbre, frequency range, loudness, and function, making them acoustically and musically distinct.
+Percussion instruments like those in a drum set stand apart from melodic instruments in that different components, such as the snare, kick, and hi-hat, produce distinctly different acoustic signatures. Even within a single drum, variations in playing technique can significantly affect the resulting sound or \textit{"audible footprint"}. The snare drum, kick drum, and hi-hat differ significantly in timbre, frequency range, loudness, and function, making them acoustically and musically distinct (as seen in Figure~\ref{DrumsetTimbreFigure}).
 
 \begin{figure}[H]
     \centering
@@ -270,7 +271,7 @@ Percussion instruments like those in a drum set stand apart from melodic instrum
 
 Understanding the transcription pipeline, specifically in the context of \gls{ADT}, is essential for this thesis. The process begins with a raw audio waveform representing the musical recording to be transcribed, typically segmented into smaller, non-overlapping partitions~\cite{vogl2018multiinstrumentdrumtranscription, gardner2022mt3multitaskmultitrackmusic}. Each segment is transformed into a spectrogram, which captures the frequency content over time while reducing temporal resolution, making it easier for models to interpret. 
 
-The spectrogram is then passed into an \gls{ADT} model, such as a \gls{DNN}, which predicts, for each time frame, the likelihood that a given drum instrument is played. These continuous probability estimates, commonly referred to as activation functions, are then post-processed into a more interpretable format, such as discrete onsets or drum notation.
+The spectrogram is then passed into an \gls{ADT} model, such as a \gls{DNN}, which predicts, for each time frame, the likelihood that a given drum instrument is played. These continuous probability estimates, commonly referred to as activation functions, are then post-processed into a more interpretable format, such as discrete onsets or drum notation. An example of this pipeline is illustrated in Figure~\ref{ADTFigure}.
 
 \begin{figure}[H]
     \centering
@@ -292,7 +293,7 @@ Early work in \gls{ADT} often adopted a 3-instrument setup, predicting only the 
 
 \subsection{Accuracy}
 
-Although accuracy is a widely used performance measure in classification, it is ill-suited for \gls{ADT}. Most frames contain no onsets, creating a heavy class imbalance that allows a naïve model to achieve high accuracy by simply predicting silence. Moreover, due to the event-based evaluation and tolerance window, the number of \glspl{TN} are generally undefined, rendering the standard accuracy formula:\[ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}},\] inapplicable in practice.
+Although accuracy is a widely used performance measure in classification, it is ill-suited for \gls{ADT}. Most frames contain no onsets, creating a heavy class imbalance that allows a naive model to achieve high accuracy by simply predicting silence. Moreover, due to the event-based evaluation and tolerance window, the number of \glspl{TN} is generally undefined, rendering the standard accuracy formula:\[ \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}},\] inapplicable in practice.
 
 \subsection{F1-score}
 
@@ -306,14 +307,16 @@ In multi-label tasks like \gls{ADT}, there are multiple ways to aggregate per-cl
 
 \textit{Macro F1-score} is computed as the unweighted arithmetic mean of F1-scores for each class. It treats all classes equally, regardless of their frequency in the dataset. In the context of \gls{ADT}, this means emphasizing balanced transcription performance across all instruments, including those that occur infrequently, such as toms or cymbals.
 
-\textit{Micro F1-score}, by contrast, is computed using global counts of \glspl{TP}, \glspl{FP}, and \glspl{FN}, effectively weighting each class according to its frequency. This tends to favor models that perform well on common instruments like the snare drum or bass drum, even if their performance on rarer instruments is weaker.
+\textit{Micro F1-score}, by contrast, is computed using global counts of \glspl{TP}, \glspl{FP}, and \glspl{FN}, effectively weighting each class according to its frequency. This tends to favor models that perform well on common instruments like the snare drum or kick drum, even if their performance on rarer instruments is weaker.
 
 For \gls{ADT}, micro F1-score is often preferred, as it better reflects a model's overall transcription ability on real-world music. In practice, frequent instruments form the backbone of a drum performance, and prioritizing their transcription tends to align better with musical utility. While macro F1-score offers useful diagnostic insight, especially for evaluating per-instrument weaknesses; micro F1 is typically used as the main evaluation criterion.
+
+Figure~\ref{F1Figure} shows an \gls{ADT} example with the resulting \glspl{TP}, \glspl{FP}, \glspl{FN} of a sample prediction, and contrasts macro vs.\ micro aggregation of per-class F1-scores.
 
 \begin{figure}[H]
     \centering
     \hspace*{-0.5cm}
     \input{tikz/f1.tex}
-    \caption{Illustration of micro and macro F1-score computation for an example \gls{ADT} transcription. Symbols such as $\HaPa$, $\ViPa$, and $\AcPa$ denote pauses, and not onsets. Macro F1 reflects the average performance across individual instruments, while micro F1 captures the overall transcription quality across the entire sequence. For clarity, F1-scores are reported with two decimal places.}
+    \caption{Illustration of micro and macro F1-score computation for an example \gls{ADT} transcription. Symbols such as $\HaPa$, $\ViPa$, and $\AcPa$ denote pauses, and not onsets. Macro F1 reflects the average performance across individual instruments, while micro F1 captures the overall transcription quality across the entire sequence. For clarity, F1-scores are reported with up to two decimal places.}
     \label{F1Figure}
 \end{figure}

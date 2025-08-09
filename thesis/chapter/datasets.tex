@@ -20,7 +20,7 @@ In total, ENST+MDB contains 1.37 hours of music across 87 tracks, split into 896
 
 \subsection{Splits}
 
-Neither dataset comes with predefined train/validation/test splits, so I construct my own. From ENST-Drums, I use recordings from \textit{drummer1} and \textit{drummer2} for training. The remaining drummer, \textit{drummer3}, is split evenly between validation and test sets. Since MDB Drums does not include explicit drummers, I instead split the data by musical genre. Full details of the splits are provided in Appendix~\ref{appendix-a}.
+Neither dataset comes with predefined train/validation/test splits, so I construct my own. From ENST-Drums, I use recordings from \textit{drummer1} and \textit{drummer2} for training. The remaining drummer, \textit{drummer3}, is split evenly between validation and test sets. Since MDB Drums does not include explicit drummers, I instead split the data by musical genre. Full details of the splits are provided in Appendix~\ref{appendix-a}, described in Tables~\ref{ENSTSplits} and~\ref{MDBSplits}.
 
 \subsection{Mapping}
 
@@ -62,7 +62,7 @@ In general, MIDI percussion follows the widely adopted \textit{General MIDI} spe
 
 To ensure correct identification of all instruments in the MIDI transcription, I construct a combined MIDI mapping that uses the Roland TD-17 specification (as referenced for E-GMD) as a base, supplemented with select entries from the General MIDI percussion standard. If the same pitch corresponds to different instruments across these two specifications, I prioritize the Roland mapping. While this approach might introduce redundancies, it ensures that all annotations are accurately parsed~\cite{pmlr-v97-gillick19a, callender2020improvingperceptualqualitydrum}.
 
-This combined MIDI mapping is extensive and includes a wide range of percussive instruments. However, instruments that do not commonly appear in drum set transcriptions or that cannot be logically mapped to the 5-instrument vocabulary are excluded.
+This combined MIDI mapping (seen in Table~\ref{RolandMIDIMapping}) is extensive and includes a wide range of percussive instruments. However, instruments that do not commonly appear in drum set transcriptions or that cannot be logically mapped to the 5-instrument vocabulary are excluded.
 
 \begin{table}[H]
     \centering

@@ -12,7 +12,7 @@ While the input sequence length $T$ may vary, it is fixed to $T = 400$ for all e
 
 \glspl{RNN} are a foundational architecture for modeling sequential data and have demonstrated promising results on a wide range of audio-related tasks. Their core component is the \textit{recurrent unit}, which processes an input sequence one frame at a time while maintaining a hidden state that carries information from previous timesteps. This enables the model to capture temporal dependencies within the input.
 
-To include information from both past and future frames, \glspl{RNN} can be extended to their \textit{bidirectional} variant, where one recurrent layer processes the sequence forward in time and another in reverse. This is particularly useful in tasks such as \gls{ADT}, where relevant auditory information may span multiple frames; for example, due to instrument timbre persisting after onset.
+To include information from both past and future frames, \glspl{RNN} can be extended to their \textit{bidirectional} variant, where one recurrent layer processes the sequence forward in time and another in reverse. This bidirectional sequential influence is illustrated in Figure~\ref{RNNInfluenceFigure}. This is particularly useful in tasks such as \gls{ADT}, where relevant auditory information may span multiple frames; for example, due to instrument timbre persisting after onset.
 
 \begin{figure}[H]
     \centering
@@ -27,9 +27,9 @@ Both \glspl{GRU} and \glspl{LSTM} have been successfully applied to \gls{ADT}-re
 
 \subsection{Implementation}
 
-I implemented the \gls{RNN} architecture using a stack of \glspl{BiRU}, followed by a framewise linear projection. These bidirectional recurrent layers extract and combine local temporal features at each time frame, allowing the model to consider both past and future context. The final linear layer then maps each resulting hidden state to onset probabilities for each of the five drum instruments. 
+I implemented the \gls{RNN} architecture using a stack of \glspl{BiRU}, followed by a framewise linear projection. These bidirectional recurrent layers extract and combine local temporal features at each time frame, allowing the model to consider both past and future context. The final linear layer then maps each resulting hidden state to onset probabilities for each of the five drum instruments. The full architecture is visualized in Figure~\ref{RNNFigure}.
 
-As part of the model search, I experimented with both bidirectional \glspl{GRU} and \glspl{LSTM} as the recurrent unit, treating this choice as a tunable hyperparameter. I also varied the number of layers $L$ and the hidden size $H$.
+As part of the model search, I experimented with both bidirectional \glspl{GRU} and \glspl{LSTM} as the recurrent unit, treating this choice as a tunable hyperparameter. I also varied the number of layers $L$ and the hidden size $H$. These are explicitly visualized in Table~\ref{RNNHyperparams}.
 
 \begin{figure}[H]
     \centering
@@ -55,7 +55,7 @@ As part of the model search, I experimented with both bidirectional \glspl{GRU} 
 
 Although spectrograms are often processed as time sequences, we've seen that they also naturally resemble images, with time and frequency forming the horizontal and vertical axes. This makes them well-suited for \glspl{CNN}, which are designed to extract local patterns in data.
 
-A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, across the input. These filters aggregate spatially local information, allowing each output unit to incorporate context from its surrounding region. When applied to spectrograms, convolutional layers enable the model to detect patterns in time-frequency space. This makes them a strong candidate for tasks like \gls{ADT}, where relevant features often span multiple adjacent time frames and frequency bins.
+A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, across the input. These filters aggregate spatially local information, allowing each output unit to incorporate context from its surrounding region. When applied to spectrograms, convolutional layers enable the model to detect patterns in time-frequency space (illustrated in Figure~\ref{CNNInfluenceFigure}). This makes them a strong candidate for tasks like \gls{ADT}, where relevant features often span multiple adjacent time frames and frequency bins.
 
 \glspl{CNN} have also been shown to perform well in \gls{ADT}, likely because this contextual information helps the model more easily learn the characteristics of instrument onsets. They are also relatively efficient to train and run, which may also help explain their reasonable performance~\cite{Vogl2017DrumTV}.
 
@@ -72,7 +72,7 @@ My \gls{CNN} architecture begins with $I$ initial convolutional blocks, each des
 
 These convolutional blocks iteratively combine local features from the spectrogram, forming a richer internal representation of the input. This representation is then passed through $L$ fully connected layers, which project the features into an $H$-dimensional latent space for final interpretation. 
 
-Each convolutional and fully connected layer is followed by a \gls{ReLU} activation function. Finally, an output layer computes onset probabilities for each of the five drum instruments.
+Each convolutional and fully connected layer is followed by a \gls{ReLU} activation function. Finally, an output layer computes onset probabilities for each of the five drum instruments. The architecture is visualized in Figure~\ref{CNNFigure}, with tunable hyperparameters stated in Table~\ref{CNNHyperparams}.
 
 \begin{figure}[H]
     \centering
@@ -104,7 +104,7 @@ Intuitively, the ability of \glspl{CNN} to extract local time–frequency patter
 
 I implemented the \gls{CRNN} using a fixed stack of $I = 2$ initial convolutional blocks, a setup inspired by prior work in \gls{ADT}~\cite{Vogl2017DrumTV, signals4040042}. These convolutional blocks use an increasing number of kernels $K = \{32, 64\}$, allowing deeper layers to extract more complex time–frequency patterns. As with the pure \gls{CNN}, the convolutions preserve the input's temporal resolution.
 
-The resulting convolutional output is passed to a \gls{BiRU}, which models temporal dependencies across frames. As in the \gls{RNN} architecture, I experimented with both \glspl{GRU} and \glspl{LSTM}. Each timestep's hidden state is then passed into the final linear layer, which computes and outputs onset probabilities for each of the five drum instruments.
+The resulting convolutional output is passed to a \gls{BiRU}, which models temporal dependencies across frames. As in the \gls{RNN} architecture, I experimented with both \glspl{GRU} and \glspl{LSTM}. Each timestep's hidden state is then passed into the final linear layer, which computes and outputs onset probabilities for each of the five drum instruments. The full architecture can be seen in Figure~\ref{CRNNFigure}, with its corresponding tunable hyperparameters in Table~\ref{CRNNHyperparams}.
 
 \begin{figure}[H]
     \centering
@@ -132,7 +132,7 @@ While \glspl{CRNN} have proven effective in combining local time–frequency pat
 
 To address these limitations, a major architectural shift was instigated, most notably with the introduction of the \textit{attention} mechanism in Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243}. This mechanism allows models to dynamically focus, or \textit{attend}, to different parts of an input sequence by learning relationships between its elements. Replacing recurrent layers with stacks of attention-based blocks gave rise to a new class of models: the \textit{transformers}.
 
-Unlike recurrent units, which propagate information sequentially through hidden states, attention layers allow each timestep to directly access information from every other timestep in the sequence. This gives the model a more flexible way to capture a global context. Intuitively, it enables each element to \textit{"intelligently"} decide which other parts of the sequence it wants to focus on, rather than depending on neighbouring timesteps to pass information forward.
+Unlike recurrent units, which propagate information sequentially through hidden states, attention layers allow each timestep to directly access information from every other timestep in the sequence. This gives the model a more flexible way to capture a global context. Intuitively, it enables each element to \textit{"intelligently"} decide which other parts of the sequence it wants to focus on, rather than depending on neighbouring timesteps to pass information forward (visualized in Figure~\ref{CTInfluenceFigure}).
 
 \begin{figure}[H]
     \centering
@@ -151,7 +151,7 @@ The convolutional output is then projected into a lower-dimensional embedding sp
 
 The core of the model consists of $L$ transformer block with pre-layer normalization, a design shown to improve training stability compared to post-layer normalization~\cite{pmlr-v119-xiong20b}. Each block contains multi-head self-attention with $H$ heads, enabling the model to capture global dependencies across the input sequence. The first layer of each block's feedforward component uses the \gls{GELU} activation function, which is standard in transformer-based models and has shown improved performance over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. 
 
-Finally, a linear output layer computes onset probabilities for each of the five drum instruments.
+Finally, a linear output layer computes onset probabilities for each of the five drum instruments. Figure~\ref{CTFigure} illustrates the whole convolutional transformer architecture, with its tunable hyperparameters shown in Table~\ref{CTHyperparams}.
 
 \begin{figure}[H]
     \centering
@@ -183,7 +183,7 @@ While Vision Transformers have shown excellent performance, they typically requi
 
 \subsection{Patch Embedding}
 
-A key component of the Vision Transformer is the use of patch embeddings. The input image is first divided into patches, each of which is flattened and linearly projected into a latent vector. These latent vectors, known as patch embeddings, together form a sequence that represents the entire input image. To retain spatial information, a positional encoding is added to each vector, often implemented as a learnable embedding.
+A key component of the Vision Transformer is the use of patch embeddings. The input image is first divided into patches, each of which is flattened and linearly projected into a latent vector. These latent vectors, known as patch embeddings, together form a sequence that represents the entire input image. To retain spatial information, a positional encoding is added to each vector, often implemented as a learnable embedding. Figure~\ref{PatchEmbeddingFigure} shows this process applied to a spectrogram.
 
 Although Vision Transformers are often described as convolution–free, patch embeddings are typically implemented using a single 2D convolutional layer with a kernel size and stride equal to the patch size (assuming non-overlapping patches). This acts as a linear projection over each patch and does not involve any activation function.
 
@@ -201,7 +201,7 @@ The original Vision Transformer was designed for classification tasks, where the
 
 To accommodate this, we reinterpret groups of patch embeddings as representing individual time frames. This is feasible as long as the number of timesteps divides evenly into the total number of patches, allowing the output to be reshaped to match the desired sequence length.
 
-Since we do not perform classification, the additional \gls{CLS} typically used to summarize the input for class prediction is unnecessary and thus omitted~\cite{dosovitskiy2021imageworth16x16words}.
+Since we do not perform classification, the additional \gls{CLS} typically used to summarize the input for class prediction (as seen in Figure~\ref{PatchEmbeddingFigure}) is unnecessary and thus omitted~\cite{dosovitskiy2021imageworth16x16words}.
 
 \subsection{Implementation}
 
@@ -209,7 +209,7 @@ I implemented the Vision Transformer by first converting the input spectrogram i
 
 Since each patch has a width of 1, it retains information only about the frequencies within its own time frame, helping preserve the temporal resolution of the input spectrogram. A learnable positional embedding of shape $(\frac{D_e}{n_P} \times n_P)$ is then added to each patch to encode spectral position and kernel identity. These patches are then permuted and flattened into a sequence, forming the final patch embedding representation.
 
-While each patch embedding encodes its relative position within a time frame, it lacks information about which time frame it belongs to. To introduce this temporal ordering, I add a sinusoidal positional encoding across the time dimension. The resulting sequence is then passed through $L$ transformer blocks with pre-layer normalization and multi-head self-attention using $H$ heads, following the same design as in the convolutional transformer. Finally, a linear output layer computes onset probabilities for each of the five drum instruments.
+While each patch embedding encodes its relative position within a time frame, it lacks information about which time frame it belongs to. To introduce this temporal ordering, I add a sinusoidal positional encoding across the time dimension. The resulting sequence is then passed through $L$ transformer blocks with pre-layer normalization and multi-head self-attention using $H$ heads, following the same design as in the convolutional transformer. Finally, a linear output layer computes onset probabilities for each of the five drum instruments. This full architecture is illustrated in Figure~\ref{ViTFigure}, with its corresponding tunable hyperparameters described in Table~\ref{ViTHyperparams}.
 
 \begin{figure}[H]
     \hspace*{-0.5cm}
