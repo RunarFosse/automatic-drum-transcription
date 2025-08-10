@@ -42,7 +42,7 @@ This form of data normalization has been shown to improve the speed and stabilit
 
 Another preprocessing step motivated by \gls{ADT}-specific methods is the use of infrequency weights, which assign frame-wise loss weights based on the instrument onsets present at each frame. These weights are precomputed from the training dataset and are calculated, for each instrument, using what Cartwright and Bello refer to as \textit{"the inverse estimated entropy of their event activity distribution"}~\cite{cartwright2018increasing}. While they applied this technique to address sparsity across different tasks, Zehren et al.~\cite{signals4040042} adapted it to emphasize infrequent instruments.
 
-To compute these weights, I first calculate the probability of an instrument $i$ appearing as $p_i = \frac{n_i}{T}$, where $n_i$ is the number of onsets and $T$ is the number of timesteps. The infrequency weight for instrument $i$, denoted $w_i$, is then computed as the inverse entropy: \[w_i = \left(-p_i\log p_i - (1 - p_i)\log{1 - p_i}\right)^{-1}.\] Note that this differs from the method by Cartwright and Bello, where the probability is averaged across instruments; here, I compute it per instrument independently~\cite{cartwright2018increasing}. 
+To compute these weights, I first calculate the probability of an instrument $i$ appearing as $p_i = \frac{n_i}{T}$, where $n_i$ is the number of onsets and $T$ is the number of timesteps. The infrequency weight for instrument $i$, denoted $w_i$, is then computed as the inverse entropy: \[w_i = \left(-p_i\log p_i - (1 - p_i)\log{(1 - p_i)}\right)^{-1}.\] Note that this differs from the method by Cartwright and Bello, where the probability is averaged across instruments; here, I compute it per instrument independently~\cite{cartwright2018increasing}. 
 
 It is worth noting that this entropy-based weighting function is symmetric around $p_i = 0.5$, meaning that weights would decrease again if an instrument appeared very frequently (i.e., in over 50\% of all time frames). However, this is not a concern in \gls{ADT}, as instrument onsets are inherently sparse, particularly at the fine-grained temporal resolution used in this thesis, ensuring that the computed weights emphasize the appropriate classes.
 
@@ -56,7 +56,7 @@ As previously discussed, the \gls{ADT} task can be framed as a sequence labeling
 
 Instead of applying a sigmoid activation function to the model's logits followed by binary cross-entropy, I directly output logits and use PyTorch's \texttt{BCEWithLogitsLoss} function, as recommended in the PyTorch documentation. This improves numerical stability by internally applying the log-sum-exp trick, which helps prevent underflow or overflow issues caused by extremely small or extremely large output values.
 
-For the choice of optimizer, I initially considered Adam, which is widely regarded as a strong general-purpose optimizer in deep learning. As Sebastian Ruder notes, \textit{".., Adam might be the best overall choice"}~\cite{ruder2017overviewgradientdescentoptimization}. However, despite its popularity, Adam has known limitations, particularly in how it couples its weight decay term within its gradient-based updates~\cite{kingma2017adammethodstochasticoptimization, bock2018improvementconvergenceproofadamoptimizer}.
+For the choice of optimizer, I initially considered Adam, which is widely regarded as a strong general-purpose optimizer in deep learning. As Sebastian Ruder notes, \textit{"Adam might be the best overall choice"}~\cite{ruder2017overviewgradientdescentoptimization}. However, despite its popularity, Adam has known limitations, particularly in how it couples its weight decay term within its gradient-based updates~\cite{kingma2017adammethodstochasticoptimization, bock2018improvementconvergenceproofadamoptimizer}.
 
 To address this, I instead used AdamW~\cite{loshchilov2019decoupledweightdecayregularization}, a modified version of Adam that fully decouples weight decay from gradient updates. This decoupling has been shown to improve generalization performance, especially in regularized training scenarios.
 
@@ -76,7 +76,7 @@ These counts of \acrshort{TP}, \acrshort{FP}, and \acrshort{FN} are then used to
 
 \section{Model Selection}
 
-For model training and selection, I utilize the RayTune library~\cite{liaw2018tuneresearchplatformdistributed}, which provides and efficient and flexible framework for hyperparameter optimization and experiment management. It allows me to define a training function, specify the evaluation metric to optimize, configure hyperparameter search spaces and strategies, as well as manage runtime settings. Through per-epoch reporting, RayTune also handles checkpointing and automatically selects the best-performing model during and after training.
+For model training and selection, I utilize the RayTune library~\cite{liaw2018tuneresearchplatformdistributed}, which provides an efficient and flexible framework for hyperparameter optimization and experiment management. It allows me to define a training function, specify the evaluation metric to optimize, configure hyperparameter search spaces and strategies, as well as manage runtime settings. Through per-epoch reporting, RayTune also handles checkpointing and automatically selects the best-performing model during and after training.
 
 For each experiment, I train 15 different models using RayTune, with the exception of the smallest dataset (ENST+MDB), where 25 models are evaluated due to having a lower computational complexity. Hyperparameters are optimized using Bayesian optimization (described in Section~\ref{HyperparameterTuning}). Each model is trained for up to 100 epochs, with early stopping applied if the validation loss plateaus. 
 
@@ -86,7 +86,7 @@ Because most datasets used are pre-split into training, validation, and test set
 
 Once the best-performing model is selected based on validation performance, I evaluate it on the corresponding test dataset to estimate its generalization performance to unseen data. The final model is then stored along with its learned weights, training configuration, and evaluation metrics.
 
-As mentioned, each selected model is evaluated on test split of its corresponding datasets. Although test sets are traditionally reserved for a final performance evaluation, providing an estimate of how well a model generalizes to unseen data, they are also used here to compare the effects of different architectures or dataset configurations, depending on the study. This enables the analysing how various controllable factors influence a model's generalization ability. 
+As mentioned, each selected model is evaluated on the test splits of all datasets. Although test sets are traditionally reserved for a final performance evaluation, providing an estimate of how well a model generalizes to unseen data, they are also used here to compare the effects of different architectures or dataset configurations, depending on the study. This enables the analysis how various controllable factors influence a model's generalization ability. 
 
 Importantly, no model selection nor hyperparameter tuning is performed based on test performance, preserving the validity of test performances as an unbiased estimate of generalization.
 
@@ -100,7 +100,7 @@ A more efficient alternative is random search, where hyperparameter combinations
 
 A strategy that combines the advantages of both grid search and random search is Bayesian optimization. Like random search, it samples hyperparameter configurations from a defined space, but it also uses performance information from previously evaluated models to guide future sampling. This allows the search to progressively focus on more promising regions of the hyperparameter space. In doing so, it retains the computational efficiency of random search while gaining some of the systematic exploration found in grid search~\cite{snoek2012practical}.
 
-In this thesis, I utilize RayTune's implementation of \texttt{OptunaSearch}, which integrates the Optuna optimization framework~\cite{akiba2019optuna}. Optuna is based on Bayesian optimization and has shown to be effective in neural network tuning tasks. For example, Shekhar et al.~\cite{shekhar2021comparative} benchmarked several hyperparameter optimization frameworks and noted that \textit{"The performance score of Optuna is the highest for all datasets."}
+In this thesis, I utilize RayTune's implementation of \texttt{OptunaSearch}, which integrates the Optuna optimization framework~\cite{akiba2019optuna}. Optuna is based on Bayesian optimization and has been shown to be effective in neural network tuning tasks. For example, Shekhar et al.~\cite{shekhar2021comparative} benchmarked several hyperparameter optimization frameworks and noted that \textit{"The performance score of Optuna is the highest for all datasets."}
 
 \subsection{Hyperparameters}
 

@@ -128,7 +128,7 @@ The resulting convolutional output is passed to a \gls{BiRU}, which models tempo
 
 \section{Convolutional Transformer}
 
-While \glspl{CRNN} have proven effective in combining local time–frequency pattern extraction with temporal modeling, their ability to capture long-range dependencies still remain limited. Recurrent layers often struggle to maintain distant information through their hidden states, and convolutional layers are constrained by the size of their fixed receptive field.
+While \glspl{CRNN} have proven effective in combining local time–frequency pattern extraction with temporal modeling, their ability to capture long-range dependencies still remains limited. Recurrent layers often struggle to maintain distant information through their hidden states, and convolutional layers are constrained by the size of their fixed receptive field.
 
 To address these limitations, a major architectural shift was instigated, most notably with the introduction of the \textit{attention} mechanism in Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243}. This mechanism allows models to dynamically focus, or \textit{attend}, to different parts of an input sequence by learning relationships between its elements. Replacing recurrent layers with stacks of attention-based blocks gave rise to a new class of models: the \textit{transformers}.
 
@@ -147,9 +147,9 @@ Attention mechanisms have recently shown strong performance in both \gls{AMT} an
 
 I implemented the convolutional transformer architecture using an initial fixed stack of $I = 2$ convolutional blocks, following the same configuration as in the \gls{CRNN}. These blocks use an increasing number of kernels $K = \{32, 64\}$, as in the \gls{CRNN} setup. 
 
-The convolutional output is then projected into a lower-dimensional embedding space if size $D_e$, which reduces computational load and acts as input to the transformer blocks. A sinusoidal positional encoding is added to this embedding to provide the model with temporal ordering information, compensating for the transformer's lack of inherent sequence structure. 
+The convolutional output is then projected into a lower-dimensional embedding space of size $D_e$, which reduces computational load and acts as input to the transformer blocks. A sinusoidal positional encoding is added to this embedding to provide the model with temporal ordering information, compensating for the transformer's lack of inherent sequence structure. 
 
-The core of the model consists of $L$ transformer block with pre-layer normalization, a design shown to improve training stability compared to post-layer normalization~\cite{pmlr-v119-xiong20b}. Each block contains multi-head self-attention with $H$ heads, enabling the model to capture global dependencies across the input sequence. The first layer of each block's feedforward component uses the \gls{GELU} activation function, which is standard in transformer-based models and has shown improved performance over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. 
+The core of the model consists of $L$ transformer blocks with pre-layer normalization, a design shown to improve training stability compared to post-layer normalization~\cite{pmlr-v119-xiong20b}. Each block contains multi-head self-attention with $H$ heads, enabling the model to capture global dependencies across the input sequence. The first layer of each block's feedforward component uses the \gls{GELU} activation function, which is standard in transformer-based models and has shown improved performance over \gls{ReLU}~\cite{devlin-etal-2019-bert, hendrycks2023gaussianerrorlinearunits}. 
 
 Finally, a linear output layer computes onset probabilities for each of the five drum instruments. Figure~\ref{CTFigure} illustrates the whole convolutional transformer architecture, with its tunable hyperparameters shown in Table~\ref{CTHyperparams}.
 
@@ -175,7 +175,7 @@ Finally, a linear output layer computes onset probabilities for each of the five
 
 \section{Vision Transformer}
 
-The introducing of the transformer naturally raises a question: is it possible to build an architecture composed solely of attention layers, eliminating convolutions and removing the need for hybrid convolutional-transformer designs? This question was explored in Google's "An Image Is Worth 16x16 Words"~\cite{dosovitskiy2021imageworth16x16words}, which introduced the \gls{ViT}.
+The introduction of the transformer naturally raises a question: is it possible to build an architecture composed solely of attention layers, eliminating convolutions and removing the need for hybrid convolutional-transformer designs? This question was explored in Google's "An Image Is Worth 16x16 Words"~\cite{dosovitskiy2021imageworth16x16words}, which introduced the \gls{ViT}.
 
 Originally developed for image recognition tasks, the Vision Transformer has since been applied to audio-based problems as well, demonstrating strong performance in both domains~\cite{dosovitskiy2021imageworth16x16words, gong2021astaudiospectrogramtransformer}. However, to the best of my knowledge, its application to \gls{ADT} remains unexplored, making it a novel approach evaluated in this thesis.
 

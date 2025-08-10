@@ -4,7 +4,7 @@
 
 In general, transcription refers to the process of retrieving information from audible data, such as sounds or music. Specifically when applied on music, the information we seek is often an annotation in music notation. This is what is referred to as \textit{music transcription}. Generally, transcribing a musical piece is expensive, requiring both extensive experience within a specific instrumental field, as well as a lot of manual, time-consuming work. Early on in 1986, Martin Piszczalski stated that \textit{"The learned, human skill of transcribing music is one of the most sophisticated auditory-based pattern-recognition tasks that humans perform."}~\cite{10.5555/15202}. A decade prior he helped introduce the term \acrfull{AMT} covering a field in which now, many years later, has evolved significantly~\cite{piszczalski1977automatic}.
 
-\subsection{Transcription using Deep learning}
+\subsection{Transcription using Deep Learning}
 Currently, the majority of state-of-the-art models within \gls{AMT} utilize deep learning~\cite{8350302, signals4040042, jamshidi2024machine}. With enough data one can train a \gls{DNN} to, given an input sequence of music, automatically output a transcribed sequence representing musical notation. Musical notation such as this could be extensive in their information, but by far the most important parts could be reduced down to \textit{"which instruments are playing"} and \textit{"when are they playing"}.
 
 Relating this to a common deep learning task, it could be described as a multi-label sequence tagging/sequence labeling task. For each element in an input sequence, output a combination of one or more labels. Each element of this output sequence represents a timestep in the input audio recording, consisting of a combination of labels, each representing an instrument being played. This constitutes the most basic form of \gls{AMT}. Figure~\ref{AMTFigure} illustrates an abstract \gls{AMT} pipeline.
@@ -35,9 +35,9 @@ For monophonic sound, this waveform is a one-dimensional representation. Even th
 
 The Fourier Transform is a mathematical transformation which, given a signal and frequency, computes the frequency's significance, or intensity, in the original signal. As we've established, audio is represented as a signal, meaning we therefore can use this transform, turning an audio signal into frequency space. 
 
-The Fourier transform is a complex transformation. Specifically given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number on the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{(\frac{b}{a})}$, adjusted for the right quadrant, computes the phase of the respective frequency in the original signal $f$. Frequencies with higher amplitudes play a more prominent role in shaping the original sequence, indicating a greater significance. This information is what allow us to figure out which frequencies a signal is made out of and how each frequency contributes. 
+The Fourier transform is a complex transformation. Specifically given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number of the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{(\frac{b}{a})}$, adjusted for the right quadrant, computes the phase of the respective frequency in the original signal $f$. Frequencies with higher amplitudes play a more prominent role in shaping the original sequence, indicating a greater significance. This information is what allows us to figure out which frequencies make up the signal and how each frequency contributes. 
 
-By doing such a transform (seen in Figure~\ref{FTFigure}) we turn our temporal data, like a waveform, into spectral data, its \textit{spectrum}. This intuitively \textit{untangles} our signal into its respective base frequencies. By ridding our data with the highly dense temporal aspect, replacing it with a more informationally independent and sparse spectral representation, a transformation such as this could lessen the complexity of the task, making the audio easier to \textit{understand}; in a metaphorical sense.
+By doing such a transform (seen in Figure~\ref{FTFigure}) we turn our temporal data, like a waveform, into spectral data, its \textit{spectrum}. This intuitively \textit{untangles} our signal into its respective base frequencies. By ridding our data of the highly dense temporal aspect, replacing it with a more informationally independent and sparse spectral representation, a transformation such as this could lessen the complexity of the task, making the audio easier to \textit{understand}, in a metaphorical sense.
 
 \begin{figure}[H]
     \centering
@@ -56,7 +56,7 @@ Note that the Fourier Transform is invertible, meaning that the original signal 
 
 The Fourier Transform is defined as an integral over continuous time. On computers, instead of storing signals continuously we instead store signals using a discrete number of samples. Each signal's \textit{sampling rate} describes how many samples a signal contains per second of audio, and is denoted in \textit{Hz}.
 
-To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works identically to the normal Fourier Transform, just ported to work on discretely sampled signals. It is given by the formula \[ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}}, \] where $k$ denotes a certain frequency bin and $N$ the number of discrete samples. Note that contrary to the normal Fourier transformer, instead of computing the magnitude of each specific real-valued frequency, we instead compute the magnitude of frequencies covered by certain frequency bins. The number, or granularity, of these bins are directly dependent on the number of samples $N$, and the respective frequencies covered by each bin is given by the signal's sampling rate.
+To extract frequency values from these signals, we instead have to use the \gls{DFT}. Intuitively this works identically to the normal Fourier Transform, just ported to work on discretely sampled signals. It is given by the formula \[ X_k = \sum^{N - 1}_{n=0}{x_n \cdot e^{-i 2\pi \frac{k}{N} n}}, \] where $k$ denotes a certain frequency bin and $N$ the number of discrete samples. Note that contrary to the normal Fourier transform, instead of computing the magnitude of each specific real-valued frequency, we instead compute the magnitude of frequencies covered by certain frequency bins. The number, or granularity, of these bins is directly dependent on the number of samples $N$, and the respective frequencies covered by each bin is given by the signal's sampling rate.
 
 \subsection{Nyquist frequency}
 
@@ -75,7 +75,7 @@ In the case of the \gls{DFT}, it directly follows that the maximum frequency fro
 
 \subsection{Fast Fourier Transform}
 
-Keen-eyed computer scientists may note that the \gls{DFT} has a time complexity of $\mathcal{O}(n^2)$, since it requires summing over $N$ values for each of the $N$ different frequencies. As a result, the \gls{DFT} scales poorly in regards to input size. For instance, given that the standard audio sampling rate is $44.1 \text{kHz}$, the computational cost becomes significant, making the \gls{DFT} impractical for real-time or large-scale signal analysis~\cite{pras2010sampling}.
+Keen-eyed computer scientists may note that the \gls{DFT} has a time complexity of $\mathcal{O}(n^2)$, since it requires summing over $N$ values for each of the $N$ different frequencies. As a result, the \gls{DFT} scales poorly with regard to input size. For instance, given that the standard audio sampling rate is $44.1 \text{kHz}$, the computational cost becomes significant, making the \gls{DFT} impractical for real-time or large-scale signal analysis~\cite{pras2010sampling}.
 
 The \gls{FFT} algorithm addresses this limitation by computing the same result as the \gls{DFT}, but with a time complexity of $\mathcal{O}(n\log{n})$ instead. Described by Gilbert Strang as \textit{"the most important numerical algorithm of our lifetime"}~\cite{strang1993wavelet}, the \gls{FFT} effectively solves the prior scaling problem, allowing us to efficiently extract spectral information from a signal even at high sampling rates.
 
@@ -118,7 +118,7 @@ The result is a two-dimensional, real-valued representation of the signal, where
 \begin{figure}[H]
     \centering
     \includegraphics[scale=1.1]{figures/logspectrogram}
-    \caption{Log-magnitude spectrogram of the SADTP track \textit{"Red Swan"}, showing the segment from 3:35 to 3:40 minutes. The spectrogram is computed using 2048 \glspl{FFT}, with a window length of 512 samples and a hop length corresponding to 10~ms. Only the first 420 frequency bins are visualized. The color represents the log-magnitude of each time–frequency bin.}
+    \caption{Log-magnitude spectrogram of the SADTP track \textit{"Red Swan"}, showing the segment from 3:35 to 3:40 minutes. The spectrogram is computed using 2048 \glspl{FFT}, with a window length of 512 samples and a hop length corresponding to 10~ms. Only the first 420 frequency bins are visualized. The colour represents the log-magnitude of each time–frequency bin.}
     \label{SpectrogramFigure}
 \end{figure}
 
@@ -128,7 +128,7 @@ One drawback of the spectrogram is that it discards all information about signal
 
 \subsection{Loudness of Magnitude}
 
-The human perception of loudness is approximately logarithmic. A sound wave that carries ten times more energy is not perceived as ten times louder. Instead, a doubling in perceived loudness corresponds roughly to a 10~\gls{dB} increase in signal amplitude. The \acrlong{dB} is a relative unit of measurement that expresses the power the ratio between two signals, where an increase of 1~\gls{dB} corresponds to a power ratio of $10^\frac{1}{10}$. The power of a signal is computed as the square of its magnitude. 
+The human perception of loudness is approximately logarithmic. A sound wave that carries ten times more energy is not perceived as ten times louder. Instead, a doubling in perceived loudness corresponds roughly to a 10~\gls{dB} increase in signal amplitude. The \acrlong{dB} is a relative unit of measurement that expresses the power ratio between two signals, where an increase of 1~\gls{dB} corresponds to a power ratio of $10^\frac{1}{10}$. The power of a signal is computed as the square of its magnitude. 
 
 This relationship has two major consequences. First, the magnitude scale used in standard spectrograms does not align with human perception of loudness; quiet and loud signals may differ significantly in magnitude, even if they perceptually seem close. Second, this mismatch causes the standard (linear) spectrogram to be highly variable in its magnitude representation, often making it difficult to identify quieter frequency components among louder ones.
 
@@ -241,7 +241,7 @@ As mentioned, \acrfull{ADT} refers to the task of transcribing symbolic drum not
     \item \acrshort{DTM}: Drum transcription from full musical mixtures, where both melodic and percussive instruments are present and only drum onsets should be transcribed.
 \end{itemize}
 
-This thesis focuses on the most complex of these tasks, namely \acrfull{DTM}. Intuitively, the goal is to develop a deep learning model that, given input audio in the form of music containing both drums and melodic instruments, can detect and classify drum instrument onsets while selectively ignoring unrelated melodic content. This setting introduces challenges not present in the simpler variants. As Zehren et al.~\cite{signals4040042} note, \textit{"melodic and percussive instruments can overlap and mask each other..., or have similar sounds, thus creating confusion between instruments"}.
+This thesis focuses on the most complex of these tasks, namely \acrfull{DTM}. Intuitively, the goal is to develop a deep learning model that, given input audio in the form of music containing both drums and melodic instruments, can detect and classify drum instrument onsets while selectively ignoring unrelated melodic content. This setting introduces challenges not present in the simpler variants. As Zehren et al.~\cite{signals4040042} note, \textit{"melodic and percussive instruments can overlap and mask each other... or have similar sounds, thus creating confusion between instruments"}.
 
 Deep learning has proven to be an effective approach for \gls{DTM}, and a range of architectures have been explored with promising results. Vogl et al.~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription} achieved strong results using both convolutional and convolutional-recurrent networks. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} emphasized the importance of dataset size and quality, showing that both are critical to achieving strong performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} proposed an autoregressive language-model approach for multi-instrument transcription (\gls{AMT}), with competitive results on \gls{DTM}.
 
@@ -249,7 +249,7 @@ These works highlight that multiple modeling directions remain viable and that f
 
 \subsection{The Drum Set}
 
-A drum set is a collection of percussive instruments, typically including drums, cymbals, and possibly different auxiliary percussion. While the exact configuration can vary, a standard drum kit (shown in Figure~\ref{DrumsetFigure}) typically includes a \gls{SD}, a \gls{KD}, one or more \glspl{TT} (toms), one or more cymbals (\gls{CC} and \gls{RC}), and a \gls{HH} cymbal~\cite{TheDrumHandbook2003}.
+A drum set is a collection of percussive instruments, typically including drums, cymbals, and possibly different auxiliary percussion. While the exact configuration can vary, a standard drum kit (shown in Figure~\ref{DrumsetFigure}) typically includes a \gls{SD}, a \acrfull{KD}, one or more \glspl{TT} (toms), one or more cymbals (\gls{CC} and \gls{RC}), and a \gls{HH} cymbal~\cite{TheDrumHandbook2003}.
 
 \begin{figure}[H]
     \centering
