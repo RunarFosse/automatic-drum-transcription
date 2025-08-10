@@ -1,6 +1,6 @@
 \chapter{Architectures}\label{Architectures}
 
-Choosing an suitable architecture is crucial for achieving strong performance in deep learning. The choice of model defines not only the capacity for learning complex patterns, but also the inductive biases that guide generalization. In the context of \gls{ADT}, these models must operate on time-frequency representations of audio and produce accurate, frame-level onset predictions.
+Choosing a suitable architecture is crucial for achieving strong performance in deep learning. The choice of model defines not only the capacity for learning complex patterns, but also the inductive biases that guide generalization. In the context of \gls{ADT}, these models must operate on time-frequency representations of audio and produce accurate, frame-level onset predictions.
 
 Each input to the model is a spectrogram of shape $(T \times D_{STFT})$, where $T$ is the sequence length (i.e., number of frames) and $D_{STFT}$ is the number of frequency bins. The corresponding output is a matrix of shape $(T \times C)$, where $C$ is the number of drum instruments being predicted.
 
@@ -128,7 +128,7 @@ The resulting convolutional output is passed to a \gls{BiRU}, which models tempo
 
 \section{Convolutional Transformer}
 
-While \glspl{CRNN} have proven effective in combining local time–frequency pattern extraction with temporal modeling, their ability to capture long-range dependencies still remains limited. Recurrent layers often struggle to maintain distant information through their hidden states, and convolutional layers are constrained by the size of their fixed receptive field.
+While \glspl{CRNN} have proven effective at combining local time–frequency pattern extraction with temporal modeling, their ability to capture long-range dependencies still remains limited. Recurrent layers often struggle to maintain distant information through their hidden states, and convolutional layers are constrained by the size of their fixed receptive field.
 
 To address these limitations, a major architectural shift was instigated, most notably with the introduction of the \textit{attention} mechanism in Google's "Attention Is All You Need"~\cite{NIPS2017_3f5ee243}. This mechanism allows models to dynamically focus, or \textit{attend}, to different parts of an input sequence by learning relationships between its elements. Replacing recurrent layers with stacks of attention-based blocks gave rise to a new class of models: the \textit{transformers}.
 
