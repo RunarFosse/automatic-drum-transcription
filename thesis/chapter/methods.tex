@@ -14,7 +14,7 @@ For the ADTOF-YT dataset, this unification is straightforward due to its already
 
 \subsection{Audio Files}
 
-The remaining datasets are distributed as either Waveform Audio File Format (\texttt{.wav}) or Free Lossless Audio Codec (\texttt{.flac}) files. Both formats are loaded using the PyTorch \texttt{Torchaudio} library and converted to monophonic format by averaging the left and right channels. If a dataset provides separate audio for drums and accompaniement (as in ENST-Drums), these are additively mixed.
+The remaining datasets are distributed as either Waveform Audio File Format (\texttt{.wav}) or Free Lossless Audio Codec (\texttt{.flac}) files. Both formats are loaded using the PyTorch \texttt{Torchaudio} library and converted to monophonic format by averaging the left and right channels. If a dataset provides separate audio for drums and accompaniment (as in ENST-Drums), these are additively mixed.
 
 Once a track is loaded as a waveform, zero-padding is added to its end to ensure even partitioning into 4-second segments. Each segment is then transformed into a spectrogram using a \acrfull{STFT} with 2048 FFT bins, and a window length of 2048. The hop length is set to the sampling rate divided by 100, yielding a temporal resolution of 10~ms per frame. Since each segment contains 4 seconds of audio, the resulting spectrograms have a fixed sequence length of $T = 400$ frames.
 
@@ -40,7 +40,7 @@ Although most preprocessing is completed in advance, during the prior dataset pr
 
 This form of data normalization has been shown to improve the speed and stability of convergence during training, and often results in models generalize better to unseen data. While the specific effects depend on the normalization technique used, there is a broad consensus in machine learning community that normalization is beneficial, which explains its ubiquitous use in state-of-the-art models~\cite{10056354}.
 
-Another preprocessing step motivated by \gls{ADT}-specific methods is the use of infrequency weights, which assign framewise loss weights based on the instrument onsets present at each frame. These weights are precomputed from the training dataset and are calculated, for each instrument, using what Cartwright and Bello refer to as \textit{"the inverse estimated entropy of their event activity distribution"}~\cite{cartwright2018increasing}. While they applied this technique to address sparsity across different tasks, Zehren et al.~\cite{signals4040042} adapted it to emphasize infrequent instruments.
+Another preprocessing step motivated by \gls{ADT}-specific methods is the use of infrequency weights, which assign frame-wise loss weights based on the instrument onsets present at each frame. These weights are precomputed from the training dataset and are calculated, for each instrument, using what Cartwright and Bello refer to as \textit{"the inverse estimated entropy of their event activity distribution"}~\cite{cartwright2018increasing}. While they applied this technique to address sparsity across different tasks, Zehren et al.~\cite{signals4040042} adapted it to emphasize infrequent instruments.
 
 To compute these weights, I first calculate the probability of an instrument $i$ appearing as $p_i = \frac{n_i}{T}$, where $n_i$ is the number of onsets and $T$ is the number of timesteps. The infrequency weight for instrument $i$, denoted $w_i$, is then computed as the inverse entropy: \[w_i = \left(-p_i\log p_i - (1 - p_i)\log{1 - p_i}\right)^{-1}.\] Note that this differs from the method by Cartwright and Bello, where the probability is averaged across instruments; here, I compute it per instrument independently~\cite{cartwright2018increasing}. 
 
@@ -50,7 +50,7 @@ It is worth noting that this entropy-based weighting function is symmetric aroun
 
 With the datasets preprocessed and standardized into uniform PyTorch formats, training can proceed using the prepared spectrograms and corresponding onset annotations. This section describes how I implement the training procedure and outlines the loss function and training setup used to optimize model performance for the \gls{ADT} task.
 
-During training, the datasets are loaded and iterated using PyTorch's \texttt{Dataloader} objects, with a batch size of 128. At runtime, additional transformations are applied, such as model-specific input normalization and reshaping to match architectural requirements. All training is performed on an NVIDIA A100 Tensor Core GPU to ensure efficient execution.
+During training, the datasets are loaded and iterated using PyTorch's \texttt{DataLoader} objects, with a batch size of 128. At runtime, additional transformations are applied, such as model-specific input normalization and reshaping to match architectural requirements. All training is performed on an NVIDIA A100 80GB Tensor Core GPU to ensure efficient execution.
 
 As previously discussed, the \gls{ADT} task can be framed as a sequence labeling problem, where each time frame may contain multiple simultaneous instrument onsets. These are represented as binary targets: 1 if an instrument is active, and 0 otherwise. A natural loss function for this multi-label setup is binary cross-entropy, which treats each output dimension as an independent probability prediction. 
 
@@ -66,7 +66,7 @@ Another common addition in \gls{ADT} literature is the use of a learning rate sc
 
 \section{Postprocessing}
 
-After training, the model produces framewise activation values rather than discrete predictions. These outputs form a two-dimensional matrix with values on the interval $(0, 1)$, representing the model's estimated confidence that a particular instrument is present at each time frame. While this continuous format is suitable for computing loss during training, it is less interpretable when evaluating performance or generating final transcriptions. To enable clear evaluation and comparison, additional postprocessing is applied to convert these confidence values into discrete onset predictions.
+After training, the model produces frame-wise activation values rather than discrete predictions. These outputs form a two-dimensional matrix with values on the interval $(0, 1)$, representing the model's estimated confidence that a particular instrument is present at each time frame. While this continuous format is suitable for computing loss during training, it is less interpretable when evaluating performance or generating final transcriptions. To enable clear evaluation and comparison, additional postprocessing is applied to convert these confidence values into discrete onset predictions.
 
 First, I apply a peak-picking algorithm to isolate local maxima in the model's onset confidence values. These peaks intuitively represent frames where the model is most confident that an instrument onset occurs, relative to its surrounding frames~\cite{Bck2012EvaluatingTO, vogl2018multiinstrumentdrumtranscription}. A predicted onset is registered if a peak has a confidence value greater than or equal to 0.5.
 
@@ -100,7 +100,7 @@ A more efficient alternative is random search, where hyperparameter combinations
 
 A strategy that combines the advantages of both grid search and random search is Bayesian optimization. Like random search, it samples hyperparameter configurations from a defined space, but it also uses performance information from previously evaluated models to guide future sampling. This allows the search to progressively focus on more promising regions of the hyperparameter space. In doing so, it retains the computational efficiency of random search while gaining some of the systematic exploration found in grid search~\cite{snoek2012practical}.
 
-In this thesis, I utilize RayTune's implementation of \texttt{OptunaSearch}, which integrates the Optuna optimization frameworkn~\cite{akiba2019optuna}. Optuna is based on Bayesian optimization and has shown to be effective in neural network tuning tasks. For example, Shekhar et al.~\cite{shekhar2021comparative} benchmarked several hyperparameter optimization frameworks and noted that \textit{"The performance score of Optuna is the highest for all datasets."}
+In this thesis, I utilize RayTune's implementation of \texttt{OptunaSearch}, which integrates the Optuna optimization framework~\cite{akiba2019optuna}. Optuna is based on Bayesian optimization and has shown to be effective in neural network tuning tasks. For example, Shekhar et al.~\cite{shekhar2021comparative} benchmarked several hyperparameter optimization frameworks and noted that \textit{"The performance score of Optuna is the highest for all datasets."}
 
 \subsection{Hyperparameters}
 

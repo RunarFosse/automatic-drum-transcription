@@ -20,7 +20,7 @@ Relating this to a common deep learning task, it could be described as a multi-l
 
 Sound is described by \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear."}~\cite{1953fundamentals}. In short, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
 
-Thus sound can be described as the propogation and perception of waves. Mathematically, waves can be studied as signals~\cite{8454362}. To represent these sounds digitally, as \textit{audio}, one can express these waves as a signal, giving rise to the \textit{waveform}. The waveform is a timewise representation of a signal as a graph, charting the amplitude, or strength of the signal, over time. This sound wave to waveform relationship is visualized in Figure~\ref{WaveformFigure}.
+Thus sound can be described as the propagation and perception of waves. Mathematically, waves can be studied as signals~\cite{8454362}. To represent these sounds digitally, as \textit{audio}, one can express these waves as a signal, giving rise to the \textit{waveform}. The waveform is a time-wise representation of a signal as a graph, charting the amplitude, or strength of the signal, over time. This sound wave to waveform relationship is visualized in Figure~\ref{WaveformFigure}.
 
 \begin{figure}[H]
     \centering
@@ -35,9 +35,9 @@ For monophonic sound, this waveform is a one-dimensional representation. Even th
 
 The Fourier Transform is a mathematical transformation which, given a signal and frequency, computes the frequency's significance, or intensity, in the original signal. As we've established, audio is represented as a signal, meaning we therefore can use this transform, turning an audio signal into frequency space. 
 
-The fourier transform is a complex transformation. Specifically given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number on the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{(\frac{b}{a})}$, adjusted for the right quadrant, computes the phase of the respective frequency in the original signal $f$. Frequencies with higher amplitudes play a more prominent role in shaping the original sequence, indicating a greater significance. This information is what allow us to figure out which frequencies a signal is made out of and how each frequency contributes. 
+The Fourier transform is a complex transformation. Specifically given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number on the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{(\frac{b}{a})}$, adjusted for the right quadrant, computes the phase of the respective frequency in the original signal $f$. Frequencies with higher amplitudes play a more prominent role in shaping the original sequence, indicating a greater significance. This information is what allow us to figure out which frequencies a signal is made out of and how each frequency contributes. 
 
-By doing such a transform (seen in Figure~\ref{FTFigure}) we turn our temporal data, like a waveform, into spectral data, its \textit{spectrum}. This inuitively \textit{untangles} our signal into its respective base frequencies. By ridding our data with the highly dense temporal aspect, replacing it with a more informationally independent and sparse spectral representation, a transformation such as this could lessen the complexity of the task, making the audio easier to \textit{understand}; in a metaphorical sense.
+By doing such a transform (seen in Figure~\ref{FTFigure}) we turn our temporal data, like a waveform, into spectral data, its \textit{spectrum}. This intuitively \textit{untangles} our signal into its respective base frequencies. By ridding our data with the highly dense temporal aspect, replacing it with a more informationally independent and sparse spectral representation, a transformation such as this could lessen the complexity of the task, making the audio easier to \textit{understand}; in a metaphorical sense.
 
 \begin{figure}[H]
     \centering
@@ -60,7 +60,7 @@ To extract frequency values from these signals, we instead have to use the \gls{
 
 \subsection{Nyquist frequency}
 
-When a continuous signal, such as an audio wave traveling through the air, is discritized by recording it on a computer, some information may be lost in the process. The discrete representation of the signal is an \textit{approximation} which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approxmation.
+When a continuous signal, such as an audio wave traveling through the air, is discretized by recording it on a computer, some information may be lost in the process. The discrete representation of the signal is an \textit{approximation} which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approximation.
 
 \textit{Aliasing} is the phenomenon where new, incorrect frequencies emerge in undersampled signals (illustrated in Figure~\ref{AliasingFigure}). The \textit{Nyquist frequency}, defined as half the sampling rate, represents the highest frequency that can be accurately captured by a discrete signal. Thus to prevent aliasing, the sampling rate must be at least twice the maximum frequency present in the original signal.
 
@@ -98,7 +98,7 @@ The \gls{STFT} has several parameters that affect the structure and resolution o
 
 The window length plays a crucial role in determining the time–frequency resolution. A longer window improves the frequency resolution, allowing for more precise magnitude estimation of each frequency component, but comes at the cost of reduced time resolution. This is because a large window spans a longer segment of the signal, causing individual windows to overlap more and blur timing information. On the contrary, shorter windows improve temporal precision but blur frequency content, due to each window consequently consisting of fewer samples. This duality is known as the \textit{time–frequency tradeoff}.
 
-The hop length determines how far the window shifts between each segment and directly affects the temporal granularity of the output. A smaller hop length results in more overlap and a finer temporal resolution, but also increases the computational cost by requiring more \glspl{FFT}. Additionally, the hop length defines the time step between frames, allowing each window to be assigned a temporal index.
+The hop length determines how far the window shifts between each segment and directly affects the temporal granularity of the output. A smaller hop length results in more overlap and a finer temporal resolution, but also increases the computational cost by requiring more \glspl{FFT}. Additionally, the hop length defines the timestep between frames, allowing each window to be assigned a temporal index.
 
 \begin{figure}[H]
     \centering
@@ -128,7 +128,7 @@ One drawback of the spectrogram is that it discards all information about signal
 
 \subsection{Loudness of Magnitude}
 
-The human perception of loudness is approximately logarithmic. A soundwave that carries ten times more energy is not perceived as ten times louder. Instead, a doubling in perceived loudness corresponds roughly to a 10~\gls{dB} increase in signal amplitude. The \acrlong{dB} is a relative unit of measurement that expresses the power the ratio between two signals, where an increase of 1~\gls{dB} corresponds to a power ratio of $10^\frac{1}{10}$. The power of a signal is computed as the square of its magnitude. 
+The human perception of loudness is approximately logarithmic. A sound wave that carries ten times more energy is not perceived as ten times louder. Instead, a doubling in perceived loudness corresponds roughly to a 10~\gls{dB} increase in signal amplitude. The \acrlong{dB} is a relative unit of measurement that expresses the power the ratio between two signals, where an increase of 1~\gls{dB} corresponds to a power ratio of $10^\frac{1}{10}$. The power of a signal is computed as the square of its magnitude. 
 
 This relationship has two major consequences. First, the magnitude scale used in standard spectrograms does not align with human perception of loudness; quiet and loud signals may differ significantly in magnitude, even if they perceptually seem close. Second, this mismatch causes the standard (linear) spectrogram to be highly variable in its magnitude representation, often making it difficult to identify quieter frequency components among louder ones.
 
@@ -176,7 +176,7 @@ Transcription refers to the process of converting an auditory signal, such as mu
 
 \subsection{Music Notation}
 
-Modern staff notation is a symbolic transcription systen that provides a structured set of instructions for a musician to reproduce a performance. It has become the standard way of documenting music and is widely used by musicians across many different genres and instruments.
+Modern staff notation is a symbolic transcription system that provides a structured set of instructions for a musician to reproduce a performance. It has become the standard way of documenting music and is widely used by musicians across many different genres and instruments.
 
 Sheet music written in this notation is typically highly descriptive, containing information such as note onsets, pitch (for pitched instruments), instrument type, velocity, and tempo. Time is represented horizontally from left to right, while pitch or instrument assignment is encoded vertically. For pitched instruments, the vertical position of the note corresponds to its pitch, while for instruments like percussion, the vertical position indicates the specific drum instruments. The duration of the note is denoted through the shape of the notehead, stem, or additional note decorations.
 
@@ -193,7 +193,7 @@ Figure~\ref{DrumsheetFigure} illustrates a simple drum pattern using staff notat
 
 \gls{MIDI} is the industry standard for representing and controlling digital music. It is an event-based protocol, encoding sequences of commands used to synthesize or trigger musical sounds. As it is stored in a binary format, \gls{MIDI} is not directly readable to humans without translating it into a more interpretable representation. Figure~\ref{MIDIFigure} illustrates a list of MIDI events written out in text format.
 
-When computers play \gls{MIDI} sequences, the events are parsed in order at a fixed rate, using \textit{note on}/\textit{note off} messages seperated by time deltas. Similar to sheet music, \gls{MIDI} is highly descriptive, capturing information such as pitch, velocity and timing. Intuitively, one might think of \gls{MIDI} as serving the same role for computers as sheet music does for musicians.
+When computers play \gls{MIDI} sequences, the events are parsed in order at a fixed rate, using \textit{note on}/\textit{note off} messages separated by time deltas. Similar to sheet music, \gls{MIDI} is highly descriptive, capturing information such as pitch, velocity and timing. Intuitively, one might think of \gls{MIDI} as serving the same role for computers as sheet music does for musicians.
 
 Recently, several works in \gls{AMT} have explored generating transcriptions in a \gls{MIDI}-like format, with promising results. Using an \acrshort{NLP} approach, Gardner et al. introduced MT3~\cite{gardner2022mt3multitaskmultitrackmusic}, a model that takes log-Mel spectrograms as input and autoregressively predicts \gls{MIDI} events. This format was further developed by Chang et al. in YourMT3+~\cite{chang2024yourmt3+}, utilizing an \acrshort{LLM} instead.
 
@@ -241,7 +241,7 @@ As mentioned, \acrfull{ADT} refers to the task of transcribing symbolic drum not
     \item \acrshort{DTM}: Drum transcription from full musical mixtures, where both melodic and percussive instruments are present and only drum onsets should be transcribed.
 \end{itemize}
 
-This thesis focuses on the most complex of these tasks, namely \acrfull{DTM}. Intuitively, the goal is to develop a deep learning model that, given input audio in the form of music containing both drums and melodic instruments, can detect and classify drum instrument onsets while selectively ignoring unrelated melodic content. This setting introduces challenges not present in the simpler variants. As Zehren et al.~\cite{signals4040042} note, \textit{"melodic and percussive instruments can overlap and mask eachother..., or have similar sounds, thus creating confusion between instruments"}.
+This thesis focuses on the most complex of these tasks, namely \acrfull{DTM}. Intuitively, the goal is to develop a deep learning model that, given input audio in the form of music containing both drums and melodic instruments, can detect and classify drum instrument onsets while selectively ignoring unrelated melodic content. This setting introduces challenges not present in the simpler variants. As Zehren et al.~\cite{signals4040042} note, \textit{"melodic and percussive instruments can overlap and mask each other..., or have similar sounds, thus creating confusion between instruments"}.
 
 Deep learning has proven to be an effective approach for \gls{DTM}, and a range of architectures have been explored with promising results. Vogl et al.~\cite{Vogl2017DrumTV, vogl2018multiinstrumentdrumtranscription} achieved strong results using both convolutional and convolutional-recurrent networks. Zehren et al.~\cite{signals4040042, zehren2024analyzingreducingsynthetictorealtransfer} emphasized the importance of dataset size and quality, showing that both are critical to achieving strong performance. Most recently, Chang et al.~\cite{chang2024yourmt3+} proposed an autoregressive language-model approach for multi-instrument transcription (\gls{AMT}), with competitive results on \gls{DTM}.
 
@@ -289,7 +289,7 @@ Early work in \gls{ADT} often adopted a 3-instrument setup, predicting only the 
 
 \subsection{Correct Predictions}
 
-\gls{ADT} models predict instrument onsets on a frame-level basis. To account for slight misalignments between predicted and ground truth events, evaluation is typically performed using a \textit{tolerance window}, where a prediction is considered correct if it falls within a fixed time window around the reference onset, commonly between 25~ms and 50~ms~\cite{vogl2016recurrent}. This approach shifts the evaluation focus from framewise labels to discrete event matching and introduces challenges when defining standard classification metrics.
+\gls{ADT} models predict instrument onsets on a frame-level basis. To account for slight misalignments between predicted and ground truth events, evaluation is typically performed using a \textit{tolerance window}, where a prediction is considered correct if it falls within a fixed time window around the reference onset, commonly between 25~ms and 50~ms~\cite{vogl2016recurrent}. This approach shifts the evaluation focus from frame-wise labels to discrete event matching and introduces challenges when defining standard classification metrics.
 
 \subsection{Accuracy}
 

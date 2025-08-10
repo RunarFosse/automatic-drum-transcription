@@ -1,6 +1,6 @@
 \chapter{Architectures}\label{Architectures}
 
-Choosing an suitable architecture is crucial for achieving strong performance in deep learning. The choice of model defines not only the capacity for learning complex patterns, but also the inductive biases that guide generalization. In the context of \gls{ADT}, these models must operate on time-frequency representations of audio and produce accuracte, frame-level onset predictions.
+Choosing an suitable architecture is crucial for achieving strong performance in deep learning. The choice of model defines not only the capacity for learning complex patterns, but also the inductive biases that guide generalization. In the context of \gls{ADT}, these models must operate on time-frequency representations of audio and produce accurate, frame-level onset predictions.
 
 Each input to the model is a spectrogram of shape $(T \times D_{STFT})$, where $T$ is the sequence length (i.e., number of frames) and $D_{STFT}$ is the number of frequency bins. The corresponding output is a matrix of shape $(T \times C)$, where $C$ is the number of drum instruments being predicted.
 
@@ -27,7 +27,7 @@ Both \glspl{GRU} and \glspl{LSTM} have been successfully applied to \gls{ADT}-re
 
 \subsection{Implementation}
 
-I implemented the \gls{RNN} architecture using a stack of \glspl{BiRU}, followed by a framewise linear projection. These bidirectional recurrent layers extract and combine local temporal features at each time frame, allowing the model to consider both past and future context. The final linear layer then maps each resulting hidden state to onset probabilities for each of the five drum instruments. The full architecture is visualized in Figure~\ref{RNNFigure}.
+I implemented the \gls{RNN} architecture using a stack of \glspl{BiRU}, followed by a frame-wise linear projection. These bidirectional recurrent layers extract and combine local temporal features at each time frame, allowing the model to consider both past and future context. The final linear layer then maps each resulting hidden state to onset probabilities for each of the five drum instruments. The full architecture is visualized in Figure~\ref{RNNFigure}.
 
 As part of the model search, I experimented with both bidirectional \glspl{GRU} and \glspl{LSTM} as the recurrent unit, treating this choice as a tunable hyperparameter. I also varied the number of layers $L$ and the hidden size $H$. These are explicitly visualized in Table~\ref{RNNHyperparams}.
 
@@ -68,7 +68,7 @@ A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, acr
 
 \subsection{Implementation}
 
-My \gls{CNN} architecture begins with $I$ initial convolutional blocks, each designed to preserve the temporal resolution of the input, ensuring that the output retains the same sequence length $T$. Within these blocks, the number of kernels $K_i$ increases with block depth $i$, using $K = \{32, 64, 96\}$ to enable deeper layers to capture more complex time–frequency ptterns. This kernel progression is fixed (i.e., not treated as a hyperparameter), and follows a common design convention of increasing the filter count with depth~\cite{simonyan2014very}.
+My \gls{CNN} architecture begins with $I$ initial convolutional blocks, each designed to preserve the temporal resolution of the input, ensuring that the output retains the same sequence length $T$. Within these blocks, the number of kernels $K_i$ increases with block depth $i$, using $K = \{32, 64, 96\}$ to enable deeper layers to capture more complex time–frequency patterns. This kernel progression is fixed (i.e., not treated as a hyperparameter), and follows a common design convention of increasing the filter count with depth~\cite{simonyan2014very}.
 
 These convolutional blocks iteratively combine local features from the spectrogram, forming a richer internal representation of the input. This representation is then passed through $L$ fully connected layers, which project the features into an $H$-dimensional latent space for final interpretation. 
 
@@ -137,7 +137,7 @@ Unlike recurrent units, which propagate information sequentially through hidden 
 \begin{figure}[H]
     \centering
     \input{tikz/ctspectrogram}
-    \caption{Ilustration of how attention layers enable influence from time frames across the entire sequence. The background represents a mock spectrogram, and the red boxes indicate the time frames influencing the prediction on the middle frame. Box height reflects the reltive influence strength, as determined by attention weights.}
+    \caption{Illustration of how attention layers enable influence from time frames across the entire sequence. The background represents a mock spectrogram, and the red boxes indicate the time frames influencing the prediction on the middle frame. Box height reflects the relative influence strength, as determined by attention weights.}
     \label{CTInfluenceFigure}
 \end{figure}
 
@@ -179,7 +179,7 @@ The introducing of the transformer naturally raises a question: is it possible t
 
 Originally developed for image recognition tasks, the Vision Transformer has since been applied to audio-based problems as well, demonstrating strong performance in both domains~\cite{dosovitskiy2021imageworth16x16words, gong2021astaudiospectrogramtransformer}. However, to the best of my knowledge, its application to \gls{ADT} remains unexplored, making it a novel approach evaluated in this thesis.
 
-While Vision Transformers have shown excellent performance, they typically require substantially more data, or benefit heavily from large-scale pre-training, to reach their full potential.~\cite{dosovitskiy2021imageworth16x16words}.
+While Vision Transformers have shown excellent performance, they typically require substantially more data, or benefit heavily from large-scale pretraining, to reach their full potential.~\cite{dosovitskiy2021imageworth16x16words}.
 
 \subsection{Patch Embedding}
 
