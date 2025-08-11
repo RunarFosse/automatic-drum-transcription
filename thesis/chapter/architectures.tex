@@ -1,6 +1,6 @@
 \chapter{Architectures}\label{Architectures}
 
-Choosing a suitable architecture is crucial for achieving strong performance in deep learning. The choice of model defines not only the capacity for learning complex patterns, but also the inductive biases that guide generalization. In the context of \gls{ADT}, these models must operate on time-frequency representations of audio and produce accurate, frame-level onset predictions.
+Choosing a suitable architecture is crucial for achieving strong performance in deep learning. The choice of model defines not only the capacity for learning complex patterns, but also the inductive biases that guide generalization. In the context of \gls{ADT}, these models must operate on time–frequency representations of audio and produce accurate, frame-level onset predictions.
 
 Each input to the model is a spectrogram of shape $(T \times D_{STFT})$, where $T$ is the sequence length (i.e., number of frames) and $D_{STFT}$ is the number of frequency bins. The corresponding output is a matrix of shape $(T \times C)$, where $C$ is the number of drum instruments being predicted.
 
@@ -55,7 +55,7 @@ As part of the model search, I experimented with both bidirectional \glspl{GRU} 
 
 Although spectrograms are often processed as time sequences, we've seen that they also naturally resemble images, with time and frequency forming the horizontal and vertical axes. This makes them well-suited for \glspl{CNN}, which are designed to extract local patterns in data.
 
-A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, across the input. These filters aggregate spatially local information, allowing each output unit to incorporate context from its surrounding region. When applied to spectrograms, convolutional layers enable the model to detect patterns in time-frequency space (illustrated in Figure~\ref{CNNInfluenceFigure}). This makes them a strong candidate for tasks like \gls{ADT}, where relevant features often span multiple adjacent time frames and frequency bins.
+A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, across the input. These filters aggregate spatially local information, allowing each output unit to incorporate context from its surrounding region. When applied to spectrograms, convolutional layers enable the model to detect patterns in time–frequency space (illustrated in Figure~\ref{CNNInfluenceFigure}). This makes them a strong candidate for tasks like \gls{ADT}, where relevant features often span multiple adjacent time frames and frequency bins.
 
 \glspl{CNN} have also been shown to perform well in \gls{ADT}, likely because this contextual information helps the model more easily learn the characteristics of instrument onsets. They are also relatively efficient to train and run, which may also help explain their reasonable performance~\cite{Vogl2017DrumTV}.
 

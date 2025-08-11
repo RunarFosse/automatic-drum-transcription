@@ -18,7 +18,7 @@ From a machine learning perspective, this task is formulated as a multi-label se
 
 \section{Audio}
 
-Sound is described as \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear"}~\cite{1953fundamentals}. In other words, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
+Sound is described as \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear"}~\cite{1953fundamentals}. In other words, sound is the human perception of acoustic waves in a transmission medium such as air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
 
 Mathematically, waves can be studied as signals~\cite{8454362}. To process sound digitally, these sound waves are captured as audio signals in a time-series format known as a \textit{waveform}, which charts the signal's amplitude over time. The relationship between a physical sound wave and its corresponding digital waveform is illustrated in Figure~\ref{WaveformFigure}.
 
@@ -29,7 +29,7 @@ Mathematically, waves can be studied as signals~\cite{8454362}. To process sound
     \label{WaveformFigure}
 \end{figure}
 
-While the waveform is a complete representation of an audio signal, its high temporal density and complex structure makes it a challenging input for many deep learning models. Although some architectures, like Oord et al.'s WaveNet~\cite{oord2016wavenetgenerativemodelraw}, are designed to operate directly on raw audio, a more common and often more effective approach is to first transform the waveform into a representation that makes relevant time–frequency patterns more explicit.
+While the waveform is a complete representation of an audio signal, its high temporal density and complex structure make it a challenging input for many deep learning models. Although some architectures, like Oord et al.'s WaveNet~\cite{oord2016wavenetgenerativemodelraw}, are designed to operate directly on raw audio, a more common and often more effective approach is to first transform the waveform into a representation that makes relevant time–frequency patterns more explicit.
 
 \subsection{Fourier Transform}
 
@@ -60,7 +60,7 @@ To extract frequency values from these signals, we instead have to use the \gls{
 
 \subsection{Nyquist frequency}
 
-When a continuous signal, such as an audio wave traveling through the air, is discretized by recording it on a computer, some information may be lost in the process. The discrete representation of the signal is an \textit{approximation} which quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approximation.
+When a continuous signal, such as an audio wave traveling through the air, is discretized by recording it on a computer, some information may be lost in the process. The discrete representation of the signal is an \textit{approximation} whose quality is directly dependent on the sampling rate. The higher the sampling rate, the \textit{closer} we are to the original, continuous signal. However, a higher sampling rate comes at the cost of needing to store these signals at a higher precision. A lower sampling rate would need less information stored, but this could also mean a less precise signal approximation.
 
 \textit{Aliasing} is the phenomenon where new, incorrect frequencies emerge in undersampled signals (illustrated in Figure~\ref{AliasingFigure}). The \textit{Nyquist frequency}, defined as half the sampling rate, represents the highest frequency that can be accurately captured by a discrete signal. Thus to prevent aliasing, the sampling rate must be at least twice the maximum frequency present in the original signal.
 
