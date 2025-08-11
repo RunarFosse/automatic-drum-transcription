@@ -55,11 +55,12 @@
 
 \appendix
 \titleformat{\chapter}[display]
-  {\normalfont\large\bfseries}% <- font for label "Appendix A", default \huge
+  {\vspace*{-30pt}\normalfont\large\bfseries}% <- font for label "Appendix A", default \huge
   {\chaptertitlename\ \thechapter}
-  {20pt}
+  {10pt}
   {\large}% <- font for title, default \Huge
 
 \include{generators/appendix-a}
+\include{generators/appendix-b}
 
 \end{document}
