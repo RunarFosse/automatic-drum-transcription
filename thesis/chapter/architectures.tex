@@ -17,7 +17,7 @@ To include information from both past and future frames, \glspl{RNN} can be exte
 \begin{figure}[H]
     \centering
     \input{tikz/rnnspectrogram}
-    \caption{Illustration of how bidirectional \glspl{RNN} include information from surrounding timesteps when predicting the current frame. The background represents a mock spectrogram of shape $(T \times D_{STFT})$, and the red boxes indicate the relative temporal influence on the middle frame. Box height reflects influence strength, gradually tapering off as distance from the center sequentially increases.}
+    \caption{Illustration of how bidirectional \glspl{RNN} include information from surrounding timesteps when predicting the current frame. The background represents a mock spectrogram of shape $(T \times D_{STFT})$, and the red boxes indicate the relative temporal influence on the middle frame. Box height reflects influence strength, gradually tapering off as distance from the center sequentially increases~\cite{Vogl2017DrumTV}.}
     \label{RNNInfluenceFigure}
 \end{figure}
 
@@ -62,7 +62,7 @@ A \gls{CNN} operates by applying learnable filters, called \textit{kernels}, acr
 \begin{figure}[H]
     \centering
     \input{tikz/cnnspectrogram}
-    \caption{Illustration of how \glspl{CNN} use a fixed-size receptive field to incorporate local context from surrounding time frames. The background represents a mock spectrogram. The red shaded region marks the center time frame being predicted, and the red boxes indicate the receptive field, the neighboring frames that influence the prediction.}
+    \caption{Illustration of how \glspl{CNN} use a fixed-size receptive field to incorporate local context from surrounding time frames. The background represents a mock spectrogram. The red shaded region marks the center time frame being predicted, and the red boxes indicate the receptive field, the neighboring frames that influence the prediction~\cite{Vogl2017DrumTV}.}
     \label{CNNInfluenceFigure}
 \end{figure}
 
@@ -179,7 +179,7 @@ The introduction of the transformer naturally raises a question: is it possible 
 
 Originally developed for image recognition tasks, the Vision Transformer has since been applied to audio-based problems as well, demonstrating strong performance in both domains~\cite{dosovitskiy2021imageworth16x16words, gong2021astaudiospectrogramtransformer}. However, to the best of my knowledge, its application to \gls{ADT} remains unexplored, making it a novel approach evaluated in this thesis.
 
-While Vision Transformers have shown excellent performance, they typically require substantially more data, or benefit heavily from large-scale pretraining, to reach their full potential.~\cite{dosovitskiy2021imageworth16x16words}.
+While Vision Transformers have shown excellent performance, they typically require substantially more data, or benefit heavily from large-scale pretraining, to reach their full potential~\cite{dosovitskiy2021imageworth16x16words}.
 
 \subsection{Patch Embedding}
 

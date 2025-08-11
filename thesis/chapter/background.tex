@@ -25,7 +25,7 @@ Thus sound can be described as the propagation and perception of waves. Mathemat
 \begin{figure}[H]
     \centering
     \input{tikz/waveform.tex}
-    \caption{The relationship between an acoustic sound wave and its corresponding digital waveform. The waveform represents variations in the air pressure over time. Regions of higher and lower pressure in the sound wave correspond to \textit{peaks} and \textit{troughs} in the waveform, respectively.}
+    \caption{The relationship between an acoustic sound wave and its corresponding digital waveform. The waveform represents variations in the air pressure over time. Regions of higher and lower pressure in the sound wave correspond to \textit{peaks} and \textit{troughs} in the waveform, respectively~\cite{svantek2025}.}
     \label{WaveformFigure}
 \end{figure}
 
@@ -67,7 +67,7 @@ When a continuous signal, such as an audio wave traveling through the air, is di
 \begin{figure}[H]
     \centering
     \input{tikz/aliasing}
-    \caption{Example of aliasing due to undersampling. The original signal has a true frequency of 9~Hz. In the upper plot, sampling at a sufficiently high rate of 45~Hz allows the signal to be perceived and reconstructed accurately. In the lower plot, however, a lower sampling rate of 7~Hz causes aliasing, and the signal is incorrectly perceived as having a frequency of 2~Hz.}
+    \caption{Example of aliasing due to undersampling. The original signal has a true frequency of 9~Hz. In the upper plot, sampling at a sufficiently high rate of 45~Hz allows the signal to be perceived and reconstructed accurately. In the lower plot, however, a lower sampling rate of 7~Hz causes aliasing, and the signal is incorrectly perceived as having a frequency of 2~Hz~\cite{nationalinstruments_signal_processing_2012}.}
     \label{AliasingFigure}
 \end{figure}
 
@@ -90,7 +90,7 @@ This leads us to the \gls{STFT}. Rather than transforming the entire signal at o
 \begin{figure}[H]
     \centering
     \input{tikz/stft.tex}
-    \caption{Application of the \gls{STFT} to a signal. The original waveform is multiplied by multiple offset window functions, producing a set of overlapping signal partitions. The \gls{FFT} is then applied to each partition individually, resulting in a sequence of frequency spectra that preserve localized time–frequency information.}
+    \caption{Application of the \gls{STFT} to a signal. The original waveform is multiplied by multiple offset window functions, producing a set of overlapping signal partitions. The \gls{FFT} is then applied to each partition individually, resulting in a sequence of frequency spectra that preserve localized time–frequency information~\cite{jeon2020area}.}
     \label{STFTFigure}
 \end{figure}
 
@@ -150,7 +150,7 @@ To better reflect this, we apply a set of \textit{filters}, each emphasizing a c
 
 \subsubsection{Mel Spectrograms}
 
-The Mel scale, introduced by Stevens, Volkmann, and Newmann in 1937, transforms the frequency axis into a perceptual pitch scale where equal steps correspond to equal perceived pitch differences. In other words, a linear difference in mels is perceived as a linear difference in pitch. Applying a set of triangular Mel-filters results in a \textit{Mel spectrogram}, a representation widely used in audio-related machine learning tasks. Mel spectrograms have shown successful application in \gls{AMT}.~\cite{gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3+, gong2021astaudiospectrogramtransformer, wolfmonheim2024spectralrhythmfeaturesaudio, 8350302}
+The Mel scale, introduced by Stevens, Volkmann, and Newmann in 1937, transforms the frequency axis into a perceptual pitch scale where equal steps correspond to equal perceived pitch differences. In other words, a linear difference in mels is perceived as a linear difference in pitch. Applying a set of triangular Mel-filters results in a \textit{Mel spectrogram}, a representation widely used in audio-related machine learning tasks. Mel spectrograms have shown successful application in \gls{AMT}~\cite{gardner2022mt3multitaskmultitrackmusic, chang2024yourmt3+, gong2021astaudiospectrogramtransformer, wolfmonheim2024spectralrhythmfeaturesaudio, 8350302}.
 
 \subsubsection{Logarithmic Filters}
 
@@ -206,7 +206,7 @@ Recently, several works in \gls{AMT} have explored generating transcriptions in 
 
 \subsection{Activation Functions}
 
-In machine learning, the task of detecting instrument onsets can be framed as a multi-label sequence labeling problem. For each time frame in a sequence, the model predicts a confidence value (which can be interpreted as a probability), that a given instrument onset occurs at that moment. In the context of \gls{MIR} and \gls{AMT}, it has become common practice to describe these confidence distributions over time as \textit{activation functions} (not to be confused with the activation functions used within neural networks, such as \acrshort{ReLU} or sigmoid). Figure~\ref{ActivationsFigure} illustrates how a drum pattern in staff notation can be represented using these activation functions.~\cite{schluter2014improved, bock2016joint, Southall2016AutomaticDT, 8350302, vogl2018multiinstrumentdrumtranscription}.
+In machine learning, the task of detecting instrument onsets can be framed as a multi-label sequence labeling problem. For each time frame in a sequence, the model predicts a confidence value (which can be interpreted as a probability), that a given instrument onset occurs at that moment. In the context of \gls{MIR} and \gls{AMT}, it has become common practice to describe these confidence distributions over time as \textit{activation functions} (not to be confused with the activation functions used within neural networks, such as \acrshort{ReLU} or sigmoid). Figure~\ref{ActivationsFigure} illustrates how a drum pattern in staff notation can be represented using these activation functions~\cite{schluter2014improved, bock2016joint, Southall2016AutomaticDT, 8350302, vogl2018multiinstrumentdrumtranscription}.
 
 Frame-level prediction of activation functions is a common approach in onset detection for \gls{ADT}, and is the format adopted in this thesis. Each drum instrument's activation function forms a row in a matrix, with time progressing along the columns.
 
@@ -275,7 +275,7 @@ The spectrogram is then passed into an \gls{ADT} model, such as a \gls{DNN}, whi
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.7]{figures/adtpipeline.png}
+    \includegraphics[scale=1.9]{figures/adtpipeline.png}
     \caption{Example of a typical \gls{ADT} pipeline. Given an input spectrogram, the model predicts activation functions for each instrument, which are then quantized into drum onsets and converted into symbolic sheet music~\cite{Southall2016AutomaticDT}.}
     \label{ADTFigure}
 \end{figure}
