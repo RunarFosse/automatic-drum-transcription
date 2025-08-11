@@ -2,25 +2,25 @@
 
 \section{Automatic Music Transcription}
 
-In general, transcription refers to the process of retrieving information from audible data, such as sounds or music. Specifically when applied on music, the information we seek is often an annotation in music notation. This is what is referred to as \textit{music transcription}. Generally, transcribing a musical piece is expensive, requiring both extensive experience within a specific instrumental field, as well as a lot of manual, time-consuming work. Early on in 1986, Martin Piszczalski stated that \textit{"The learned, human skill of transcribing music is one of the most sophisticated auditory-based pattern-recognition tasks that humans perform."}~\cite{10.5555/15202}. A decade prior he helped introduce the term \acrfull{AMT} covering a field in which now, many years later, has evolved significantly~\cite{piszczalski1977automatic}.
+In the field of \acrfull{MIR}, the task of automatically generating symbolic music notation from audio is known as \acrfull{AMT}. This process addresses the traditionally manual and time-consuming challenge of music transcription, a skill Martin Piszczalski described in 1986 as \textit{"one of the most sophisticated auditory-based pattern-recognition tasks that humans perform."}~\cite{10.5555/15202}. A decade prior, Piszczalski helped introduce the term \gls{AMT}, establishing a research field that has since evolved significantly~\cite{piszczalski1977automatic}.
 
 \subsection{Transcription using Deep Learning}
-Currently, the majority of state-of-the-art models within \gls{AMT} utilize deep learning~\cite{8350302, signals4040042, jamshidi2024machine}. With enough data one can train a \gls{DNN} to, given an input sequence of music, automatically output a transcribed sequence representing musical notation. Musical notation such as this could be extensive in their information, but by far the most important parts could be reduced down to \textit{"which instruments are playing"} and \textit{"when are they playing"}.
+Currently, state-of-the-art models in \gls{AMT} are based on deep learning. This approach frames the problem as training a \gls{DNN} to map an input audio signal to a symbolic musical representation. While this notation can be highly detailed, its most fundamental components are identifying \textit{which} instruments are playing and \textit{when} they are played~\cite{8350302, signals4040042, jamshidi2024machine}.
 
-Relating this to a common deep learning task, it could be described as a multi-label sequence tagging/sequence labeling task. For each element in an input sequence, output a combination of one or more labels. Each element of this output sequence represents a timestep in the input audio recording, consisting of a combination of labels, each representing an instrument being played. This constitutes the most basic form of \gls{AMT}. Figure~\ref{AMTFigure} illustrates an abstract \gls{AMT} pipeline.
+From a machine learning perspective, this task is formulated as a multi-label sequence labeling problem. The input audio is divided into short time frames, and for each frame, the model's objective is to predict a corresponding set of labels indicating the active instruments. This core process, which constitutes the most basic form of \gls{AMT}, is illustrated in Figure~\ref{AMTFigure}.
 
 \begin{figure}[H]
     \centering
     \input{tikz/amt.tex}
-    \caption{An abstract visualization of the \acrfull{AMT} process using deep learning. Music is input, processed by a neural network, and ultimately converted into a symbolic transcription.}
+    \caption{An abstract visualization of the \acrfull{AMT} process. Music is fed into a \acrlong{DNN}, which processes it and outputs a corresponding symbolic transcription.}
     \label{AMTFigure}
 \end{figure}
 
 \section{Audio}
 
-Sound is described by \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear."}~\cite{1953fundamentals}. In short, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
+Sound is described as \textit{"the sensation caused in the nervous system by vibration of the delicate membranes of the ear"}~\cite{1953fundamentals}. In other words, sound is the human perception of acoustic waves in a transition medium, like air. These waves, consisting of vibrating molecules, get sensed by our auditory organs and perceived by the brain. 
 
-Thus sound can be described as the propagation and perception of waves. Mathematically, waves can be studied as signals~\cite{8454362}. To represent these sounds digitally, as \textit{audio}, one can express these waves as a signal, giving rise to the \textit{waveform}. The waveform is a time-wise representation of a signal as a graph, charting the amplitude, or strength of the signal, over time. This sound wave to waveform relationship is visualized in Figure~\ref{WaveformFigure}.
+Mathematically, waves can be studied as signals~\cite{8454362}. To process sound digitally, these sound waves are captured as audio signals in a time-series format known as a \textit{waveform}, which charts the signal's amplitude over time. The relationship between a physical sound wave and its corresponding digital waveform is illustrated in Figure~\ref{WaveformFigure}.
 
 \begin{figure}[H]
     \centering
@@ -29,7 +29,7 @@ Thus sound can be described as the propagation and perception of waves. Mathemat
     \label{WaveformFigure}
 \end{figure}
 
-For monophonic sound, this waveform is a one-dimensional representation. Even though this is an excellent way of storing audio digitally, informationally it is very dense. Although there do exist deep learning models working directly with these waveforms, such as Oord et al.'s WaveNet~\cite{oord2016wavenetgenerativemodelraw}, the task of parsing and perceiving such a signal is a complex one. Luckily, there exists some processing techniques which can be applied to a waveform, lowering its complexity whilst keeping information intact.
+While the waveform is a complete representation of an audio signal, its high temporal density and complex structure makes it a challenging input for many deep learning models. Although some architectures, like Oord et al.'s WaveNet~\cite{oord2016wavenetgenerativemodelraw}, are designed to operate directly on raw audio, a more common and often more effective approach is to first transform the waveform into a representation that makes relevant time–frequency patterns more explicit.
 
 \subsection{Fourier Transform}
 
