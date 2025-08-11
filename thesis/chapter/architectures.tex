@@ -4,7 +4,7 @@ Choosing a suitable architecture is crucial for achieving strong performance in 
 
 Each input to the model is a spectrogram of shape $(T \times D_{STFT})$, where $T$ is the sequence length (i.e., number of frames) and $D_{STFT}$ is the number of frequency bins. The corresponding output is a matrix of shape $(T \times C)$, where $C$ is the number of drum instruments being predicted.
 
-In this thesis, I use log-magnitude spectrograms filtered with 12 logarithmically spaced, area-normalized filters per octave, spanning 20~Hz to 20,000~Hz. This results in $D_{STFT} = 84$ frequency bins. The task is to predict a common 5 class drum vocabulary, consisting of \acrfull{KD}, \acrfull{SD}, \acrfull{TT}, \acrfull{HH}, and \acrfull{CC+RC}, giving $C = 5$~\cite{zehren2024analyzingreducingsynthetictorealtransfer}.
+In this thesis, I use log-magnitude spectrograms filtered with 12 logarithmically spaced, area-normalized filters per octave, spanning 20~Hz to 20,000~Hz. This results in $D_{STFT} = 84$ frequency bins. The task is to predict a common 5-class drum vocabulary, consisting of \acrfull{KD}, \acrfull{SD}, \acrfull{TT}, \acrfull{HH}, and \acrfull{CC+RC}, giving $C = 5$~\cite{zehren2024analyzingreducingsynthetictorealtransfer}.
 
 While the input sequence length $T$ may vary, it is fixed to $T = 400$ for all experiments in this thesis, corresponding to 4 seconds of audio with 10~ms hop length. Thus, the models considered in this chapter operate with input and output shapes of $(T \times 84)$ and $(T \times 5)$, respectively.
 
@@ -179,7 +179,7 @@ The introduction of the transformer naturally raises a question: is it possible 
 
 Originally developed for image recognition tasks, the Vision Transformer has since been applied to audio-based problems as well, demonstrating strong performance in both domains~\cite{dosovitskiy2021imageworth16x16words, gong2021astaudiospectrogramtransformer}. However, to the best of my knowledge, its application to \gls{ADT} remains unexplored, making it a novel approach evaluated in this thesis.
 
-While Vision Transformers have shown excellent performance, they typically require substantially more data, or benefit heavily from large-scale pretraining, to reach their full potential~\cite{dosovitskiy2021imageworth16x16words}.
+While Vision Transformers have shown excellent performance on other tasks, they typically require substantially more data, or large-scale pretraining, to reach their full potential~\cite{dosovitskiy2021imageworth16x16words}.
 
 \subsection{Patch Embedding}
 

@@ -2,7 +2,7 @@
 
 \section{Automatic Music Transcription}
 
-In the field of \acrfull{MIR}, the task of automatically generating symbolic music notation from audio is known as \acrfull{AMT}. This process addresses the traditionally manual and time-consuming challenge of music transcription, a skill Martin Piszczalski described in 1986 as \textit{"one of the most sophisticated auditory-based pattern-recognition tasks that humans perform."}~\cite{10.5555/15202}. A decade prior, Piszczalski helped introduce the term \gls{AMT}, establishing a research field that has since evolved significantly~\cite{piszczalski1977automatic}.
+In the field of \acrfull{MIR}, the task of automatically generating symbolic music notation from audio is known as \acrfull{AMT}. This process addresses the traditionally manual and time-consuming challenge of music transcription, a skill Martin Piszczalski described in 1986 as \textit{"one of the most sophisticated auditory-based pattern-recognition tasks that humans perform"}~\cite{10.5555/15202}. A decade prior, Piszczalski helped introduce the term \gls{AMT}, establishing a research field that has since evolved significantly~\cite{piszczalski1977automatic}.
 
 \subsection{Transcription using Deep Learning}
 Currently, state-of-the-art models in \gls{AMT} are based on deep learning. This approach frames the problem as training a \gls{DNN} to map an input audio signal to a symbolic musical representation. While this notation can be highly detailed, its most fundamental components are identifying \textit{which} instruments are playing and \textit{when} they are played~\cite{8350302, signals4040042, jamshidi2024machine}.
@@ -124,13 +124,13 @@ The result is a two-dimensional, real-valued representation of the signal, where
 
 The number of frequency bins (represented on the y-axis of Figure \ref{SpectrogramFigure}) in a spectrogram is equal to half the number of \glspl{FFT} used in its computation. These bins contain information about linearly spaced frequencies, ranging from 0~Hz up to the Nyquist frequency of the signal. The number of time frames (the x-axis) is determined by the hop length of the \gls{STFT}, with smaller hop lengths resulting in a greater number of frames. In this way, one has significant control over the dimensionality of the spectrogram through parameter selection. 
 
-One drawback of the spectrogram is that it discards all information about signal's phase. As previously mentioned, phase is encoded in the angle of each complex value, which is lost when computing the magnitude. This means it is not possible to perfectly reconstruct the original signal from a magnitude-only spectrogram. However, approximate reconstruction is possible using iterative algorithms such as Griffin–Lim~\cite{1164317}.
+One drawback of the spectrogram is that it discards all information about a signal's phase. As previously mentioned, phase is encoded in the angle of each complex value, which is lost when computing the magnitude. This means it is not possible to perfectly reconstruct the original signal from a magnitude-only spectrogram. However, approximate reconstruction is possible using iterative algorithms such as Griffin–Lim~\cite{1164317}.
 
 \subsection{Loudness of Magnitude}
 
 The human perception of loudness is approximately logarithmic. A sound wave that carries ten times more energy is not perceived as ten times louder. Instead, a doubling in perceived loudness corresponds roughly to a 10~\gls{dB} increase in signal amplitude. The \acrlong{dB} is a relative unit of measurement that expresses the power ratio between two signals, where an increase of 1~\gls{dB} corresponds to a power ratio of $10^\frac{1}{10}$. The power of a signal is computed as the square of its magnitude. 
 
-This relationship has two major consequences. First, the magnitude scale used in standard spectrograms does not align with human perception of loudness; quiet and loud signals may differ significantly in magnitude, even if they perceptually seem close. Second, this mismatch causes the standard (linear) spectrogram to be highly variable in its magnitude representation, often making it difficult to identify quieter frequency components among louder ones.
+This relationship has two major consequences. First, the magnitude scale used in standard spectrograms does not align with human perception of loudness; quiet and loud signals may differ significantly in magnitude, even if they perceptually seem close. Second, this mismatch causes the standard, linear spectrogram to be highly variable in its magnitude representation, often making it difficult to identify quieter frequency components among louder ones.
 
 To address this, a log-magnitude spectrogram is often used, which applies a logarithmic transformation to the magnitudes. This logarithm is typically base 10, aligning with the \acrlong{dB} scale and better reflecting human auditory perception. A comparison between a magnitude spectrogram and a log-magnitude one can be seen in Figure~\ref{SpectrogramLogspectrogramFigure}.
 
@@ -280,7 +280,7 @@ The spectrogram is then passed into an \gls{ADT} model, such as a \gls{DNN}, whi
     \label{ADTFigure}
 \end{figure}
 
-Designing such a pipeline involves several key choices. For instance: How are the input and output of a model structured? While the input here is always a spectrogram, its size and structure can vary depending on parameters such as window length, hop length, and number of frequency bins, as discussed previously. The model's output is also structured as a sequence, with length tied to the input's time resolution and dimensionality determined by the number of instruments being transcribed.
+Designing such a pipeline involves several key choices. For instance: How is the input and output of a model structured? While the input here is always a spectrogram, its size and structure can vary depending on parameters such as window length, hop length, and number of frequency bins, as discussed previously. The model's output is also structured as a sequence, with length tied to the input's time resolution, and dimensionality determined by the number of instruments being transcribed.
 
 Early work in \gls{ADT} often adopted a 3-instrument setup, predicting only the \acrfull{KD}, \acrfull{SD} and \acrfull{HH}~\cite{vogl2016recurrent}. While this configuration offered a useful proof-of-concept for early model development, it omits essential components of the drum set. To better capture realistic use cases, I instead use a 5-instrument setup, which also includes cymbals (combining both \acrfull{CC} and \acrfull{RC}) and \acrfull{TT} (covering all toms). This adds complexity to the problem but allows the system to represent the full standard drum kit.
 
