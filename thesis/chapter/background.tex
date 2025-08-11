@@ -35,7 +35,7 @@ While the waveform is a complete representation of an audio signal, its high tem
 
 The Fourier Transform is a mathematical transformation which, given a signal and frequency, computes the frequency's significance, or intensity, in the original signal. As we've established, audio is represented as a signal, meaning we therefore can use this transform, turning an audio signal into frequency space. 
 
-The Fourier transform is a complex transformation. Specifically given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number of the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{(\frac{b}{a})}$, adjusted for the right quadrant, computes the phase of the respective frequency in the original signal $f$. Frequencies with higher amplitudes play a more prominent role in shaping the original sequence, indicating a greater significance. This information is what allows us to figure out which frequencies make up the signal and how each frequency contributes. 
+The Fourier transform is a complex transformation. Specifically, given a signal $f$, we can compute the integral \[ \widehat{f}(\xi) = \int^{\infty}_{-\infty}{f(x)e^{-i2\pi \xi x} dx} \] for a frequency $\xi \in \mathbb{R}$, computed over all values $x \in \mathbb{R}$ representing time, resulting in a \textit{complex} number of the form $\widehat{f}(\xi) = a + bi$. This number consists of a \textit{real} part $a$ and an \textit{imaginary} part $b$. We can represent this complex number in polar form \[ a + bi = re^{i\theta}, \] where $r = \sqrt{a^2 + b^2}$ denotes the magnitude (amplitude) and $\theta = \arctan{(\frac{b}{a})}$, adjusted for the right quadrant, computes the phase of the respective frequency in the original signal $f$. Frequencies with higher amplitudes play a more prominent role in shaping the original sequence, indicating a greater significance. This information is what allows us to figure out which frequencies make up the signal and how each frequency contributes. 
 
 By doing such a transform (seen in Figure~\ref{FTFigure}) we turn our temporal data, like a waveform, into spectral data, its \textit{spectrum}. This intuitively \textit{untangles} our signal into its respective base frequencies. By ridding our data of the highly dense temporal aspect, replacing it with a more informationally independent and sparse spectral representation, a transformation such as this could lessen the complexity of the task, making the audio easier to \textit{understand}, in a metaphorical sense.
 
@@ -168,7 +168,7 @@ This representation has been adopted in several recent \gls{ADT} studies, partic
     \label{AllSpectrogramFigure}
 \end{figure}
 
-Figure~\ref{AllSpectrogramFigure} compares the normal, Mel, and logarithmically filtered spectrogram (all with log-magnitude scaling). Both of the latter two reshape the frequency axis, but in different ways.
+Figure~\ref{AllSpectrogramFigure} compares the normal, Mel, and logarithmically filtered spectrogram, all of which are presented with log-magnitude scaling. Both of the latter two reshape the frequency axis, but in different ways.
 
 \section{Transcription}
 

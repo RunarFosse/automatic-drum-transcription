@@ -104,7 +104,7 @@ Intuitively, the ability of \glspl{CNN} to extract local time–frequency patter
 
 I implemented the \gls{CRNN} using a fixed stack of $I = 2$ initial convolutional blocks, a setup inspired by prior work in \gls{ADT}~\cite{Vogl2017DrumTV, signals4040042}. These convolutional blocks use an increasing number of kernels $K = \{32, 64\}$, allowing deeper layers to extract more complex time–frequency patterns. As with the pure \gls{CNN}, the convolutions preserve the input's temporal resolution.
 
-The resulting convolutional output is passed to a \gls{BiRU}, which models temporal dependencies across frames. As in the \gls{RNN} architecture, I experimented with both \glspl{GRU} and \glspl{LSTM}. Each timestep's hidden state is then passed into the final linear layer, which computes and outputs onset probabilities for each of the five drum instruments. The full architecture can be seen in Figure~\ref{CRNNFigure}, with its corresponding tunable hyperparameters in Table~\ref{CRNNHyperparams}.
+The resulting convolutional output is passed to a \gls{BiRU}, which models temporal dependencies across frames. As in the \gls{RNN} architecture, I experimented with both \glspl{GRU} and \glspl{LSTM}. Each timestep's hidden state is then passed into the final linear layer, which computes and outputs onset probabilities for each of the five drum instruments. The full architecture is visualized in Figure~\ref{CRNNFigure}, and its corresponding tunable hyperparameters are detailed in Table~\ref{CRNNHyperparams}.
 
 \begin{figure}[H]
     \centering
