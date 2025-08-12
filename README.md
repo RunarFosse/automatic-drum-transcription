@@ -4,6 +4,8 @@ This repository contains all the source code for my Master's thesis: "Automatic 
 
 ## Virtual environment
 
+Ensure you have [Python 3.11](https://www.python.org/) installed.
+
 It is highly recommended to create a Python virtual environment:
 
 ```sh
