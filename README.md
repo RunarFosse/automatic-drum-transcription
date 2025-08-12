@@ -20,6 +20,8 @@ pip install -r requirements.txt
 
 * ```run.py``` - Train specific models on specific datasets
 * ```test.py``` - Test already trained models on all datasets
+* ```study/``` - Contains information of all models trained and selected for the thesis, void of specific model weights
+* ```thesis/``` - Contains the LaTeX for the thesis
 * ```models/``` - Contains all models trained in the thesis
 * ```io/``` - Contains scripts used to parse all dataset into PyTorch
 * ```notebooks/``` - Contains notebooks used for analysis, or creating figures for the thesis
